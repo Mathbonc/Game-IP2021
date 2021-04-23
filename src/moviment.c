@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include <math.h>
 
 typedef struct{
     int life;
@@ -6,18 +7,33 @@ typedef struct{
     float speed;
 } Player;
 
+typedef struct{
+    int life;
+    Vector2 position;
+    float speed;
+    float dist;
+} Enemies;
+
 int main(){
     int const windowWidth = 1260;
     int const windowHeight = 720;
     char last = ' ';
+    int i;
     
     InitWindow(windowWidth, windowHeight, "moviment");
     SetTargetFPS(60);
     
     Player rbns = {0};
     rbns.position = (Vector2){300.0f, 175.0f};
-    rbns.speed = 5.4;
+    rbns.speed = 1.4;
     rbns.life = 3;
+    
+    Enemies guard[10] = {0};
+    for(i=0; i<10; i++){
+        guard[i].position = (Vector2){GetRandomValue(0, 1700), GetRandomValue(0, 350)};
+        guard[i].speed = (GetRandomValue(5, 10) * 0.1);
+        guard[i].life = 3;
+    }
     
     Texture2D background = LoadTexture("../bin/Map/map1.png");
     
@@ -26,6 +42,11 @@ int main(){
     float frameWidth = (float)(rbnsTex.width/6);
     float frameHeight = (float)(rbnsTex.height/17);
     int maxFrames = (int)(rbnsTex.width/(int)frameWidth);
+    
+    Texture2D guardTex = LoadTexture("../bin/Characters/Enemies/Guardian/Guardian Sprite-Sheet.png");
+    float guardframeWidth = (float)(guardTex.width/1);
+    float guardframeHeight = (float)(guardTex.height/39);
+    int guardmaxFrames = (int)(guardTex.width/(int)guardframeWidth);
     
     float timer = 0.0f;
     int frame = 0;
@@ -50,6 +71,23 @@ int main(){
             if(rbns.position.x <= 0) rbns.position.x = 1; 
             if(rbns.position.y >= background.height-50) rbns.position.y = 399;
             if(rbns.position.y <= 0) rbns.position.y = 1; 
+        }
+        
+        //Movimento do Guardian/Guardian
+        for(i=0; i<10; i++){
+            guard[i]. dist = sqrt(pow((guard[i].position.x-rbns.position.x),2) + pow((guard[i].position.y-rbns.position.y),2));
+            if(guard[i].dist > 71){ //Atacam de longe, para nenhum se apoximar demais
+                if(guard[i].position.x > rbns.position.x) guard[i].position.x -= 1.0f * guard[i].speed;
+                if(guard[i].position.x < rbns.position.x) guard[i].position.x += 1.0f * guard[i].speed;
+                if(guard[i].position.y > rbns.position.y) guard[i].position.y -= 1.0f * guard[i].speed;
+                if(guard[i].position.y < rbns.position.y) guard[i].position.y += 1.0f * guard[i].speed;
+            }
+            else if(guard[i].dist < 69){
+                if(guard[i].position.x > rbns.position.x) guard[i].position.x += 1.0f * guard[i].speed;
+                if(guard[i].position.x < rbns.position.x) guard[i].position.x -= 1.0f * guard[i].speed;
+                if(guard[i].position.y > rbns.position.y) guard[i].position.y += 1.0f * guard[i].speed;
+                if(guard[i].position.y < rbns.position.y) guard[i].position.y -= 1.0f * guard[i].speed;
+            }
         }
         
         timer += GetFrameTime();
@@ -79,6 +117,10 @@ int main(){
             
                 DrawTexture(background, 0, 0, RAYWHITE);
                 
+                for(i=0; i<10; i++){
+                    DrawTextureRec(guardTex, (Rectangle){guardframeWidth*0, guardframeHeight*frame, guardframeWidth, (float)guardframeHeight*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
+                }
+                
                 // 2 segundo parametro o Rectangle é a linha que vai ser desenhada, e o 4 a quantidade de linhas
                 if (IsKeyDown(KEY_D)) {DrawTextureRec(rbnsTex, (Rectangle){frameWidth*frame, frameHeight*1, frameWidth, (float)frameHeight*1}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE); last='d';}
                 else if (IsKeyDown(KEY_A)) {DrawTextureRec(rbnsTexRev, (Rectangle){frameWidth*frame, frameHeight*1, frameWidth, (float)frameHeight*1}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE); last='a';}
@@ -90,6 +132,7 @@ int main(){
                     if(last=='a') DrawTextureRec(rbnsTexRev, (Rectangle){frameWidth*frame, frameHeight*0, frameWidth, (float)frameHeight*1}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
                     else DrawTextureRec(rbnsTex, (Rectangle){frameWidth*frame, frameHeight*0, frameWidth, (float)frameHeight*1}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
                 }
+                
             EndMode2D();
             
         EndDrawing();

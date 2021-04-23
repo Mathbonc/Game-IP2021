@@ -35,6 +35,13 @@ int main(){
         guard[i].life = 3;
     }
     
+    Enemies storm[3] = {0};
+    for(i=0; i<5; i++){
+        storm[i].position = (Vector2){GetRandomValue(0, 1700), GetRandomValue(0, 350)};
+        storm[i].speed = (GetRandomValue(5, 7) * 0.1);
+        storm[i].life = 7;
+    }
+    
     Texture2D background = LoadTexture("../bin/Map/map1.png");
     
     Texture2D rbnsTex = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_SheetnoEffect.png");
@@ -47,6 +54,11 @@ int main(){
     float guardframeWidth = (float)(guardTex.width/1);
     float guardframeHeight = (float)(guardTex.height/39);
     int guardmaxFrames = (int)(guardTex.width/(int)guardframeWidth);
+    
+    Texture2D stormTex = LoadTexture("../bin/Characters/Enemies/Stormhead/run.png");
+    float stormframeWidth = (float)(stormTex.width/1);
+    float stormframeHeight = (float)(stormTex.height/10);
+    int stormmaxFrames = (int)(stormTex.width/(int)stormframeWidth);
     
     float timer = 0.0f;
     int frame = 0;
@@ -73,9 +85,26 @@ int main(){
             if(rbns.position.y <= 0) rbns.position.y = 1; 
         }
         
-        //Movimento do Guardian/Guardian
+        //Movimento do Stormhead
+        for(i=0; i<5; i++){
+            storm[i].dist = sqrt(pow((storm[i].position.x-rbns.position.x),2) + pow((storm[i].position.y-rbns.position.y),2));
+            if(storm[i].dist > 31){ //Atacam de perto, para nenhum se apoximar demais
+                if(storm[i].position.x+25 > rbns.position.x) storm[i].position.x -= 1.0f * storm[i].speed;
+                if(storm[i].position.x+25 < rbns.position.x) storm[i].position.x += 1.0f * storm[i].speed;
+                if(storm[i].position.y+83 > rbns.position.y) storm[i].position.y -= 1.0f * storm[i].speed;
+                if(storm[i].position.y+83 < rbns.position.y) storm[i].position.y += 1.0f * storm[i].speed;
+            }
+            else if(storm[i].dist < 29){
+                if(storm[i].position.x > rbns.position.x) storm[i].position.x += 1.0f * storm[i].speed;
+                if(storm[i].position.x < rbns.position.x) storm[i].position.x -= 1.0f * storm[i].speed;
+                if(storm[i].position.y > rbns.position.y) storm[i].position.y += 1.0f * storm[i].speed;
+                if(storm[i].position.y < rbns.position.y) storm[i].position.y -= 1.0f * storm[i].speed;
+            }
+        }
+        
+        //Movimento do Guardian
         for(i=0; i<10; i++){
-            guard[i]. dist = sqrt(pow((guard[i].position.x-rbns.position.x),2) + pow((guard[i].position.y-rbns.position.y),2));
+            guard[i].dist = sqrt(pow((guard[i].position.x-rbns.position.x),2) + pow((guard[i].position.y-rbns.position.y),2));
             if(guard[i].dist > 71){ //Atacam de longe, para nenhum se apoximar demais
                 if(guard[i].position.x > rbns.position.x) guard[i].position.x -= 1.0f * guard[i].speed;
                 if(guard[i].position.x < rbns.position.x) guard[i].position.x += 1.0f * guard[i].speed;
@@ -91,7 +120,7 @@ int main(){
         }
         
         timer += GetFrameTime();
-        if(timer >= 0.2f){
+        if(timer >= 0.15f){
             timer = 0.0f;
             frame += 1;
         }
@@ -119,6 +148,10 @@ int main(){
                 
                 for(i=0; i<10; i++){
                     DrawTextureRec(guardTex, (Rectangle){guardframeWidth*0, guardframeHeight*frame, guardframeWidth, (float)guardframeHeight*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
+                }
+                
+                for(i=0; i<5; i++){
+                    DrawTextureRec(stormTex, (Rectangle){stormframeWidth*0, stormframeHeight*frame, stormframeWidth, (float)stormframeHeight*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
                 }
                 
                 // 2 segundo parametro o Rectangle é a linha que vai ser desenhada, e o 4 a quantidade de linhas

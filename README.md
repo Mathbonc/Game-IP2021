@@ -7,6 +7,7 @@ Projeto de Introdução a Computação (IP-2021)
 ### :clipboard: Documentos
 - [Link do Script](https://docs.google.com/document/d/1zYr8_lf9n0T7lo5kB3SmSHxj26ucqIk_dWzO4aXqUik/edit)
 - [Como usar o git](https://docs.google.com/document/d/1O1CbKDdQmPPuHPe524py29n0MPCCar10N34CdKr-3fc/edit?usp=sharing)
+- [História](https://docs.google.com/document/d/1PA5blmIotS3Gf44mQdyH-2iAC6LEpth3xh7RwGihBCQ/edit)
 
 ### :link: Assets Geral
 - [Mapa](https://poppants.itch.io/the-road-north)

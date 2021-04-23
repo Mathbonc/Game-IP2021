@@ -9,6 +9,32 @@ typedef struct{
     int acertar_questao, discutir_questao;
 } ataques_aluno;
 
+void Rubens_atack(Texture2D warrior, Vector2 position, int frame, float timer, float framewidth, float frameheight, float cordx, float *cordy, int *cont, int maxFrames){ 
+    //O usuário deve executar o comando BeginDrawing antes de chamar a função   
+    frame= frame % maxFrames;
+    cordx=(framewidth*frame);
+    Rectangle framerec = {cordx, (*cordy), (float)framewidth, (float)frameheight};
+    if(frame==5){
+        *cordy=(*cordy)+frameheight;
+        
+    }
+    if(((*cordy)/frameheight)==4){
+        (*cont)++;
+        if(*cont==3){
+            frame = 2;
+            *cont= 0;
+            *cordy= frameheight*2;
+        }
+    }
+    DrawTextureRec(warrior, framerec ,position, RAYWHITE);
+    /*Escrever o seguinte código na main antes de chamar a função:
+    timer += GetFrameTime();
+    if(timer>=0.01f){
+        timer =0.0f;
+        frame+=1;
+    }*/
+}
+
 
 void Combat_LeaoNidas(int *vida_de_rubens){
     int vida_de_leao = 70, opRubens, opAluno;

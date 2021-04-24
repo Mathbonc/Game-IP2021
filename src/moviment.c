@@ -172,6 +172,9 @@ int main(){
     }
     UnloadTexture(background);
     UnloadTexture(rbnsTex);
+    UnloadTexture(guardTex);
+    UnloadTexture(stormTex);
+    
     CloseWindow();
     return 0;
 }

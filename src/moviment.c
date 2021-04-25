@@ -2,6 +2,10 @@
 #include "raylib.h"
 #include <math.h>
 
+void generateEnemies(Enemies *guard, Enemies *storm);
+void moveCharacter(Player *rbns, Texture2D background);
+void moveEnemie(Enemies *guard, Enemies *storm, Player rbns);
+
 void generateEnemies(Enemies *guard, Enemies *storm){
     int i;
     for(i=0; i<10; i++){

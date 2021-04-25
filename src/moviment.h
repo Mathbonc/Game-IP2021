@@ -1,5 +1,7 @@
-#ifndef MOVIMENT_H_INCLUDED
-#define MOVIMENT_H_INCLUDED
+#ifndef MOVIMENT_H
+#define MOVIMENT_H
+
+#include "raylib.h"
 
 typedef struct{
     int life;
@@ -15,7 +17,9 @@ typedef struct{
 } Enemies;
 
 void generateEnemies(Enemies *guard, Enemies *storm);
+
 void moveCharacter(Player *rbns, Texture2D background);
+
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns);
 
 #endif

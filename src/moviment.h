@@ -6,15 +6,17 @@
 
 typedef struct{
     int life;
+    int damage;
     Vector2 position;
-    Rectangle bound;
+    Rectangle bound, atkbound;
     float speed;
 } Player;
 
 typedef struct{
     int life;
+    int damage;
     Vector2 position;
-    Rectangle bound;
+    Rectangle bound, atkbound;
     float speed;
     float dist;
 } Enemies;

@@ -3,7 +3,7 @@
 #include <math.h>
 
 void generateEnemies(Enemies *guard, Enemies *storm);
-void moveCharacter(Player *rbns, Texture2D background);
+void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[]);
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns);
 
 void generateEnemies(Enemies *guard, Enemies *storm){
@@ -21,7 +21,8 @@ void generateEnemies(Enemies *guard, Enemies *storm){
     }
 }
 
-void moveCharacter(Player *rbns, Texture2D background){
+void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[]){
+    int i;
     if(rbns->position.x < background.width && rbns->position.x > 0 && rbns->position.y < background.height-50 && rbns->position.y > 0){
         if (IsKeyDown(KEY_D)) rbns->position.x += 1.0f * rbns->speed; 
         if (IsKeyDown(KEY_A)) rbns->position.x -= 1.0f * rbns->speed; 
@@ -29,10 +30,20 @@ void moveCharacter(Player *rbns, Texture2D background){
         if (IsKeyDown(KEY_S)) rbns->position.y += 1.0f * rbns->speed; 
     }
     else{
-        if(rbns->position.x >= background.width-70) rbns->position.x = 1780; 
-        if(rbns->position.x <= 0) rbns->position.x = 1; 
-        if(rbns->position.y >= background.height-50) rbns->position.y = 399;
-        if(rbns->position.y <= 0) rbns->position.y = 1; 
+        if(rbns->position.x >= background.width-70) rbns->position.x -= 1.0f * rbns->speed; 
+        if(rbns->position.x <= 0) rbns->position.x += 1.0f * rbns->speed; 
+        if(rbns->position.y >= background.height-50) rbns->position.y -= 1.0f * rbns->speed;
+        if(rbns->position.y <= 0) rbns->position.y += 1.0f * rbns->speed; 
+    }
+    rbns->bound.x = rbns->position.x+12;
+    rbns->bound.y = rbns->position.y;
+    for(i=0; i<3; i++){
+        if(CheckCollisionRecs(rbns->bound, obst[i])){
+            if(rbns->position.x >= obst[i].x) rbns->position.x += 1.0f * rbns->speed; 
+            if(rbns->position.x <= obst[i].x) rbns->position.x -= 1.0f * rbns->speed; 
+            if(rbns->position.y >= obst[i].y) rbns->position.y += 1.0f * rbns->speed;
+            if(rbns->position.y <= obst[i].y) rbns->position.y -= 1.0f * rbns->speed;
+        }
     }
 }
 

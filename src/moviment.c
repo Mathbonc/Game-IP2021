@@ -12,12 +12,14 @@ void generateEnemies(Enemies *guard, Enemies *storm){
         guard[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         guard[i].speed = (GetRandomValue(5, 9) * 0.1);
         guard[i].life = 3;
+        guard[i].bound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 30, 44};
     }
     
     for(i=0; i<5; i++){
         storm[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         storm[i].speed = (GetRandomValue(3, 5) * 0.1);
         storm[i].life = 7;
+        storm[i].bound = (Rectangle){storm[i].position.x+30, storm[i].position.y+85, 50, 44};
     }
 }
 
@@ -63,6 +65,8 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns){
             if(storm[i].position.y > rbns.position.y) storm[i].position.y += 1.0f * storm[i].speed;
             if(storm[i].position.y < rbns.position.y) storm[i].position.y -= 1.0f * storm[i].speed;
         }
+        storm[i].bound.x = storm[i].position.x+30;
+        storm[i].bound.y = storm[i].position.y+85;
     }
     
     //Movimento do Guardian
@@ -80,5 +84,8 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns){
             if(guard[i].position.y > rbns.position.y) guard[i].position.y += 1.0f * guard[i].speed;
             if(guard[i].position.y < rbns.position.y) guard[i].position.y -= 1.0f * guard[i].speed;
         }
+        guard[i].bound.x = guard[i].position.x+7;
+        guard[i].bound.y = guard[i].position.y-5;
     }
 }
+

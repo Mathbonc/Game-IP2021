@@ -21,7 +21,7 @@ typedef struct{
 
 void generateEnemies(Enemies *guard, Enemies *storm);
 void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[]);
-void moveEnemie(Enemies *guard, Enemies *storm, Player rbns);
+void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[]);
 
 void generateEnemies(Enemies *guard, Enemies *storm){
     int i;
@@ -66,8 +66,8 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[]){
     }
 }
 
-void moveEnemie(Enemies *guard, Enemies *storm, Player rbns){
-    int i;
+void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[]){
+    int i, j;
     for(i=0; i<5; i++){
         storm[i].dist = sqrt(pow((storm[i].position.x-rbns.position.x),2) + pow((storm[i].position.y-rbns.position.y),2));
         if(storm[i].dist > 31){ //Atacam de perto, para se apoximarem mais
@@ -84,6 +84,16 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns){
         }
         storm[i].bound.x = storm[i].position.x+30;
         storm[i].bound.y = storm[i].position.y+85;
+    }
+    for(i=0; i<3; i++){
+        for(j=0; j<5; j++){
+            if(CheckCollisionRecs(storm[i].bound, obst[i])){
+                if(storm[j].position.x+30 >= obst[i].x) storm[j].position.x += 1.0f * storm[j].speed; 
+                if(storm[j].position.x+30 <= obst[i].x) storm[j].position.x -= 1.0f * storm[j].speed; 
+                if(storm[j].position.y+85 >= obst[i].y) storm[j].position.y += 1.0f * storm[j].speed;
+                if(storm[j].position.y+85 <= obst[i].y) storm[j].position.y -= 1.0f * storm[j].speed;
+            }
+        }
     }
     
     //Movimento do Guardian
@@ -103,6 +113,16 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns){
         }
         guard[i].bound.x = guard[i].position.x+7;
         guard[i].bound.y = guard[i].position.y-5;
+    }
+    for(i=0; i<3; i++){
+        for(j=0; j<10; j++){
+            if(CheckCollisionRecs(guard[j].bound, obst[i])){
+                if(guard[j].position.x+7 >= obst[i].x) guard[j].position.x += 1.0f * guard[j].speed; 
+                if(guard[j].position.x+7 <= obst[i].x) guard[j].position.x -= 1.0f * guard[j].speed; 
+                if(guard[j].position.y-5 >= obst[i].y) guard[j].position.y += 1.0f * guard[j].speed;
+                if(guard[j].position.y-5 <= obst[i].y) guard[j].position.y -= 1.0f * guard[j].speed;
+            }
+        }
     }
 }
 

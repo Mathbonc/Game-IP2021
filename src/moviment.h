@@ -6,7 +6,7 @@
 
 typedef struct{
     int life;
-    int damage;
+    int damage, hits;
     Vector2 position;
     Rectangle bound, atkbound;
     float speed;
@@ -21,11 +21,25 @@ typedef struct{
     float dist;
 } Enemies;
 
+typedef struct{
+    int life;
+    Vector2 position;
+    Rectangle bound;
+} Student;
+
+typedef struct{
+    int lifeboost;
+    Vector2 position;
+    Rectangle bound;
+} Itens;
+
 void generateEnemies(Enemies *guard, Enemies *storm);
 void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[]);
 void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTex);
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[]);
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex);
+void generateItens(Itens extras[]);
+void getItens(Player *rbns, Itens extras[]);
 
 void generateEnemies(Enemies *guard, Enemies *storm){
     int i;
@@ -181,6 +195,25 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
                     rbns->life -= guard[i].damage;
                 }
             }
+        }
+    }
+}
+
+void generateItens(Itens extras[]){
+    int i;
+    for(i=0; i<5; i++){
+        extras[i].lifeboost = GetRandomValue(5, 10);
+        extras[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
+        extras[i].bound = (Rectangle){extras[i].position.x, extras[i].position.y, 10, 10};
+    }
+}
+
+void getItens(Player *rbns, Itens extras[]){
+    int i;
+    for(i=0; i<5; i++){
+        if(CheckCollisionRecs(rbns->bound, extras[i].bound)){
+            rbns->life += extras[i].lifeboost;
+            extras[i].lifeboost = 0;
         }
     }
 }

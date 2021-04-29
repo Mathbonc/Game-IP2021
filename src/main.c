@@ -17,11 +17,13 @@ typedef struct{
 }Parallax;
 typedef struct{
     Texture2D ButtonLong;
+    Texture2D OptFrame;
     Font Alagard;
+    Sound Click;
 }UI;
 
 void ParallaxMenu(float BGC, float FC1, float FC2, float FC3, float MenuScale, Texture2D *Cloud, Parallax Menu,UI button);
-bool MenuSelect(Texture2D ButtonLong);
+void MenuSelect(UI button,bool *OptWindow);
 
 int main(){
     const int WindowWidth = 1280;
@@ -30,9 +32,9 @@ int main(){
     InitAudioDevice();
     SetTargetFPS(60);
     
-    int i,Select=0;
+    int i;
     float MenuScale=3.333;
-    
+    //PARALLAX
     Parallax Menu;
     Menu.BackGroundSky = (Texture2D)LoadTexture("../Assets/UI/Parallax/sky_lightened.png");
     Menu.Mountains = (Texture2D)LoadTexture("../Assets/UI/Parallax/glacial_mountains_lightened.png");
@@ -42,19 +44,21 @@ int main(){
             Cloud[0] = (Texture2D)LoadTexture("../Assets/UI/Parallax/clouds_mg_1_lightened.png");
             Cloud[1] = (Texture2D)LoadTexture("../Assets/UI/Parallax/clouds_mg_2.png");
             Cloud[2] = (Texture2D)LoadTexture("../Assets/UI/Parallax/clouds_mg_3.png");
-    Texture2D Frame = LoadTexture("../Assets/UI/frame.png");
     Menu.MainTitle = (Texture2D)LoadTexture("../Assets/UI/Title.png");
-    
+    //UI
     UI button;
     button.ButtonLong = LoadTexture("../Assets/UI/ButtonLong.png");
+    button.OptFrame = LoadTexture("../Assets/UI/frame.png");
     button.Alagard = LoadFont("../fonts/alagard.ttf");
-    
+    button.Click = LoadSound("../Assets/Sample/back_style_2_004.wav");
+    bool OptWindow = false;
+    //SCROLL
     scrolling cloudsScroll;
     cloudsScroll.BGC = 0.0f;
     cloudsScroll.FC1 = 0.0f;
     cloudsScroll.FC2 = 0.0f;
     cloudsScroll.FC3 = 0.0f;
-    
+    //MSUICS
     Music MenuMusic = LoadMusicStream("../Assets/Sample/Ludum Dare 38 - Track 2.wav");
     PlayMusicStream(MenuMusic);
     SetMusicVolume(MenuMusic,0.1);
@@ -67,8 +71,8 @@ int main(){
         cloudsScroll.FC2-=0.3f;
         cloudsScroll.FC3+=0.2f;
         ParallaxMenu(cloudsScroll.BGC,cloudsScroll.FC1,cloudsScroll.FC2,cloudsScroll.FC3,MenuScale,Cloud,Menu,button);
-        Select = MenuSelect(button.ButtonLong);
-        
+        MenuSelect(button,&OptWindow);
+    
 
     }
     
@@ -82,7 +86,10 @@ int main(){
     UnloadTexture(Menu.CloudsBG);
     UnloadTexture(Menu.CloudLone);
     UnloadTexture(Menu.MainTitle);
-    UnloadTexture(Frame);
+    UnloadTexture(button.ButtonLong);
+    UnloadFont(button.Alagard);
+    UnloadSound(button.Click);
+    UnloadTexture(button.OptFrame);
     CloseWindow();
     return 0;
 }
@@ -126,17 +133,15 @@ void ParallaxMenu(float BGC, float FC1, float FC2, float FC3, float MenuScale, T
         
         DrawTextureEx(button.ButtonLong,(Vector2){640-button.ButtonLong.width*2.5,560},0.0f,5,RAYWHITE);
         DrawTextEx(button.Alagard,"Leave",(Vector2){573,575},50,1,ORANGE);
-        EndDrawing();
+        
 }
 
-bool MenuSelect(Texture2D ButtonLong){
+void MenuSelect(UI button,bool *OptWindow){
     
-    
-    Rectangle StartGame = {640-ButtonLong.width*2.5,400,ButtonLong.width*5,ButtonLong.height*5};
-    Rectangle Options =   {640-ButtonLong.width*2.5,480,ButtonLong.width*5,ButtonLong.height*5};
-    Rectangle EndGame =   {640-ButtonLong.width*2.5,560,ButtonLong.width*5,ButtonLong.height*5};
+    Rectangle StartGame = {640-button.ButtonLong.width*2.5,400,button.ButtonLong.width*5,button.ButtonLong.height*5};
+    Rectangle Options =   {640-button.ButtonLong.width*2.5,480,button.ButtonLong.width*5,button.ButtonLong.height*5};
+    Rectangle EndGame =   {640-button.ButtonLong.width*2.5,560,button.ButtonLong.width*5,button.ButtonLong.height*5};
 
-    
     Vector2 Pointer = GetMousePosition();
     
     if(CheckCollisionPointRec(Pointer,StartGame)){
@@ -145,17 +150,21 @@ bool MenuSelect(Texture2D ButtonLong){
         }
     }
     if(CheckCollisionPointRec(Pointer,Options)){
-        if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
-            BeginDrawing();
-            DrawRectangle(640-ButtonLong.width*2.5,400,ButtonLong.width*5,ButtonLong.height*5,RED);
-            EndDrawing();
-        }
+        if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){*OptWindow = !*OptWindow;}
+    }if(*OptWindow){
+        DrawTexturePro(button.OptFrame,
+                        (Rectangle){0,0,button.OptFrame.width,button.OptFrame.height},
+                        (Rectangle){(640-button.OptFrame.width*3), (360-button.OptFrame.height*2), (button.OptFrame.width*6),(button.OptFrame.height*4)},
+                        (Vector2){0,0},   
+                        0.0f,RAYWHITE);
+        DrawTextEx(button.Alagard,"   Nothing\n to see here",(Vector2){549,328},30,1,RAYWHITE);
     }
     if(CheckCollisionPointRec(Pointer,EndGame)){
         if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
             //FINALIZAR JOGO
+            PlaySound(button.Click);
             exit(0);
         }
     }
-    return 0;
+    EndDrawing();
 }

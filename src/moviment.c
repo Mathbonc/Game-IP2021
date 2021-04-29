@@ -2,10 +2,45 @@
 #include "raylib.h"
 #include <math.h>
 
+typedef struct{
+    int life;
+    int damage, hits;
+    Vector2 position;
+    Rectangle bound, atkbound;
+    float speed;
+} Player;
+
+typedef struct{
+    int life;
+    int damage;
+    Vector2 position;
+    Rectangle bound, atkbound;
+    float speed;
+    float dist;
+} Enemies;
+
+typedef struct{
+    int life;
+    Vector2 position;
+    Rectangle bound;
+} Student;
+
+typedef struct{
+    int lifeboost;
+    Vector2 position;
+    Rectangle bound;
+} Itens;
+
+typedef struct{
+    Texture2D texture;
+    float frameWidth;
+    int maxFrames;
+}TexturePack;
+
 void generateEnemies(Enemies *guard, Enemies *storm);
-void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[]);
+void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTexIdle, Texture2D rbnsTexRun, Texture2D rbnsTexDie, int frame, int frameDie, char *last);
 void resetCharacter(Player *rbns);
-void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTex);
+void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk);
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[]);
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex);
 void generateItens(Itens extras[]);
@@ -32,10 +67,58 @@ void generateEnemies(Enemies *guard, Enemies *storm){
     }
 }
 
-void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[]){
+void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTexIdle, Texture2D rbnsTexRun, Texture2D rbnsTexDie, int frame, int frameDie, char *last){
     int i;
+    static int cont=0;
+    float frameWidthIdle = (float)(rbnsTexIdle.width/6);
+    int maxFramesIdle = (int)(rbnsTexIdle.width/(int)frameWidthIdle);
+    float frameWidthRun = (float)(rbnsTexRun.width/8);
+    int maxFramesRun = (int)(rbnsTexRun.width/(int)frameWidthRun);
+    float frameWidthDie = (float)(rbnsTexDie.width/11);
+    int maxFramesDie = (int)(rbnsTexDie.width/(int)frameWidthDie);
+    
+    if(rbns->life > 0 && !IsKeyDown(KEY_C)){
+        // 2 segundo parametro o Rectangle é a linha que vai ser desenhada, e o 4 a quantidade de linhas
+        if(IsKeyDown(KEY_D)){
+            DrawTextureRec(rbnsTexRun, (Rectangle){frameWidthRun*frame, 0, frameWidthRun, (float)rbnsTexRun.height}, (Vector2){rbns->position.x, rbns->position.y}, RAYWHITE); 
+            *last='d';
+            }
+        else if(IsKeyDown(KEY_A)){
+            DrawTextureRec(rbnsTexRun, (Rectangle){frameWidthRun*frame, 0, -frameWidthRun, (float)rbnsTexRun.height}, (Vector2){rbns->position.x, rbns->position.y}, RAYWHITE); 
+            *last='a';
+            }
+        else if(IsKeyDown(KEY_W) && *last=='a'){
+            DrawTextureRec(rbnsTexRun, (Rectangle){frameWidthRun*frame, 0, -frameWidthRun, (float)rbnsTexRun.height}, (Vector2){rbns->position.x, rbns->position.y}, RAYWHITE); 
+            *last='a';
+            }
+        else if(IsKeyDown(KEY_W) && !(*last=='a')){
+            DrawTextureRec(rbnsTexRun, (Rectangle){frameWidthRun*frame, 0, frameWidthRun, (float)rbnsTexRun.height}, (Vector2){rbns->position.x, rbns->position.y}, RAYWHITE);
+            *last='d';
+            }
+        else if(IsKeyDown(KEY_S) && *last=='a'){
+            DrawTextureRec(rbnsTexRun, (Rectangle){frameWidthRun*frame, 0, -frameWidthRun, (float)rbnsTexRun.height}, (Vector2){rbns->position.x, rbns->position.y}, RAYWHITE);
+            *last='a';
+            }
+        else if(IsKeyDown(KEY_S) && !(*last=='a')){
+            DrawTextureRec(rbnsTexRun, (Rectangle){frameWidthRun*frame, 0, frameWidthRun, (float)rbnsTexRun.height}, (Vector2){rbns->position.x, rbns->position.y}, RAYWHITE); 
+            *last='d';
+        }
+        else{ //DrawTextureRec(rbnsTexRun, (Rectangle){frameWidth*frame, 0, frameWidth, (float)rbnsTexRun.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
+            if(*last=='a') DrawTextureRec(rbnsTexIdle, (Rectangle){frameWidthIdle*frame, 0, -frameWidthIdle, (float)rbnsTexIdle.height}, (Vector2){rbns->position.x, rbns->position.y}, RAYWHITE);
+            else DrawTextureRec(rbnsTexIdle, (Rectangle){frameWidthIdle*frame, 0, frameWidthIdle, (float)rbnsTexIdle.height}, (Vector2){rbns->position.x, rbns->position.y}, RAYWHITE);
+        }
+    }
+    if(rbns->life<=0){
+        DrawTextureRec(rbnsTexDie, (Rectangle){frameWidthDie*frameDie, 0, frameWidthDie, (float)rbnsTexDie.height}, (Vector2){rbns->position.x, rbns->position.y}, RAYWHITE);
+        cont++;
+        if(cont>70){
+            resetCharacter(rbns);
+            cont=0;
+        }
+    }
+    
     if(rbns->life > 0){
-        if(rbns->position.x < background.width && rbns->position.x > 0 && rbns->position.y < background.height-50 && rbns->position.y > 0){
+        if(rbns->position.x < background.width && rbns->position.x > 0 && rbns->position.y < background.height-50 && rbns->position.y > -9){
             if (IsKeyDown(KEY_D)) rbns->position.x += 1.0f * rbns->speed; 
             if (IsKeyDown(KEY_A)) rbns->position.x -= 1.0f * rbns->speed; 
             if (IsKeyDown(KEY_W)) rbns->position.y -= 1.0f * rbns->speed; 
@@ -71,15 +154,22 @@ void resetCharacter(Player *rbns){
     rbns->position = (Vector2){300.0f, 175.0f};
 }
 
-void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTex){
+void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk){
     int i;
+    float frameWidthAtk = (float)(rbnsTexAtk.width/12);
+    int maxFramesAtk = (int)(rbnsTexAtk.width/(int)frameWidthAtk);
+    
+    if(IsKeyDown(KEY_C)){
+        if(last=='d') DrawTextureRec(rbnsTexAtk, (Rectangle){frameWidthAtk*frameAtk, 0, frameWidthAtk, (float)rbnsTexAtk.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
+        if(last!='d') DrawTextureRec(rbnsTexAtk, (Rectangle){frameWidthAtk*frameAtk, 0, -frameWidthAtk, (float)rbnsTexAtk.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
+    }
     for(i=0; i<10; i++){
-        if(IsKeyPressed(KEY_E) && CheckCollisionRecs(rbns.atkbound, guard[i].bound)){
+        if(IsKeyPressed(KEY_C) && CheckCollisionRecs(rbns.atkbound, guard[i].bound)){
             guard[i].life -= rbns.damage;
         }
     }
     for(i=0; i<5; i++){
-        if(IsKeyPressed(KEY_E) && CheckCollisionRecs(rbns.atkbound, storm[i].bound)){
+        if(IsKeyPressed(KEY_C) && CheckCollisionRecs(rbns.atkbound, storm[i].bound)){
             storm[i].life -= rbns.damage;
         }
     }
@@ -190,3 +280,4 @@ void getItens(Player *rbns, Itens extras[]){
         }
     }
 }
+

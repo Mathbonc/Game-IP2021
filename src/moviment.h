@@ -33,9 +33,16 @@ typedef struct{
     Rectangle bound;
 } Itens;
 
+typedef struct{
+    Texture2D texture;
+    float frameWidth;
+    int maxFrames;
+}TexturePack;
+
 void generateEnemies(Enemies *guard, Enemies *storm);
 void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[]);
-void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTex);
+void resetCharacter(Player *rbns);
+void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk);
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[]);
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex);
 void generateItens(Itens extras[]);
@@ -64,49 +71,59 @@ void generateEnemies(Enemies *guard, Enemies *storm){
 
 void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[]){
     int i;
-    if(rbns->position.x < background.width && rbns->position.x > 0 && rbns->position.y < background.height-50 && rbns->position.y > 0){
-        if (IsKeyDown(KEY_D)) rbns->position.x += 1.0f * rbns->speed; 
-        if (IsKeyDown(KEY_A)) rbns->position.x -= 1.0f * rbns->speed; 
-        if (IsKeyDown(KEY_W)) rbns->position.y -= 1.0f * rbns->speed; 
-        if (IsKeyDown(KEY_S)) rbns->position.y += 1.0f * rbns->speed; 
-    }
-    else{
-        if(rbns->position.x >= background.width-70) rbns->position.x -= 1.0f * rbns->speed; 
-        if(rbns->position.x <= 0) rbns->position.x += 1.0f * rbns->speed; 
-        if(rbns->position.y >= background.height-50) rbns->position.y -= 1.0f * rbns->speed;
-        if(rbns->position.y <= 0) rbns->position.y += 1.0f * rbns->speed; 
-    }
-    
-    if (IsKeyDown(KEY_D))rbns->bound.x = rbns->position.x+12;
-    if (IsKeyDown(KEY_A))rbns->bound.x = rbns->position.x+24;
-    rbns->bound.y = rbns->position.y;
-    if (IsKeyDown(KEY_D))rbns->atkbound.x = rbns->position.x+12;
-    if (IsKeyDown(KEY_A))rbns->atkbound.x = rbns->position.x;
-    rbns->atkbound.y = rbns->position.y;
-    
-    for(i=0; i<5; i++){
-        if(CheckCollisionRecs(rbns->bound, obst[i])){
-            if(rbns->position.x >= obst[i].x) rbns->position.x += 1.0f * rbns->speed; 
-            if(rbns->position.x <= obst[i].x) rbns->position.x -= 1.0f * rbns->speed; 
-            if(rbns->position.y >= obst[i].y) rbns->position.y += 1.0f * rbns->speed;
-            if(rbns->position.y <= obst[i].y) rbns->position.y -= 1.0f * rbns->speed;
+    if(rbns->life > 0){
+        if(rbns->position.x < background.width && rbns->position.x > 0 && rbns->position.y < background.height-50 && rbns->position.y > -9){
+            if (IsKeyDown(KEY_D)) rbns->position.x += 1.0f * rbns->speed; 
+            if (IsKeyDown(KEY_A)) rbns->position.x -= 1.0f * rbns->speed; 
+            if (IsKeyDown(KEY_W)) rbns->position.y -= 1.0f * rbns->speed; 
+            if (IsKeyDown(KEY_S)) rbns->position.y += 1.0f * rbns->speed; 
         }
-    }
-    if(rbns->life<=0){
-        rbns->life = 20;
-        rbns->position = (Vector2){300.0f, 175.0f};
+        else{
+            if(rbns->position.x >= background.width-70) rbns->position.x -= 1.0f * rbns->speed; 
+            if(rbns->position.x <= 0) rbns->position.x += 1.0f * rbns->speed; 
+            if(rbns->position.y >= background.height-50) rbns->position.y -= 1.0f * rbns->speed;
+            if(rbns->position.y <= 0) rbns->position.y += 1.0f * rbns->speed; 
+        }
+        
+        if (IsKeyDown(KEY_D))rbns->bound.x = rbns->position.x+12;
+        if (IsKeyDown(KEY_A))rbns->bound.x = rbns->position.x+24;
+        rbns->bound.y = rbns->position.y;
+        if (IsKeyDown(KEY_D))rbns->atkbound.x = rbns->position.x+12;
+        if (IsKeyDown(KEY_A))rbns->atkbound.x = rbns->position.x;
+        rbns->atkbound.y = rbns->position.y;
+        
+        for(i=0; i<5; i++){
+            if(CheckCollisionRecs(rbns->bound, obst[i])){
+                if(rbns->position.x >= obst[i].x) rbns->position.x += 1.0f * rbns->speed; 
+                if(rbns->position.x <= obst[i].x) rbns->position.x -= 1.0f * rbns->speed; 
+                if(rbns->position.y >= obst[i].y) rbns->position.y += 1.0f * rbns->speed;
+                if(rbns->position.y <= obst[i].y) rbns->position.y -= 1.0f * rbns->speed;
+            }
+        }
     }
 }
 
-void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTex){
+void resetCharacter(Player *rbns){
+    rbns->life = 20;
+    rbns->position = (Vector2){300.0f, 175.0f};
+}
+
+void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk){
     int i;
+    float frameWidthAtk = (float)(rbnsTexAtk.width/12);
+    int maxFramesAtk = (int)(rbnsTexAtk.width/(int)frameWidthAtk);
+    
+    if(IsKeyDown(KEY_C)){
+        if(last=='d') DrawTextureRec(rbnsTexAtk, (Rectangle){frameWidthAtk*frameAtk, 0, frameWidthAtk, (float)rbnsTexAtk.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
+        if(last!='d') DrawTextureRec(rbnsTexAtk, (Rectangle){frameWidthAtk*frameAtk, 0, -frameWidthAtk, (float)rbnsTexAtk.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
+    }
     for(i=0; i<10; i++){
-        if(IsKeyPressed(KEY_E) && CheckCollisionRecs(rbns.atkbound, guard[i].bound)){
+        if(IsKeyPressed(KEY_C) && CheckCollisionRecs(rbns.atkbound, guard[i].bound)){
             guard[i].life -= rbns.damage;
         }
     }
     for(i=0; i<5; i++){
-        if(IsKeyPressed(KEY_E) && CheckCollisionRecs(rbns.atkbound, storm[i].bound)){
+        if(IsKeyPressed(KEY_C) && CheckCollisionRecs(rbns.atkbound, storm[i].bound)){
             storm[i].life -= rbns.damage;
         }
     }

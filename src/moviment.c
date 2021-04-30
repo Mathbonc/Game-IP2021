@@ -2,50 +2,17 @@
 #include "raylib.h"
 #include <math.h>
 
-typedef struct{
-    int life;
-    int damage, hits;
-    Vector2 position;
-    Rectangle bound, atkbound;
-    float speed;
-} Player;
-
-typedef struct{
-    int life;
-    int damage;
-    Vector2 position;
-    Rectangle bound, atkbound;
-    float speed;
-    float dist;
-} Enemies;
-
-typedef struct{
-    int life;
-    Vector2 position;
-    Rectangle bound;
-} Student;
-
-typedef struct{
-    int lifeboost;
-    Vector2 position;
-    Rectangle bound;
-} Itens;
-
-typedef struct{
-    Texture2D texture;
-    float frameWidth;
-    int maxFrames;
-}TexturePack;
-
 void generateEnemies(Enemies *guard, Enemies *storm);
-void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTexIdle, Texture2D rbnsTexRun, Texture2D rbnsTexDie, int frame, int frameDie, char *last);
+void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTex[], int frame, int frameDie, char *last);
 void resetCharacter(Player *rbns);
 void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk);
-void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex, Texture2D stormTex, int frame);
+void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex[], Texture2D stormTex[], int frame);
+void resetEnemies(Enemies *guard, Enemies *storm);
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex);
 void generateItens(Itens extras[]);
 void getItens(Player *rbns, Itens extras[], Texture2D itensTex);
 void cameraUpdate(Camera2D *camera, Player rbns);
+void studentFight(Player *rbns);
 
 void generateEnemies(Enemies *guard, Enemies *storm){
     int i;
@@ -68,9 +35,14 @@ void generateEnemies(Enemies *guard, Enemies *storm){
     }
 }
 
-void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTexIdle, Texture2D rbnsTexRun, Texture2D rbnsTexDie, int frame, int frameDie, char *last){
+void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTex[], int frame, int frameDie, char *last){
     int i;
     static int cont=0;
+    
+    Texture2D rbnsTexIdle = rbnsTex[0];
+    Texture2D rbnsTexRun = rbnsTex[1];
+    Texture2D rbnsTexDie = rbnsTex[2];
+    
     float frameWidthIdle = (float)(rbnsTexIdle.width/6);
     int maxFramesIdle = (int)(rbnsTexIdle.width/(int)frameWidthIdle);
     float frameWidthRun = (float)(rbnsTexRun.width/8);
@@ -126,7 +98,7 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
             if (IsKeyDown(KEY_S)) rbns->position.y += 1.0f * rbns->speed; 
         }
         else{
-            if(rbns->position.x >= background.width-70) rbns->position.x -= 1.0f * rbns->speed; 
+            if(rbns->position.x > 12300) rbns->position.x = 12300; 
             if(rbns->position.x <= 0) rbns->position.x += 1.0f * rbns->speed; 
             if(rbns->position.y >= background.height-50) rbns->position.y -= 1.0f * rbns->speed;
             if(rbns->position.y <= 0) rbns->position.y += 1.0f * rbns->speed; 
@@ -151,7 +123,7 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
 }
 
 void resetCharacter(Player *rbns){
-    rbns->life = 20;
+    rbns->life = 200;
     rbns->position = (Vector2){300.0f, 175.0f};
 }
 
@@ -176,36 +148,89 @@ void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbns
     }
 }
 
-void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex, Texture2D stormTex, int frame){
+void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex[], Texture2D stormTex[], int frame){
     int i, j;
-    float guardframeHeight = (float)(guardTex.height/39);
-    int guardmaxFrames = (int)(guardTex.width/(int)guardframeHeight);
-    float stormframeHeight = (float)(stormTex.height/10);
-    int stormmaxFrames = (int)(stormTex.width/(int)stormframeHeight);
+    
+    Texture2D guardTexMove = guardTex[0];
+    Texture2D guardTexDie = guardTex[1];
+    Texture2D stormTexMove = stormTex[0];
+    Texture2D stormTexDie = stormTex[1];
+    
+    float guardframeHeightMove = (float)(guardTexMove.height/12);
+    int guardmaxFramesMove = (int)(guardTexMove.width/(int)guardframeHeightMove);
+    float guardframeHeightDie = (float)(guardTexDie.height/10);
+    int guardmaxFramesDie = (int)(guardTexDie.width/(int)guardframeHeightDie);
+    
+    float stormframeHeightMove = (float)(stormTexMove.height/10);
+    int stormmaxFramesMove = (int)(stormTexMove.width/(int)stormframeHeightMove);
+    float stormframeHeightDie = (float)(stormTexDie.height/9);
+    int stormmaxFramesDie = (int)(stormTexDie.width/(int)stormframeHeightDie);
     
     for(i=0; i<10; i++){
-        if(guard[i].life>0) DrawTextureRec(guardTex, (Rectangle){0, guardframeHeight*frame, guardframeHeight, (float)guardframeHeight*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
+        if(guard[i].life>0) DrawTextureRec(guardTexMove, (Rectangle){0, guardframeHeightMove*frame, guardframeHeightMove, (float)guardframeHeightMove*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
     }
     for(i=0; i<5; i++){
-        if(storm[i].life>0) DrawTextureRec(stormTex, (Rectangle){0, stormframeHeight*frame, stormframeHeight, (float)stormframeHeight*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
+        if(storm[i].life>0) DrawTextureRec(stormTexMove, (Rectangle){0, stormframeHeightMove*frame, stormframeHeightMove, (float)stormframeHeightMove*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
     }
+    for(i=0; i<10; i++){
+        if(guard[i].life<=0) DrawTextureRec(guardTexDie, (Rectangle){0, guardframeHeightDie*frame, guardframeHeightDie, (float)guardframeHeightDie*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
+    }
+    for(i=0; i<5; i++){
+        if(storm[i].life<=0) DrawTextureRec(stormTexDie, (Rectangle){0, stormframeHeightDie*frame, stormframeHeightDie, (float)stormframeHeightDie*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
+    }
+    
+    //Movimento do Guardian
+    for(i=0; i<10; i++){
+        if(guard[i].life > 0){
+            guard[i].dist = sqrt(pow((guard[i].position.x-rbns.position.x),2) + pow((guard[i].position.y-rbns.position.y),2));
+            if(guard[i].dist > 71){ //Atacam de longe, para nenhum se apoximar demais
+                if(guard[i].position.x > rbns.position.x) guard[i].position.x -= 1.0f * guard[i].speed;
+                if(guard[i].position.x < rbns.position.x) guard[i].position.x += 1.0f * guard[i].speed;
+                if(guard[i].position.y > rbns.position.y) guard[i].position.y -= 1.0f * guard[i].speed;
+                if(guard[i].position.y < rbns.position.y) guard[i].position.y += 1.0f * guard[i].speed;
+            }
+            else if(guard[i].dist < 69){
+                if(guard[i].position.x > rbns.position.x) guard[i].position.x += 1.0f * guard[i].speed;
+                if(guard[i].position.x < rbns.position.x) guard[i].position.x -= 1.0f * guard[i].speed;
+                if(guard[i].position.y > rbns.position.y) guard[i].position.y += 1.0f * guard[i].speed;
+                if(guard[i].position.y < rbns.position.y) guard[i].position.y -= 1.0f * guard[i].speed;
+            }
+            guard[i].bound.x = guard[i].position.x+7;
+            guard[i].bound.y = guard[i].position.y-5;
+            guard[i].atkbound.x = guard[i].position.x+7;
+            guard[i].atkbound.y = guard[i].position.y-5;
+        }
+    }
+    for(i=0; i<3; i++){
+        for(j=0; j<10; j++){
+            if(CheckCollisionRecs(guard[j].bound, obst[i])){
+                if(guard[j].position.x+7 >= obst[i].x) guard[j].position.x += 1.0f * guard[j].speed; 
+                if(guard[j].position.x+7 <= obst[i].x) guard[j].position.x -= 1.0f * guard[j].speed; 
+                if(guard[j].position.y-5 >= obst[i].y) guard[j].position.y += 1.0f * guard[j].speed;
+                if(guard[j].position.y-5 <= obst[i].y) guard[j].position.y -= 1.0f * guard[j].speed;
+            }
+        }
+    }
+    
     //Movimento do Stormhead
     for(i=0; i<5; i++){
-        storm[i].dist = sqrt(pow((storm[i].position.x-rbns.position.x),2) + pow((storm[i].position.y-rbns.position.y),2));
-        if(storm[i].dist > 31){ //Atacam de perto, para se apoximarem mais
-            if(storm[i].position.x+25 > rbns.position.x) storm[i].position.x -= 1.0f * storm[i].speed;
-            if(storm[i].position.x+25 < rbns.position.x) storm[i].position.x += 1.0f * storm[i].speed;
-            if(storm[i].position.y+83 > rbns.position.y) storm[i].position.y -= 1.0f * storm[i].speed;
-            if(storm[i].position.y+83 < rbns.position.y) storm[i].position.y += 1.0f * storm[i].speed;
+        if(storm[i].life > 0){
+            storm[i].dist = sqrt(pow((storm[i].position.x-rbns.position.x),2) + pow((storm[i].position.y-rbns.position.y),2));
+            if(storm[i].dist > 31){ //Atacam de perto, para se apoximarem mais
+                if(storm[i].position.x+25 > rbns.position.x) storm[i].position.x -= 1.0f * storm[i].speed;
+                if(storm[i].position.x+25 < rbns.position.x) storm[i].position.x += 1.0f * storm[i].speed;
+                if(storm[i].position.y+83 > rbns.position.y) storm[i].position.y -= 1.0f * storm[i].speed;
+                if(storm[i].position.y+83 < rbns.position.y) storm[i].position.y += 1.0f * storm[i].speed;
+            }
+            else if(storm[i].dist < 29){
+                if(storm[i].position.x > rbns.position.x) storm[i].position.x += 1.0f * storm[i].speed;
+                if(storm[i].position.x < rbns.position.x) storm[i].position.x -= 1.0f * storm[i].speed;
+                if(storm[i].position.y > rbns.position.y) storm[i].position.y += 1.0f * storm[i].speed;
+                if(storm[i].position.y < rbns.position.y) storm[i].position.y -= 1.0f * storm[i].speed;
+            }
+            storm[i].bound.x = storm[i].position.x+30;
+            storm[i].bound.y = storm[i].position.y+85;
         }
-        else if(storm[i].dist < 29){
-            if(storm[i].position.x > rbns.position.x) storm[i].position.x += 1.0f * storm[i].speed;
-            if(storm[i].position.x < rbns.position.x) storm[i].position.x -= 1.0f * storm[i].speed;
-            if(storm[i].position.y > rbns.position.y) storm[i].position.y += 1.0f * storm[i].speed;
-            if(storm[i].position.y < rbns.position.y) storm[i].position.y -= 1.0f * storm[i].speed;
-        }
-        storm[i].bound.x = storm[i].position.x+30;
-        storm[i].bound.y = storm[i].position.y+85;
     }
     for(i=0; i<3; i++){
         for(j=0; j<5; j++){
@@ -218,50 +243,10 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
         }
     }
     
-    //Movimento do Guardian
-    for(i=0; i<10; i++){
-        guard[i].dist = sqrt(pow((guard[i].position.x-rbns.position.x),2) + pow((guard[i].position.y-rbns.position.y),2));
-        if(guard[i].dist > 71){ //Atacam de longe, para nenhum se apoximar demais
-            if(guard[i].position.x > rbns.position.x) guard[i].position.x -= 1.0f * guard[i].speed;
-            if(guard[i].position.x < rbns.position.x) guard[i].position.x += 1.0f * guard[i].speed;
-            if(guard[i].position.y > rbns.position.y) guard[i].position.y -= 1.0f * guard[i].speed;
-            if(guard[i].position.y < rbns.position.y) guard[i].position.y += 1.0f * guard[i].speed;
-        }
-        else if(guard[i].dist < 69){
-            if(guard[i].position.x > rbns.position.x) guard[i].position.x += 1.0f * guard[i].speed;
-            if(guard[i].position.x < rbns.position.x) guard[i].position.x -= 1.0f * guard[i].speed;
-            if(guard[i].position.y > rbns.position.y) guard[i].position.y += 1.0f * guard[i].speed;
-            if(guard[i].position.y < rbns.position.y) guard[i].position.y -= 1.0f * guard[i].speed;
-        }
-        guard[i].bound.x = guard[i].position.x+7;
-        guard[i].bound.y = guard[i].position.y-5;
-        guard[i].atkbound.x = guard[i].position.x+7;
-        guard[i].atkbound.y = guard[i].position.y-5;
-    }
-    for(i=0; i<3; i++){
-        for(j=0; j<10; j++){
-            if(CheckCollisionRecs(guard[j].bound, obst[i])){
-                if(guard[j].position.x+7 >= obst[i].x) guard[j].position.x += 1.0f * guard[j].speed; 
-                if(guard[j].position.x+7 <= obst[i].x) guard[j].position.x -= 1.0f * guard[j].speed; 
-                if(guard[j].position.y-5 >= obst[i].y) guard[j].position.y += 1.0f * guard[j].speed;
-                if(guard[j].position.y-5 <= obst[i].y) guard[j].position.y -= 1.0f * guard[j].speed;
-            }
-        }
-    }
 }
 
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex){
     int i;
-    for(i=0; i<5; i++){
-        if(storm[i].life>0){
-            storm[i].dist = sqrt(pow((storm[i].position.x-rbns->position.x),2) + pow((storm[i].position.y-rbns->position.y),2));
-            if(storm[i].dist < 31){
-                if(GetRandomValue(1, 5)==1){
-                    rbns->life -= storm[i].damage;
-                }
-            }
-        }
-    }
     for(i=0; i<10; i++){
         if(guard[i].life>0){
             guard[i].dist = sqrt(pow((guard[i].position.x-rbns->position.x),2) + pow((guard[i].position.y-rbns->position.y),2));
@@ -272,12 +257,29 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
             }
         }
     }
+    
+    for(i=0; i<5; i++){
+        if(storm[i].life>0){
+            storm[i].dist = sqrt(pow((storm[i].position.x-rbns->position.x),2) + pow((storm[i].position.y-rbns->position.y),2));
+            if(storm[i].dist < 31){
+                if(GetRandomValue(1, 5)==1){
+                    rbns->life -= storm[i].damage;
+                }
+            }
+        }
+    } 
+}
+
+void resetEnemies(Enemies *guard, Enemies *storm){
+    int i;
+    for(i=0; i<10; i++) guard[i].life = 3;
+    for(i=0; i<5; i++) storm[i].life = 7;
 }
 
 void generateItens(Itens extras[]){
     int i;
     for(i=0; i<5; i++){
-        extras[i].lifeboost = GetRandomValue(5, 10);
+        extras[i].lifeboost = GetRandomValue(10, 20);
         extras[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         extras[i].bound = (Rectangle){extras[i].position.x, extras[i].position.y, 10, 10};
     }
@@ -303,8 +305,16 @@ void cameraUpdate(Camera2D *camera, Player rbns){
     else if (camera->zoom < 2.0f) camera->zoom = 2.0f;
     //Limitando o deslocamento da camera
     if(camera->target.x<320) camera->target.x = 320;
-    //if(camera->target.x>1510) camera->target.x = 1510;
+    if(camera->target.x>12050) camera->target.x = 12050;
     if(camera->target.y<180) camera->target.y = 180;
     if(camera->target.y>270) camera->target.y = 270;
+}
+
+void studentFight(Player *rbns){
+    //if(rbns->position.x > 1720 && rbns->position.x < 1830) //chama combate 1
+    //if(rbns->position.x > 4200 && rbns->position.x < 4370) //chama combate 2
+    //if(rbns->position.x > 6910 && rbns->position.x < 7030) //chama combate 3
+    //if(rbns->position.x > 9600 && rbns->position.x < 9730) //chama combate 4
+    //if(rbns->position.x > 12250) //chama combate 5
 }
 

@@ -41,10 +41,11 @@ void generateEnemies(Enemies *guard, Enemies *storm);
 void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTexIdle, Texture2D rbnsTexRun, Texture2D rbnsTexDie, int frame, int frameDie, char *last);
 void resetCharacter(Player *rbns);
 void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk);
-void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[]);
+void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex, Texture2D stormTex, int frame);
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex);
 void generateItens(Itens extras[]);
-void getItens(Player *rbns, Itens extras[]);
+void getItens(Player *rbns, Itens extras[], Texture2D itensTex);
+void cameraUpdate(Camera2D *camera, Player rbns);
 
 void generateEnemies(Enemies *guard, Enemies *storm){
     int i;
@@ -175,8 +176,19 @@ void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbns
     }
 }
 
-void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[]){
+void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex, Texture2D stormTex, int frame){
     int i, j;
+    float guardframeHeight = (float)(guardTex.height/39);
+    int guardmaxFrames = (int)(guardTex.width/(int)guardframeHeight);
+    float stormframeHeight = (float)(stormTex.height/10);
+    int stormmaxFrames = (int)(stormTex.width/(int)stormframeHeight);
+    
+    for(i=0; i<10; i++){
+        if(guard[i].life>0) DrawTextureRec(guardTex, (Rectangle){0, guardframeHeight*frame, guardframeHeight, (float)guardframeHeight*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
+    }
+    for(i=0; i<5; i++){
+        if(storm[i].life>0) DrawTextureRec(stormTex, (Rectangle){0, stormframeHeight*frame, stormframeHeight, (float)stormframeHeight*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
+    }
     //Movimento do Stormhead
     for(i=0; i<5; i++){
         storm[i].dist = sqrt(pow((storm[i].position.x-rbns.position.x),2) + pow((storm[i].position.y-rbns.position.y),2));
@@ -271,7 +283,7 @@ void generateItens(Itens extras[]){
     }
 }
 
-void getItens(Player *rbns, Itens extras[]){
+void getItens(Player *rbns, Itens extras[], Texture2D itensTex){
     int i;
     for(i=0; i<5; i++){
         if(CheckCollisionRecs(rbns->bound, extras[i].bound)){
@@ -279,5 +291,20 @@ void getItens(Player *rbns, Itens extras[]){
             extras[i].lifeboost = 0;
         }
     }
+    for(i=0; i<5; i++) if(extras[i].lifeboost > 0) DrawTextureEx(itensTex, (Vector2){extras[i].position.x, extras[i].position.y}, 0.0f, 0.50f, RAYWHITE); 
+}
+
+void cameraUpdate(Camera2D *camera, Player rbns){
+    //Atualizando os parametros da camera
+    camera->target = (Vector2){rbns.position.x + 20, rbns.position.y + 20};
+    camera->zoom += ((float)GetMouseWheelMove()*0.05f);
+    //Limitando o zoom da camera
+    if (camera->zoom > 3.0f) camera->zoom = 3.0f;
+    else if (camera->zoom < 2.0f) camera->zoom = 2.0f;
+    //Limitando o deslocamento da camera
+    if(camera->target.x<320) camera->target.x = 320;
+    //if(camera->target.x>1510) camera->target.x = 1510;
+    if(camera->target.y<180) camera->target.y = 180;
+    if(camera->target.y>270) camera->target.y = 270;
 }
 

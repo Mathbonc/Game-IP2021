@@ -4,7 +4,7 @@
 #include <raylib.h>
 #include <math.h>
 
-#define numObjs 11
+#define numObjs 8
 
 typedef struct{
     int life;
@@ -43,7 +43,7 @@ void resetCharacter(Player *rbns);
 void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk);
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex[], Texture2D stormTex[], int frame);
 void resetEnemies(Enemies *guard, Enemies *storm, Player rbns);
-void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex);
+void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex[], Texture2D stormTex[], int frame);
 void generateItens(Itens extras[], Player rbns);
 void getItens(Player *rbns, Itens extras[], Texture2D itensTex);
 void cameraUpdate(Camera2D *camera, Player rbns);

@@ -2,18 +2,6 @@
 #include "raylib.h"
 #include <math.h>
 
-void generateEnemies(Enemies *guard, Enemies *storm);
-void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTex[], int frame, int frameDie, char *last);
-void resetCharacter(Player *rbns);
-void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk);
-void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex[], Texture2D stormTex[], int frame);
-void resetEnemies(Enemies *guard, Enemies *storm, Player rbns);
-void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex);
-void generateItens(Itens extras[], Player rbns);
-void getItens(Player *rbns, Itens extras[], Texture2D itensTex);
-void cameraUpdate(Camera2D *camera, Player rbns);
-void studentPlace(Student lnidas, Student robrigo, int frame);
-void studentFight(Player *rbns);
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 void generateEnemies(Enemies *guard, Enemies *storm){
@@ -24,7 +12,7 @@ void generateEnemies(Enemies *guard, Enemies *storm){
         guard[i].life = 3;
         guard[i].damage = GetRandomValue(1, 1);
         guard[i].bound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 30, 44};
-        //guard[i].atkbound = (Rectangle){guard[i].position.x-60, guard[i].position.y, 128, 44};
+        guard[i].atkbound = (Rectangle){guard[i].position.x-60, guard[i].position.y, 170, 44};
     }
     
     for(i=0; i<5; i++){
@@ -33,7 +21,7 @@ void generateEnemies(Enemies *guard, Enemies *storm){
         storm[i].life = 7;
         storm[i].damage = GetRandomValue(3, 3);
         storm[i].bound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 30, 44};
-        //storm[i].atkbound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 30, 44};
+        storm[i].atkbound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 100, 44};
     }
 }
 //-----------------------------------------------------------------------------------------------------------------------------------
@@ -114,7 +102,7 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
         if (IsKeyDown(KEY_A))rbns->atkbound.x = rbns->position.x;
         rbns->atkbound.y = rbns->position.y;
         
-        for(i=0; i<11; i++){
+        for(i=0; i<8; i++){
             if(CheckCollisionRecs(rbns->bound, obst[i])){
                 if(rbns->position.x >= obst[i].x) rbns->position.x += 1.0f * rbns->speed; 
                 if(rbns->position.x <= obst[i].x) rbns->position.x -= 1.0f * rbns->speed; 
@@ -159,7 +147,7 @@ void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbns
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex[], Texture2D stormTex[], int frame){
-    int i, j;
+    int i, j, cont=0;
     
     Texture2D guardTexMove = guardTex[0];
     Texture2D guardTexDie = guardTex[1];
@@ -207,11 +195,11 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
             }
             guard[i].bound.x = guard[i].position.x+7;
             guard[i].bound.y = guard[i].position.y-5;
-            guard[i].atkbound.x = guard[i].position.x+7;
-            guard[i].atkbound.y = guard[i].position.y-5;
+            guard[i].atkbound.x = guard[i].position.x-60;
+            guard[i].atkbound.y = guard[i].position.y;
         }
     }
-    for(i=0; i<11; i++){
+    for(i=0; i<8; i++){
         for(j=0; j<10; j++){
             if(CheckCollisionRecs(guard[j].bound, obst[i])){
                 if(guard[j].position.x+7 >= obst[i].x) guard[j].position.x += 1.0f * guard[j].speed; 
@@ -240,9 +228,11 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
             }
             storm[i].bound.x = storm[i].position.x+30;
             storm[i].bound.y = storm[i].position.y+85;
+            storm[i].atkbound.x = storm[i].position.x+5;
+            storm[i].atkbound.y = storm[i].position.y+85;
         }
     }
-    for(i=0; i<11; i++){
+    for(i=0; i<8; i++){
         for(j=0; j<5; j++){
             if(CheckCollisionRecs(storm[i].bound, obst[i])){
                 if(storm[j].position.x+30 >= obst[i].x) storm[j].position.x += 1.0f * storm[j].speed; 
@@ -256,14 +246,24 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
 }
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex){
+void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex[], Texture2D stormTex[], int frame){
+    
+    Texture2D guardTexAtk = guardTex[2];
+    Texture2D stormTexAtk = stormTex[2];
+    
+    float guardframeHeightAtk = (float)(guardTexAtk.height/10);
+    int guardmaxFramesAtk = (int)(guardTexAtk.width/(int)guardframeHeightAtk);
+    float stormframeHeightAtk = (float)(stormTexAtk.height/21);
+    int stormmaxFramesAtk = (int)(stormTexAtk.width/(int)stormframeHeightAtk);
+    
     int i;
     for(i=0; i<10; i++){
         if(guard[i].life>0){
-            guard[i].dist = sqrt(pow((guard[i].position.x-rbns->position.x),2) + pow((guard[i].position.y-rbns->position.y),2));
-            if(guard[i].dist < 31){
-                if(GetRandomValue(1, 5)==1){
+            if(CheckCollisionRecs(guard[i].atkbound, rbns->bound)){
+                if(GetRandomValue(1, 10)==1){
+                    
                     rbns->life -= guard[i].damage;
+                    rbns->hits += 1;
                 }
             }
         }
@@ -271,10 +271,11 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
     
     for(i=0; i<5; i++){
         if(storm[i].life>0){
-            storm[i].dist = sqrt(pow((storm[i].position.x-rbns->position.x),2) + pow((storm[i].position.y-rbns->position.y),2));
-            if(storm[i].dist < 31){
-                if(GetRandomValue(1, 5)==1){
+            if(CheckCollisionRecs(storm[i].atkbound, rbns->bound)){
+                if(GetRandomValue(1, 10)==1){
+                    DrawTextureRec(stormTexAtk, (Rectangle){0, stormframeHeightAtk*frame, stormframeHeightAtk, (float)stormframeHeightAtk*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
                     rbns->life -= storm[i].damage;
+                    rbns->hits += 1;
                 }
             }
         }
@@ -308,12 +309,12 @@ void generateItens(Itens extras[], Player rbns){
     int i;
     for(i=0; i<5; i++){
         extras[i].lifeboost = GetRandomValue(10, 20);
-        extras[i].bound = (Rectangle){extras[i].position.x, extras[i].position.y, 10, 10};
         if(rbns.position.x <= 1830) extras[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         if(rbns.position.x > 2600 && rbns.position.x <= 4370) extras[i].position = (Vector2){GetRandomValue(3000, 4200), GetRandomValue(0, 350)};
         if(rbns.position.x > 5300 && rbns.position.x <= 7030) extras[i].position = (Vector2){GetRandomValue(5700, 8900), GetRandomValue(0, 350)};
         if(rbns.position.x > 7900 && rbns.position.x <= 9730) extras[i].position = (Vector2){GetRandomValue(8300, 9600), GetRandomValue(0, 350)};
         if(rbns.position.x > 10500) extras[i].position = (Vector2){GetRandomValue(10900, 12000), GetRandomValue(0, 350)};
+        extras[i].bound = (Rectangle){extras[i].position.x, extras[i].position.y, 10, 10};
     }
 }
 //-----------------------------------------------------------------------------------------------------------------------------------

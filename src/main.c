@@ -15,8 +15,10 @@ int main(){
   
     Parallax Menu = LoadMenu();
     UI UIAssets = LoadUIAssets();
+    UIIG InGameUI = LoadUIIG();
     
     bool OptWindow = false;
+    bool GamePause = 0;
     int GameStage = 0;
     //SCROLL
     scrolling cloudsScroll;
@@ -39,10 +41,13 @@ int main(){
         GameStage = MenuSelect(UIAssets,&OptWindow);
     }
     if(GameStage==1){
-        StopMusicStream(Menu.Music);
+        MudaMusica(Menu.Music,InGameUI.GameMusic1);
+        SetMusicVolume(InGameUI.GameMusic1,0.1);
         while(!WindowShouldClose()){
+            UpdateMusicStream(InGameUI.GameMusic1);
             BeginDrawing();
-            ClearBackground(RED);
+            ClearBackground(DARKGRAY);
+            DrawGameUI(&GamePause, InGameUI);
             EndDrawing();
         }
     }
@@ -52,6 +57,7 @@ int main(){
     
     UnloadUIAssets(UIAssets);
     UnloadMenu(Menu);
+    UnloadUIIG(InGameUI);
     
     CloseAudioDevice();
     CloseWindow();

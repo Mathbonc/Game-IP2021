@@ -1,7 +1,9 @@
 #ifndef ASSETS_H
 #define ASSETS_H
-#define MenuScale 3.333
 #include <raylib.h>
+#define MenuScale 3.333
+#define HITS 80
+#define Health 200
 
 typedef struct{
     float BGC; 
@@ -9,6 +11,7 @@ typedef struct{
     float FC2;
     float FC3;
 }scrolling;
+
 typedef struct{
     Texture2D BackGroundSky;
     Texture2D Mountains;
@@ -18,6 +21,7 @@ typedef struct{
     Texture2D Cloud[3];
     Music Music;
 }Parallax;
+
 typedef struct{
     Texture2D ButtonLong;
     Texture2D OptFrame;
@@ -26,13 +30,28 @@ typedef struct{
     Sound ConfirmClick;
 }UI;
 
+typedef struct{
+    Texture2D HealthBar;
+    Texture2D Pause;
+    Texture2D MenuPause;
+    Sound PauseSound;
+    Music GameMusic1;
+    Music GameMusic2;
+    Music FredTheme;
+    Music GameCombat;
+}UIIG;
+
 UI LoadUIAssets();
 void UnloadUIAssets (UI UIAssets);
 
 Parallax LoadMenu();
 void UnloadMenu(Parallax Menu);
 
-void MudaMusica(Sound song_anterior, Sound song_proximo);
+void MudaMusica(Music song_anterior, Music song_proximo);
 
+UIIG LoadUIIG();
+void UnloadUIIG(UIIG InGameUI);
+//INCLUIR VIDA NESSA FUNÇÃO!!
+void DrawGameUI(bool *GamePause, UIIG InGameUI);
 
 #endif

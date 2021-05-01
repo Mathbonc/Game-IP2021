@@ -9,8 +9,8 @@ void generateEnemies(Enemies *guard, Enemies *storm){
     for(i=0; i<10; i++){
         guard[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         guard[i].speed = (GetRandomValue(5, 9) * 0.1);
-        guard[i].life = 3;
-        guard[i].damage = GetRandomValue(1, 1);
+        guard[i].life = 20;
+        guard[i].damage = GetRandomValue(1, 3);
         guard[i].bound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 30, 44};
         guard[i].atkbound = (Rectangle){guard[i].position.x-60, guard[i].position.y, 170, 44};
     }
@@ -18,8 +18,8 @@ void generateEnemies(Enemies *guard, Enemies *storm){
     for(i=0; i<5; i++){
         storm[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         storm[i].speed = (GetRandomValue(3, 5) * 0.1);
-        storm[i].life = 7;
-        storm[i].damage = GetRandomValue(3, 3);
+        storm[i].life = 40;
+        storm[i].damage = GetRandomValue(3, 5);
         storm[i].bound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 30, 44};
         storm[i].atkbound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 100, 44};
     }
@@ -124,22 +124,28 @@ void resetCharacter(Player *rbns){
 }
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk){
+void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, Texture2D rbnsTexAtk2, char last, int frameAtk){
     int i;
-    float frameWidthAtk = (float)(rbnsTexAtk.width/12);
+    float frameWidthAtk = (float)(rbnsTexAtk.width/3);
     int maxFramesAtk = (int)(rbnsTexAtk.width/(int)frameWidthAtk);
+    float frameWidthAtk2 = (float)(rbnsTexAtk2.width/3);
+    int maxFramesAtk2 = (int)(rbnsTexAtk2.width/(int)frameWidthAtk2);
     
-    if(IsKeyDown(KEY_C)){
+    if(IsKeyDown(KEY_K)){
         if(last=='d') DrawTextureRec(rbnsTexAtk, (Rectangle){frameWidthAtk*frameAtk, 0, frameWidthAtk, (float)rbnsTexAtk.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
         if(last!='d') DrawTextureRec(rbnsTexAtk, (Rectangle){frameWidthAtk*frameAtk, 0, -frameWidthAtk, (float)rbnsTexAtk.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
     }
+    if(IsKeyDown(KEY_L)){
+        if(last=='d') DrawTextureRec(rbnsTexAtk2, (Rectangle){frameWidthAtk2*frameAtk, 0, frameWidthAtk2, (float)rbnsTexAtk2.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
+        if(last!='d') DrawTextureRec(rbnsTexAtk2, (Rectangle){frameWidthAtk2*frameAtk, 0, -frameWidthAtk2, (float)rbnsTexAtk2.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
+    }
     for(i=0; i<10; i++){
-        if(IsKeyPressed(KEY_C) && CheckCollisionRecs(rbns.atkbound, guard[i].bound)){
+        if((IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L)) && CheckCollisionRecs(rbns.atkbound, guard[i].bound)){
             guard[i].life -= rbns.damage;
         }
     }
     for(i=0; i<5; i++){
-        if(IsKeyPressed(KEY_C) && CheckCollisionRecs(rbns.atkbound, storm[i].bound)){
+        if((IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L)) && CheckCollisionRecs(rbns.atkbound, storm[i].bound)){
             storm[i].life -= rbns.damage;
         }
     }
@@ -179,7 +185,7 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
     
     //Movimento do Guardian
     for(i=0; i<10; i++){
-        if(guard[i].life > 0){
+        if(guard[i].life > 0 && CheckCollisionRecs(guard[i].atkbound, rbns.bound)==0){
             guard[i].dist = sqrt(pow((guard[i].position.x-rbns.position.x),2) + pow((guard[i].position.y-rbns.position.y),2));
             if(guard[i].dist > 71){ //Atacam de longe, para nenhum se apoximar demais
                 if(guard[i].position.x > rbns.position.x) guard[i].position.x -= 1.0f * guard[i].speed;
@@ -212,7 +218,7 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
     
     //Movimento do Stormhead
     for(i=0; i<5; i++){
-        if(storm[i].life > 0){
+        if(storm[i].life > 0 && CheckCollisionRecs(storm[i].atkbound, rbns.bound)==0){
             storm[i].dist = sqrt(pow((storm[i].position.x-rbns.position.x),2) + pow((storm[i].position.y-rbns.position.y),2));
             if(storm[i].dist > 31){ //Atacam de perto, para se apoximarem mais
                 if(storm[i].position.x+25 > rbns.position.x) storm[i].position.x -= 1.0f * storm[i].speed;
@@ -247,11 +253,10 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex[], Texture2D stormTex[], int frame){
-    
     Texture2D guardTexAtk = guardTex[2];
     Texture2D stormTexAtk = stormTex[2];
     
-    float guardframeHeightAtk = (float)(guardTexAtk.height/10);
+    float guardframeHeightAtk = (float)(guardTexAtk.height/9);
     int guardmaxFramesAtk = (int)(guardTexAtk.width/(int)guardframeHeightAtk);
     float stormframeHeightAtk = (float)(stormTexAtk.height/21);
     int stormmaxFramesAtk = (int)(stormTexAtk.width/(int)stormframeHeightAtk);
@@ -261,7 +266,6 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
         if(guard[i].life>0){
             if(CheckCollisionRecs(guard[i].atkbound, rbns->bound)){
                 if(GetRandomValue(1, 10)==1){
-                    
                     rbns->life -= guard[i].damage;
                     rbns->hits += 1;
                 }
@@ -308,7 +312,7 @@ void resetEnemies(Enemies *guard, Enemies *storm, Player rbns){
 void generateItens(Itens extras[], Player rbns){
     int i;
     for(i=0; i<5; i++){
-        extras[i].lifeboost = GetRandomValue(10, 20);
+        extras[i].lifeboost = GetRandomValue(20, 30);
         if(rbns.position.x <= 1830) extras[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         if(rbns.position.x > 2600 && rbns.position.x <= 4370) extras[i].position = (Vector2){GetRandomValue(3000, 4200), GetRandomValue(0, 350)};
         if(rbns.position.x > 5300 && rbns.position.x <= 7030) extras[i].position = (Vector2){GetRandomValue(5700, 8900), GetRandomValue(0, 350)};
@@ -345,15 +349,28 @@ void cameraUpdate(Camera2D *camera, Player rbns){
     if(camera->target.y>270) camera->target.y = 270;
 }
 //-----------------------------------------------------------------------------------------------------------------------------------
-void studentPlace(Student lnidas, Student robrigo, int frame){
+void studentPlace(Student lnidas, Student robrigo, Student mulittle, Student xanny, Student freddy, int frame){
     float lnidasframeWidth = (float)(lnidas.texture.width/6);
     int maxFramesLnidas = (int)(lnidas.texture.width/(int)lnidasframeWidth);
     
     float robrigoframeWidth = (float)(robrigo.texture.width/6);
     int maxFramesrobrigo = (int)(robrigo.texture.width/(int)robrigoframeWidth);
     
+    float mulittleframeWidth = (float)(mulittle.texture.width/6);
+    int maxFramesmulittle = (int)(mulittle.texture.width/(int)mulittleframeWidth);
+    
+    float xannyframeWidth = (float)(xanny.texture.width/6);
+    int maxFramesxanny = (int)(xanny.texture.width/(int)xannyframeWidth);
+    
+    float freddyframeWidth = (float)(freddy.texture.width/15);
+    int maxFramesfreddy = (int)(freddy.texture.width/(int)freddyframeWidth);
+    
+    
     if(lnidas.life > 0) DrawTextureRec(lnidas.texture, (Rectangle){lnidasframeWidth*frame, 0, lnidasframeWidth, lnidas.texture.height}, (Vector2){lnidas.position.x, lnidas.position.y}, RAYWHITE);
     if(robrigo.life> 0) DrawTextureRec(robrigo.texture, (Rectangle){robrigoframeWidth*frame, 0, robrigoframeWidth, robrigo.texture.height}, (Vector2){robrigo.position.x, robrigo.position.y}, RAYWHITE);
+    if(robrigo.life> 0) DrawTextureRec(mulittle.texture, (Rectangle){mulittleframeWidth*frame, 0, mulittleframeWidth, mulittle.texture.height}, (Vector2){mulittle.position.x, mulittle.position.y}, RAYWHITE);
+    if(robrigo.life> 0) DrawTextureRec(xanny.texture, (Rectangle){xannyframeWidth*frame, 0, xannyframeWidth, xanny.texture.height}, (Vector2){xanny.position.x, xanny.position.y}, RAYWHITE);
+    if(robrigo.life> 0) DrawTextureRec(freddy.texture, (Rectangle){freddyframeWidth*frame, 0, -freddyframeWidth, freddy.texture.height}, (Vector2){freddy.position.x, freddy.position.y}, RAYWHITE);
 }
     
 void studentFight(Player *rbns){

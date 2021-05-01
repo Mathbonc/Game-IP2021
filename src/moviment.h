@@ -40,14 +40,14 @@ typedef struct{
 void generateEnemies(Enemies *guard, Enemies *storm);
 void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTex[], int frame, int frameDie, char *last);
 void resetCharacter(Player *rbns);
-void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk);
+void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, Texture2D rbnsTexAtk2, char last, int frameAtk);
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex[], Texture2D stormTex[], int frame);
 void resetEnemies(Enemies *guard, Enemies *storm, Player rbns);
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex[], Texture2D stormTex[], int frame);
 void generateItens(Itens extras[], Player rbns);
 void getItens(Player *rbns, Itens extras[], Texture2D itensTex);
 void cameraUpdate(Camera2D *camera, Player rbns);
-void studentPlace(Student lnidas, Student robrigo, int frame);
+void studentPlace(Student lnidas, Student robrigo, Student mulittle, Student xanny, Student freddy, int frame);
 void studentFight(Player *rbns);
 //-----------------------------------------------------------------------------------------------------------------------------------
 

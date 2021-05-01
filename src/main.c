@@ -4,7 +4,7 @@
 #include "assets.h"
 
 void ParallaxMenu(float BGC, float FC1, float FC2, float FC3, Parallax Menu,UI UIAssets);
-void MenuSelect(UI UIAssets,bool *OptWindow);
+int MenuSelect(UI UIAssets,bool *OptWindow);
 
 int main(){
     const int WindowWidth = 1280;
@@ -12,22 +12,12 @@ int main(){
     InitWindow(WindowWidth,WindowHeight,"MainMenu");
     InitAudioDevice();
     SetTargetFPS(60);
-    
-    int i;
-    
-    //PARALLAX
-    Parallax Menu;
-    Menu.BackGroundSky = (Texture2D)LoadTexture("../Assets/UI/Parallax/sky_lightened.png");
-    Menu.Mountains = (Texture2D)LoadTexture("../Assets/UI/Parallax/glacial_mountains_lightened.png");
-    Menu.CloudsBG = (Texture2D)LoadTexture("../Assets/UI/Parallax/clouds_bg.png");
-    Menu.CloudLone = (Texture2D)LoadTexture("../Assets/UI/Parallax/cloud_lonely.png");
-    Menu.Cloud[0] = (Texture2D)LoadTexture("../Assets/UI/Parallax/clouds_mg_1_lightened.png");
-    Menu.Cloud[1] = (Texture2D)LoadTexture("../Assets/UI/Parallax/clouds_mg_2.png");
-    Menu.Cloud[2] = (Texture2D)LoadTexture("../Assets/UI/Parallax/clouds_mg_3.png");
-    Menu.MainTitle = (Texture2D)LoadTexture("../Assets/UI/Title.png");
-    //UI
+  
+    Parallax Menu = LoadMenu();
     UI UIAssets = LoadUIAssets();
+    
     bool OptWindow = false;
+    int GameStage = 0;
     //SCROLL
     scrolling cloudsScroll;
     cloudsScroll.BGC = 0.0f;
@@ -35,11 +25,10 @@ int main(){
     cloudsScroll.FC2 = 0.0f;
     cloudsScroll.FC3 = 0.0f;
     //MUSICS
-    Menu.Music = (Music)LoadMusicStream("../Assets/Sample/Ludum Dare 38 - Track 2.wav");
     PlayMusicStream(Menu.Music);
     SetMusicVolume(Menu.Music,0.1);
     
-    while(!WindowShouldClose()){
+    while(GameStage==0){
         UpdateMusicStream(Menu.Music);
         //Scrolling
         cloudsScroll.BGC-=0.2f;
@@ -47,22 +36,23 @@ int main(){
         cloudsScroll.FC2-=0.3f;
         cloudsScroll.FC3+=0.2f;
         ParallaxMenu(cloudsScroll.BGC,cloudsScroll.FC1,cloudsScroll.FC2,cloudsScroll.FC3,Menu,UIAssets);
-        MenuSelect(UIAssets,&OptWindow);
+        GameStage = MenuSelect(UIAssets,&OptWindow);
+    }
+    if(GameStage==1){
+        StopMusicStream(Menu.Music);
+        while(!WindowShouldClose()){
+            BeginDrawing();
+            ClearBackground(RED);
+            EndDrawing();
+        }
     }
     
-    StopMusicStream(Menu.Music);
-    UnloadMusicStream(Menu.Music);
     
-    for(i=0;i<2;i++){UnloadTexture(Menu.Cloud[i]);}
-    UnloadTexture(Menu.BackGroundSky);
-    UnloadTexture(Menu.Mountains);
-    UnloadTexture(Menu.CloudsBG);
-    UnloadTexture(Menu.CloudLone);
-    UnloadTexture(Menu.MainTitle);
-    UnloadTexture(UIAssets.ButtonLong);
-    UnloadFont(UIAssets.Alagard);
-    UnloadSound(UIAssets.Click);
-    UnloadTexture(UIAssets.OptFrame);
+    StopMusicStream(Menu.Music);
+    
+    UnloadUIAssets(UIAssets);
+    UnloadMenu(Menu);
+    
     CloseAudioDevice();
     CloseWindow();
     return 0;
@@ -100,17 +90,17 @@ void ParallaxMenu(float BGC, float FC1, float FC2, float FC3, Parallax Menu,UI U
         DrawTextureEx(Menu.MainTitle,(Vector2){640-Menu.MainTitle.width*1.25,-50},0.0f,2.5,RAYWHITE);
         //UI
         DrawTextureEx(UIAssets.ButtonLong,(Vector2){640-UIAssets.ButtonLong.width*2.5,400},0.0f,5,RAYWHITE);
-        DrawTextEx(UIAssets.Alagard,"Start",(Vector2){582,415},50,1,ORANGE);
+        DrawTextEx(UIAssets.Alagard,"Comecar",(Vector2){544,415},48,1,ORANGE);
        
         DrawTextureEx(UIAssets.ButtonLong,(Vector2){640-UIAssets.ButtonLong.width*2.5,480},0.0f,5,RAYWHITE);
-        DrawTextEx(UIAssets.Alagard,"Options",(Vector2){555,495},50,1,ORANGE);
+        DrawTextEx(UIAssets.Alagard,"Opcoes",(Vector2){562,495},50,1,ORANGE);
         
         DrawTextureEx(UIAssets.ButtonLong,(Vector2){640-UIAssets.ButtonLong.width*2.5,560},0.0f,5,RAYWHITE);
-        DrawTextEx(UIAssets.Alagard,"Leave",(Vector2){573,575},50,1,ORANGE);
+        DrawTextEx(UIAssets.Alagard,"Sair",(Vector2){594,575},50,1,ORANGE);
         
 }
 
-void MenuSelect(UI UIAssets,bool *OptWindow){
+int MenuSelect(UI UIAssets,bool *OptWindow){
     
     Rectangle StartGame = {640-UIAssets.ButtonLong.width*2.5,400,UIAssets.ButtonLong.width*5,UIAssets.ButtonLong.height*5};
     Rectangle Options =   {640-UIAssets.ButtonLong.width*2.5,480,UIAssets.ButtonLong.width*5,UIAssets.ButtonLong.height*5};
@@ -120,6 +110,8 @@ void MenuSelect(UI UIAssets,bool *OptWindow){
     
     if(CheckCollisionPointRec(Pointer,StartGame)){
         if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
+            PlaySound(UIAssets.ConfirmClick);
+            return 1;
             //COMEÇAR JOGO
         }
     }
@@ -131,7 +123,7 @@ void MenuSelect(UI UIAssets,bool *OptWindow){
                         (Rectangle){(640-UIAssets.OptFrame.width*3), (360-UIAssets.OptFrame.height*2), (UIAssets.OptFrame.width*6),(UIAssets.OptFrame.height*4)},
                         (Vector2){0,0},   
                         0.0f,RAYWHITE);
-        DrawTextEx(UIAssets.Alagard,"   Nothing\n to see here",(Vector2){549,328},30,1,RAYWHITE);
+        DrawTextEx(UIAssets.Alagard,"  Nada pra\n  ver aqui",(Vector2){549,328},30,1,RAYWHITE);
     }
     if(CheckCollisionPointRec(Pointer,EndGame)){
         if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
@@ -141,4 +133,5 @@ void MenuSelect(UI UIAssets,bool *OptWindow){
         }
     }
     EndDrawing();
+    return 0;
 }

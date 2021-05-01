@@ -7,12 +7,14 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
 void resetCharacter(Player *rbns);
 void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk);
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex[], Texture2D stormTex[], int frame);
-void resetEnemies(Enemies *guard, Enemies *storm);
+void resetEnemies(Enemies *guard, Enemies *storm, Player rbns);
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex);
-void generateItens(Itens extras[]);
+void generateItens(Itens extras[], Player rbns);
 void getItens(Player *rbns, Itens extras[], Texture2D itensTex);
 void cameraUpdate(Camera2D *camera, Player rbns);
+void studentPlace(Student lnidas, Student robrigo, int frame);
 void studentFight(Player *rbns);
+//-----------------------------------------------------------------------------------------------------------------------------------
 
 void generateEnemies(Enemies *guard, Enemies *storm){
     int i;
@@ -34,6 +36,7 @@ void generateEnemies(Enemies *guard, Enemies *storm){
         //storm[i].atkbound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 30, 44};
     }
 }
+//-----------------------------------------------------------------------------------------------------------------------------------
 
 void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTex[], int frame, int frameDie, char *last){
     int i;
@@ -111,7 +114,7 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
         if (IsKeyDown(KEY_A))rbns->atkbound.x = rbns->position.x;
         rbns->atkbound.y = rbns->position.y;
         
-        for(i=0; i<5; i++){
+        for(i=0; i<11; i++){
             if(CheckCollisionRecs(rbns->bound, obst[i])){
                 if(rbns->position.x >= obst[i].x) rbns->position.x += 1.0f * rbns->speed; 
                 if(rbns->position.x <= obst[i].x) rbns->position.x -= 1.0f * rbns->speed; 
@@ -121,11 +124,17 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
         }
     }
 }
+//-----------------------------------------------------------------------------------------------------------------------------------
 
 void resetCharacter(Player *rbns){
     rbns->life = 200;
-    rbns->position = (Vector2){300.0f, 175.0f};
+    if(rbns->position.x <= 1830) rbns->position = (Vector2){300.0f, 175.0f};
+    if(rbns->position.x > 1830 && rbns->position.x <= 4370) rbns->position = (Vector2){2700.0f, 175.0f};
+    if(rbns->position.x > 4370 && rbns->position.x <= 7030) rbns->position = (Vector2){5600.0f, 175.0f};
+    if(rbns->position.x > 7030 && rbns->position.x <= 9730) rbns->position = (Vector2){8200.0f, 175.0f};
+    if(rbns->position.x > 9730) rbns->position = (Vector2){10900.0f, 175.0f};
 }
+//-----------------------------------------------------------------------------------------------------------------------------------
 
 void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, char last, int frameAtk){
     int i;
@@ -147,6 +156,7 @@ void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbns
         }
     }
 }
+//-----------------------------------------------------------------------------------------------------------------------------------
 
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex[], Texture2D stormTex[], int frame){
     int i, j;
@@ -201,7 +211,7 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
             guard[i].atkbound.y = guard[i].position.y-5;
         }
     }
-    for(i=0; i<3; i++){
+    for(i=0; i<11; i++){
         for(j=0; j<10; j++){
             if(CheckCollisionRecs(guard[j].bound, obst[i])){
                 if(guard[j].position.x+7 >= obst[i].x) guard[j].position.x += 1.0f * guard[j].speed; 
@@ -232,7 +242,7 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
             storm[i].bound.y = storm[i].position.y+85;
         }
     }
-    for(i=0; i<3; i++){
+    for(i=0; i<11; i++){
         for(j=0; j<5; j++){
             if(CheckCollisionRecs(storm[i].bound, obst[i])){
                 if(storm[j].position.x+30 >= obst[i].x) storm[j].position.x += 1.0f * storm[j].speed; 
@@ -244,6 +254,7 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
     }
     
 }
+//-----------------------------------------------------------------------------------------------------------------------------------
 
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex, Texture2D stormTex){
     int i;
@@ -269,21 +280,43 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
         }
     } 
 }
+//-----------------------------------------------------------------------------------------------------------------------------------
 
-void resetEnemies(Enemies *guard, Enemies *storm){
+void resetEnemies(Enemies *guard, Enemies *storm, Player rbns){
     int i;
-    for(i=0; i<10; i++) guard[i].life = 3;
-    for(i=0; i<5; i++) storm[i].life = 7;
+    for(i=0; i<10; i++){
+        guard[i].life = 3;
+        //if(rbns.position.x <= 1830) guard[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
+        if(rbns.position.x > 2600 && rbns.position.x <= 4370) guard[i].position = (Vector2){GetRandomValue(3000, 4200), GetRandomValue(0, 350)};
+        if(rbns.position.x > 5300 && rbns.position.x <= 7030) guard[i].position = (Vector2){GetRandomValue(5700, 8900), GetRandomValue(0, 350)};
+        if(rbns.position.x > 7900 && rbns.position.x <= 9730) guard[i].position = (Vector2){GetRandomValue(8300, 9600), GetRandomValue(0, 350)};
+        if(rbns.position.x > 10500) guard[i].position = (Vector2){GetRandomValue(10900, 12000), GetRandomValue(0, 350)};
+    }
+    
+    for(i=0; i<5; i++){
+        storm[i].life = 7;
+        //if(rbns.position.x <= 1830) storm[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
+        if(rbns.position.x > 1830 && rbns.position.x <= 4370) storm[i].position = (Vector2){GetRandomValue(3000, 4200), GetRandomValue(0, 350)};
+        if(rbns.position.x > 4370 && rbns.position.x <= 7030) storm[i].position = (Vector2){GetRandomValue(5700, 8900), GetRandomValue(0, 350)};
+        if(rbns.position.x > 7900 && rbns.position.x <= 9730) storm[i].position = (Vector2){GetRandomValue(8300, 9600), GetRandomValue(0, 350)};
+        if(rbns.position.x > 10500) storm[i].position = (Vector2){GetRandomValue(10900, 12000), GetRandomValue(0, 350)};
+    }
 }
+//-----------------------------------------------------------------------------------------------------------------------------------
 
-void generateItens(Itens extras[]){
+void generateItens(Itens extras[], Player rbns){
     int i;
     for(i=0; i<5; i++){
         extras[i].lifeboost = GetRandomValue(10, 20);
-        extras[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         extras[i].bound = (Rectangle){extras[i].position.x, extras[i].position.y, 10, 10};
+        if(rbns.position.x <= 1830) extras[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
+        if(rbns.position.x > 2600 && rbns.position.x <= 4370) extras[i].position = (Vector2){GetRandomValue(3000, 4200), GetRandomValue(0, 350)};
+        if(rbns.position.x > 5300 && rbns.position.x <= 7030) extras[i].position = (Vector2){GetRandomValue(5700, 8900), GetRandomValue(0, 350)};
+        if(rbns.position.x > 7900 && rbns.position.x <= 9730) extras[i].position = (Vector2){GetRandomValue(8300, 9600), GetRandomValue(0, 350)};
+        if(rbns.position.x > 10500) extras[i].position = (Vector2){GetRandomValue(10900, 12000), GetRandomValue(0, 350)};
     }
 }
+//-----------------------------------------------------------------------------------------------------------------------------------
 
 void getItens(Player *rbns, Itens extras[], Texture2D itensTex){
     int i;
@@ -295,6 +328,7 @@ void getItens(Player *rbns, Itens extras[], Texture2D itensTex){
     }
     for(i=0; i<5; i++) if(extras[i].lifeboost > 0) DrawTextureEx(itensTex, (Vector2){extras[i].position.x, extras[i].position.y}, 0.0f, 0.50f, RAYWHITE); 
 }
+//-----------------------------------------------------------------------------------------------------------------------------------
 
 void cameraUpdate(Camera2D *camera, Player rbns){
     //Atualizando os parametros da camera
@@ -309,12 +343,23 @@ void cameraUpdate(Camera2D *camera, Player rbns){
     if(camera->target.y<180) camera->target.y = 180;
     if(camera->target.y>270) camera->target.y = 270;
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------------
+void studentPlace(Student lnidas, Student robrigo, int frame){
+    float lnidasframeWidth = (float)(lnidas.texture.width/6);
+    int maxFramesLnidas = (int)(lnidas.texture.width/(int)lnidasframeWidth);
+    
+    float robrigoframeWidth = (float)(robrigo.texture.width/6);
+    int maxFramesrobrigo = (int)(robrigo.texture.width/(int)robrigoframeWidth);
+    
+    if(lnidas.life > 0) DrawTextureRec(lnidas.texture, (Rectangle){lnidasframeWidth*frame, 0, lnidasframeWidth, lnidas.texture.height}, (Vector2){lnidas.position.x, lnidas.position.y}, RAYWHITE);
+    if(robrigo.life> 0) DrawTextureRec(robrigo.texture, (Rectangle){robrigoframeWidth*frame, 0, robrigoframeWidth, robrigo.texture.height}, (Vector2){robrigo.position.x, robrigo.position.y}, RAYWHITE);
+}
+    
 void studentFight(Player *rbns){
     //if(rbns->position.x > 1720 && rbns->position.x < 1830) //chama combate 1
-    //if(rbns->position.x > 4200 && rbns->position.x < 4370) //chama combate 2
+    //if(rbns->position.x > 4300 && rbns->position.x < 4370) //chama combate 2
     //if(rbns->position.x > 6910 && rbns->position.x < 7030) //chama combate 3
     //if(rbns->position.x > 9600 && rbns->position.x < 9730) //chama combate 4
     //if(rbns->position.x > 12250) //chama combate 5
 }
-
+//-----------------------------------------------------------------------------------------------------------------------------------

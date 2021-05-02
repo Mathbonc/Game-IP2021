@@ -31,16 +31,16 @@ mus CarregaMusicas(mus Song){
 	Song.musica[6]=LoadSound("./bin/Sample/Music/Ludum Dare - Track 8.wav");  
 	Song.musica[7]=LoadSound("./bin/Sample/Music/Ludum Dare - Track 9.wav");  
 	Song.musica[8]=LoadSound("./bin/Sample/Music/Ludum Dare - Track 10.wav");
-    Song.musica[9]=LoadSound("./bin/Sample/Music/10-Fight.wav");
+    	Song.musica[9]=LoadSound("./bin/Sample/Music/10-Fight.wav");
 	return Song;  
 }
 
 void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens,int posx,int posy){
     int valorizador = 1;
     DrawText("Escolha um ataque: \nQuestao_Complicada(J)\nCorrecao Errada(K)\nNota Errada(L)\nQuestao Oral(M)\n",posx,posy,5,RED);
-    if(vida_Rubens >= 100) valorizador = 1.2;
-    if(vida_Rubens >= 50) valorizador = 1.5;
-    if(vida_Rubens >= 30) valorizador = 2;
+    if(vida_Rubens <= 100) valorizador = 1.2;
+    if(vida_Rubens <= 50) valorizador = 1.5;
+    if(vida_Rubens <= 30) valorizador = 2;
     if(IsKeyPressed(KEY_J)){
         *vida_estudante -= valorizador * ataques.Questao_complicada;
         *opRubens = 1;
@@ -66,9 +66,9 @@ void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, 
 void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens, int opFreddy,int posx,int posy){
     int valorizador = 1; int contra_ataque1 = 1, contra_ataque2 = 1, contra_ataque3 = 1, contra_ataque4 = 1;
     DrawText("Escolha um ataque: \nQuestao_Complicada(J)\nCorrecao Errada(K)\nNota Errada(L)\nQuestao Oral(M)\n",posx,posy,5,RED);
-    if(vida_Rubens >= 100) valorizador = 1.2;
-    if(vida_Rubens >= 50) valorizador = 1.5;
-    if(vida_Rubens >= 30) valorizador = 2;
+    if(vida_Rubens <= 100) valorizador = 1.2;
+    if(vida_Rubens <= 50) valorizador = 1.5;
+    if(vida_Rubens <= 30) valorizador = 2;
     switch (opFreddy){
         case 1:
             contra_ataque2 = 1.5;
@@ -230,7 +230,7 @@ void Combat_RoBrigo(int *vida_de_rubens){
         do{
             opAluno =  (rand() % 10);
         }while(opAluno < 1 || opAluno > 3);
-        if(vida_de_Robrigo >= 40) opAluno = 4;
+        if(vida_de_Robrigo <= 40) opAluno = 4;
         switch (opAluno){
         case 1:
             *vida_de_rubens -= contra_ataque1 * ataqueRobrigo.acertar_questao;
@@ -295,7 +295,7 @@ void Combat_MuLittle(int *vida_de_rubens){
         do{
             opAluno =  (rand() % 10);
         }while(opAluno < 1 || opAluno > 3);
-        if(vida_de_MuLittle >= 40) opAluno = 4;
+        if(vida_de_MuLittle <= 40) opAluno = 4;
         switch (opAluno){
         case 1:
             *vida_de_rubens -= contra_ataque1 * ataqueMuLittle.acertar_questao;
@@ -363,7 +363,7 @@ void Combat_XAnny(int *vida_de_rubens){
         do{
             opAluno =  (rand() % 10);
         }while(opAluno < 1 || opAluno > 3);
-        if(vida_de_XAnny > 40) opAluno = 4;
+        if(vida_de_XAnny <= 40) opAluno = 4;
         switch (opAluno){
         case 1:
             *vida_de_rubens -= contra_ataque1 * ataqueXAnny.acertar_questao;

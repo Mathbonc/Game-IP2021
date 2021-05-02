@@ -3,6 +3,7 @@
 
 #include <raylib.h>
 #include <math.h>
+#include "assets.h"
 
 #define numObjs 8
 
@@ -50,6 +51,7 @@ void getItens(Player *rbns, Itens extras[], Texture2D itensTex);
 void cameraUpdate(Camera2D *camera, Player rbns);
 void studentPlace(Student lnidas, Student robrigo, Student mulittle, Student xanny, Student freddy, int frame);
 void studentFight(Player *rbns);
+int Game();
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 #endif

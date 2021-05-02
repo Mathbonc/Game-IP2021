@@ -1,4 +1,5 @@
 #include "moviment.h"
+#include "assets.h"
 #include "raylib.h"
 #include <math.h>
 

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "assets.h"
+#include "moviment.h"
 
 void ParallaxMenu(float BGC, float FC1, float FC2, float FC3, Parallax Menu,UI UIAssets);
 int MenuSelect(UI UIAssets,bool *OptWindow);

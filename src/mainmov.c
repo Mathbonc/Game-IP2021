@@ -1,8 +1,9 @@
 #include "raylib.h"
 #include "moviment.h"
+#include "assets.h"
 #include <stdlib.h>
 
-int main(){
+int Game(){
     //Iniciando Game
     int const windowWidth = 1260;
     int const windowHeight = 720;

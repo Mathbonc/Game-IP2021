@@ -3,14 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-player CarregaSpriteRubens(player rbs){
-	rbs.Rubens[0]=LoadTexture("./bin/Characters/Enemies/Guardian/rubiaAtk1.png");
-	rbs.Rubens[1]=LoadTexture("./bin/Characters/Enemies/Guardian/rubiaAtk2.png");
-	rbs.Rubens[2]=LoadTexture("./bin/Characters/Enemies/Guardian/rubiadeath.png");
-	rbs.Rubens[3]=LoadTexture("./bin/Characters/Enemies/Guardian/rubia_recebe_dano.png");
-	return rbs;
-}
-
 mus CarregaMusicas(mus Song){
 	Song.musica[0]=LoadSound("./bin/Sample/Music/Ludum Dare - Track 1.wav");  
 	Song.musica[1]=LoadSound("./bin/Sample/Music/Ludum Dare - Track 3.wav");  
@@ -24,29 +16,32 @@ mus CarregaMusicas(mus Song){
     Song.musica[9]=LoadSound("./bin/Sample/Music/10-Fight.wav");
 	return Song;  
 }
-void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens){
+void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens,int posx,int posy){
     int valorizador = 1;
+    DrawText("Escolha um ataque: \nQuestao_Complicada(J)\nCorrecao Errada(K)\nNota Errada(L)\nQuestao Oral(M)\n",posx,posy,5,RED);
     if(vida_Rubens >= 50) valorizador = 1.5;
     if(vida_Rubens >= 30) valorizador = 2;
     if(IsKeyPressed(KEY_J)){
         *vida_estudante -= valorizador * ataques.Questao_complicada;
         *opRubens = 1;
+       
     }
     if(IsKeyPressed(KEY_K)){
         *vida_estudante -= valorizador * ataques.Correcao_errada;
         *opRubens = 2;
+        
     }
     if(IsKeyPressed(KEY_L)){
         *vida_estudante -= valorizador * ataques.Nota_Errada;
         *opRubens = 3;
+
     }
     if(IsKeyPressed(KEY_M)){
         *vida_estudante -= valorizador * ataques.Questao_Oral;
         *opRubens = 4;
+  
     }
-    else {
-    //DrawText("invalido, bla bla bla...."); <-apareceria na tela... // mas onde? 
-   }
+    
 }
 
 //Funcao de trocar a musica de combate (Vai ser utilizada quando chamar a funcao de combate do freddy
@@ -96,7 +91,7 @@ void Combat_LeaoNidas(int *vida_de_rubens){
     while(vida_de_leao > 0 && *vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
         if(flag == 0) /*menu de opcoes para Rubens de 1 a 2*/;
-        MenudeRubens(ataqueRubens,&vida_de_leao, *vida_de_rubens, &opRubens);
+        MenudeRubens(ataqueRubens,&vida_de_leao, *vida_de_rubens, &opRubens,1735,173);
         switch (opRubens){
         case 1: 
             contra_ataque2 = 1.3;
@@ -118,15 +113,15 @@ void Combat_LeaoNidas(int *vida_de_rubens){
         switch (opAluno){
         case 1:
             *vida_de_rubens -= contra_ataque1 * ataqueLeao.acertar_questao;
-            //aparece na tela o ataque
+            DrawText("Acertei a questao!",1750.0f,175.0f,5,RED);
             break;
         case 2:
             *vida_de_rubens -= contra_ataque2 * ataqueLeao.discutir_questao;
-            //aparece na tela o ataque
+             DrawText("Discuti questao!",1750.0f,175.0f,5,BLUE);
             break;
         case 3:
             *vida_de_rubens -= contra_ataque3 * ataqueLeao.chamar_no_zap;
-            //aparece na tela o ataque
+             DrawText("Chamei no Zap!",1750.0f,175.0f,5,GREEN);
             break;
         default:
             break;
@@ -158,7 +153,7 @@ void Combat_RoBrigo(int *vida_de_rubens){
     while(vida_de_Robrigo > 0 && *vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
         if(flag == 0) /*menu de opcoes para Rubens de 1 a 2*/;
-        MenudeRubens(ataqueRubens,&vida_de_Robrigo, *vida_de_rubens, &opRubens);
+        MenudeRubens(ataqueRubens,&vida_de_Robrigo, *vida_de_rubens, &opRubens,4315,173);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;
@@ -181,17 +176,19 @@ void Combat_RoBrigo(int *vida_de_rubens){
         switch (opAluno){
         case 1:
             *vida_de_rubens -= contra_ataque1 * ataqueRobrigo.acertar_questao;
-            //aparece na tela o ataque
+            DrawText("Acertei a questao!",4330.0f,175.0f,5,RED);
             break;
         case 2:
             *vida_de_rubens -= contra_ataque2 * ataqueRobrigo.discutir_questao;
-            //aparece na tela o ataque
+            DrawText("Discuti questao!",4330.0f,175.0f,5,BLUE);
             break;
         case 3:
             *vida_de_rubens -= contra_ataque3 * ataqueRobrigo.chamar_no_zap;
+            DrawText("Chamei no Zap!",4330.0f,175.0f,5,GREEN);
             break;
         case 4:
             *vida_de_rubens -= 50; //ESPECIAL TERMO TECNICO-CIENTIFICO
+            DrawText("ESPECIAL TERMO TECNICO-CIENTIFICO!",4330.0f,175.0f,5,YELLOW);
             break;
         default:
             break;
@@ -222,7 +219,7 @@ void Combat_MuLittle(int *vida_de_rubens){
     while(vida_de_MuLittle > 0 && *vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
         if(flag == 0) /*menu de opcoes para Rubens de 1 a 2*/;
-        MenudeRubens(ataqueRubens,&vida_de_MuLittle, *vida_de_rubens, &opRubens);
+        MenudeRubens(ataqueRubens,&vida_de_MuLittle, *vida_de_rubens, &opRubens,6905,173);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;
@@ -245,18 +242,20 @@ void Combat_MuLittle(int *vida_de_rubens){
         switch (opAluno){
         case 1:
             *vida_de_rubens -= contra_ataque1 * ataqueMuLittle.acertar_questao;
-            //aparece na tela o ataque
+            DrawText("Acertei a questao!",6920.0f,175.0f,5,RED);
             break;
         case 2:
             *vida_de_rubens -= contra_ataque2 * ataqueMuLittle.discutir_questao;
-            //aparece na tela o ataque
+            DrawText("Discuti questao!",6920.0f,175.0f,5,BLUE);
             break;
         case 3:
             *vida_de_rubens -= contra_ataque3 * ataqueMuLittle.chamar_no_zap;
-            //aparece na tela o ataque
+            DrawText("Chamei no Zap!",6920.0f,175.0f,5,GREEN);
+            
             break;
         case 4:
             *vida_de_rubens -= 50; //ESPECIAL HIDRATACAO PROFUNDA
+            DrawText("ESPECIAL HIDRATACAO PROFUNDA!",6920.0f,175.0f,5,BLUE);
             break;
         default:
             break;
@@ -289,7 +288,7 @@ void Combat_XAnny(int *vida_de_rubens){
     while(vida_de_XAnny > 0 && *vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
         if(flag == 0) /*menu de opcoes para Rubens de 1 a 2*/;
-        MenudeRubens(ataqueRubens,&vida_de_XAnny, *vida_de_rubens, &opRubens);
+        MenudeRubens(ataqueRubens,&vida_de_XAnny, *vida_de_rubens, &opRubens,9603,172);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;
@@ -312,19 +311,20 @@ void Combat_XAnny(int *vida_de_rubens){
         switch (opAluno){
         case 1:
             *vida_de_rubens -= contra_ataque1 * ataqueXAnny.acertar_questao;
-            //aparece na tela o ataque
+            DrawText("Acertei a questao!",9610.0f,175.0f,5,RED);
             break;
         case 2:
             *vida_de_rubens -= contra_ataque2 * ataqueXAnny.discutir_questao;
-            //aparece na tela o ataque
+            DrawText("Discuti a questao!",9610.0f,175.0f,5,BLUE);
             break;
         case 3:
             *vida_de_rubens -= contra_ataque3 * ataqueXAnny.chamar_no_zap;
-            //aparece na tela o ataque
+            DrawText("Chamei no Zap!",9610.0f,175.0f,5,GREEN);
             break;
         case 4:
             //invocacao da h'(x)
             *vida_de_rubens -= 60; //ESPECIAL H'(X)
+            DrawText("H'(x)!!!",9610.0f,175.0f,5,YELLOW);
             break;
         default:
             break;

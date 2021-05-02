@@ -3,6 +3,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+/*
+typedef struct{ //Struct para os ataques de Rubens
+    int Questao_complicada, Correcao_errada, Nota_Errada, Questao_Oral;
+} ataques_rubens;
+
+typedef struct{ //Struct para os ataques do aluno
+    int acertar_questao, discutir_questao, chamar_no_zap;
+} ataques_aluno;
+
+typedef struct {
+	Sound musica[10];
+}mus;
+
+typedef struct{
+    Texture2D Rubens[4];
+}player;
+*/
+
 mus CarregaMusicas(mus Song){
 	Song.musica[0]=LoadSound("./bin/Sample/Music/Ludum Dare - Track 1.wav");  
 	Song.musica[1]=LoadSound("./bin/Sample/Music/Ludum Dare - Track 3.wav");  
@@ -16,9 +34,11 @@ mus CarregaMusicas(mus Song){
     Song.musica[9]=LoadSound("./bin/Sample/Music/10-Fight.wav");
 	return Song;  
 }
+
 void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens,int posx,int posy){
     int valorizador = 1;
     DrawText("Escolha um ataque: \nQuestao_Complicada(J)\nCorrecao Errada(K)\nNota Errada(L)\nQuestao Oral(M)\n",posx,posy,5,RED);
+    if(vida_Rubens >= 100) valorizador = 1.2;
     if(vida_Rubens >= 50) valorizador = 1.5;
     if(vida_Rubens >= 30) valorizador = 2;
     if(IsKeyPressed(KEY_J)){
@@ -39,9 +59,49 @@ void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, 
     if(IsKeyPressed(KEY_M)){
         *vida_estudante -= valorizador * ataques.Questao_Oral;
         *opRubens = 4;
-  
     }
     
+}
+
+void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens, int opFreddy,int posx,int posy){
+    int valorizador = 1; int contra_ataque1 = 1, contra_ataque2 = 1, contra_ataque3 = 1, contra_ataque4 = 1;
+    DrawText("Escolha um ataque: \nQuestao_Complicada(J)\nCorrecao Errada(K)\nNota Errada(L)\nQuestao Oral(M)\n",posx,posy,5,RED);
+    if(vida_Rubens >= 100) valorizador = 1.2;
+    if(vida_Rubens >= 50) valorizador = 1.5;
+    if(vida_Rubens >= 30) valorizador = 2;
+    switch (opFreddy){
+        case 1:
+            contra_ataque2 = 1.5;
+            contra_ataque3 = 1.6;
+            break;
+        case 2:
+            contra_ataque4 = 1.3;
+            break;
+        case 3:
+            contra_ataque4 = 1.3;
+            break;
+        default:
+            break;
+        }
+    if(IsKeyPressed(KEY_J)){
+        *vida_estudante -= valorizador * ataques.Questao_complicada * contra_ataque1;
+        *opRubens = 1;
+       
+    }
+    if(IsKeyPressed(KEY_K)){
+        *vida_estudante -= valorizador * ataques.Correcao_errada * contra_ataque2;
+        *opRubens = 2;
+        
+    }
+    if(IsKeyPressed(KEY_L)){
+        *vida_estudante -= valorizador * ataques.Nota_Errada * contra_ataque3;
+        *opRubens = 3;
+
+    }
+    if(IsKeyPressed(KEY_M)){
+        *vida_estudante -= valorizador * ataques.Questao_Oral * contra_ataque4;
+        *opRubens = 4;
+    }
 }
 
 //Funcao de trocar a musica de combate (Vai ser utilizada quando chamar a funcao de combate do freddy
@@ -78,7 +138,7 @@ void Rubens_atack(Texture2D warrior, Vector2 position, int frame, float timer, f
 }
 //combate leonidas
 void Combat_LeaoNidas(int *vida_de_rubens){
-    int vida_de_leao = 70, opRubens, opAluno, flag = 0, contra_ataque1, contra_ataque2, contra_ataque3;
+    int vida_de_leao = 70, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueLeao;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
@@ -90,7 +150,6 @@ void Combat_LeaoNidas(int *vida_de_rubens){
     PlaySound(Musica.musica[2]);
     while(vida_de_leao > 0 && *vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        if(flag == 0) /*menu de opcoes para Rubens de 1 a 2*/;
         MenudeRubens(ataqueRubens,&vida_de_leao, *vida_de_rubens, &opRubens,1735,173);
         switch (opRubens){
         case 1: 
@@ -137,7 +196,7 @@ void Combat_LeaoNidas(int *vida_de_rubens){
 }
 //Combate Ro Brigo
 void Combat_RoBrigo(int *vida_de_rubens){
-    int vida_de_Robrigo= 80, opRubens, opAluno, flag = 0, contra_ataque1, contra_ataque2, contra_ataque3;
+    int vida_de_Robrigo= 80, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueRobrigo;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
@@ -152,8 +211,7 @@ void Combat_RoBrigo(int *vida_de_rubens){
     
     while(vida_de_Robrigo > 0 && *vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        if(flag == 0) /*menu de opcoes para Rubens de 1 a 2*/;
-        MenudeRubens(ataqueRubens,&vida_de_Robrigo, *vida_de_rubens, &opRubens,4315,173);
+        MenudeRubens(ataqueRubens , &vida_de_Robrigo, *vida_de_rubens, &opRubens,4315,173);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;
@@ -171,7 +229,7 @@ void Combat_RoBrigo(int *vida_de_rubens){
         srand((unsigned)time(NULL));
         do{
             opAluno =  (rand() % 10);
-        }while(opAluno < 1 || opAluno > 2);
+        }while(opAluno < 1 || opAluno > 3);
         if(vida_de_Robrigo >= 40) opAluno = 4;
         switch (opAluno){
         case 1:
@@ -204,7 +262,7 @@ void Combat_RoBrigo(int *vida_de_rubens){
 }
 //Combate MuLittle
 void Combat_MuLittle(int *vida_de_rubens){
-    int vida_de_MuLittle = 85, opRubens, opAluno, flag = 0, contra_ataque1, contra_ataque2, contra_ataque3;
+    int vida_de_MuLittle = 85, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueMuLittle;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
@@ -218,7 +276,6 @@ void Combat_MuLittle(int *vida_de_rubens){
     
     while(vida_de_MuLittle > 0 && *vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        if(flag == 0) /*menu de opcoes para Rubens de 1 a 2*/;
         MenudeRubens(ataqueRubens,&vida_de_MuLittle, *vida_de_rubens, &opRubens,6905,173);
         switch (opRubens){
         case 1:
@@ -273,7 +330,7 @@ void Combat_MuLittle(int *vida_de_rubens){
 //Combate Anny
 
 void Combat_XAnny(int *vida_de_rubens){
-    int vida_de_XAnny = 90, opRubens, opAluno, flag = 0, contra_ataque1, contra_ataque2, contra_ataque3;
+    int vida_de_XAnny = 90, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; 
     ataques_aluno ataqueXAnny;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
@@ -287,7 +344,6 @@ void Combat_XAnny(int *vida_de_rubens){
     //dialogo entre XAnny e Rubens
     while(vida_de_XAnny > 0 && *vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        if(flag == 0) /*menu de opcoes para Rubens de 1 a 2*/;
         MenudeRubens(ataqueRubens,&vida_de_XAnny, *vida_de_rubens, &opRubens,9603,172);
         switch (opRubens){
         case 1:
@@ -306,7 +362,7 @@ void Combat_XAnny(int *vida_de_rubens){
         srand((unsigned)time(NULL));
         do{
             opAluno =  (rand() % 10);
-        }while(opAluno < 1 || opAluno > 2);
+        }while(opAluno < 1 || opAluno > 3);
         if(vida_de_XAnny > 40) opAluno = 4;
         switch (opAluno){
         case 1:
@@ -343,7 +399,7 @@ void Combat_XAnny(int *vida_de_rubens){
 //Combate do Freddy
 void Combat_Freddy(int *vida_de_rubens){
     mus Musica=CarregaMusicas(Musica);
-    //int vida_de_Freddy = ?, opRubens, opAluno, flag = 0;
+    int vida_de_Freddy = 200, opRubens, opAluno = 0, flag = 0, contra_ataque1, contra_ataque2, contra_ataque3;
     //dialogo entre Freddy e Rubens
     PlaySound(Musica.musica[8]);
     //combate Freddy x Rubens:
@@ -351,8 +407,52 @@ void Combat_Freddy(int *vida_de_rubens){
     ataques_rubens ataqueRubens; ataques_aluno ataqueFreddy;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
-    
-   /* if(vida_de_Freddy<=0 && *vida_de_rubens<=0){
+    ataqueFreddy.acertar_questao = 20; ataqueFreddy.discutir_questao = 25;
+    ataqueFreddy.chamar_no_zap = 35;
+    while(vida_de_Freddy > 0 && *vida_de_rubens > 0){
+        contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
+        MenudeRubensFreddy(ataqueRubens, &vida_de_Freddy, *vida_de_rubens, &opRubens, opAluno, 9603, 172);
+        switch (opRubens){
+        case 1:
+            contra_ataque2 = 1.3;
+            break;
+        case 2:
+            contra_ataque3 = 1.4;
+            break;
+        case 3:
+            contra_ataque3 = 1.5;
+            break;
+        default:
+            break;
+        }
+        //menu de opcoes para aluno
+        srand((unsigned)time(NULL));
+        do{
+            opAluno =  (rand() % 10);
+        }while(opAluno < 1 || opAluno > 3);
+        
+        switch (opAluno){
+        case 1:
+            *vida_de_rubens -= contra_ataque1 * ataqueFreddy.acertar_questao;
+            DrawText("Acertei a questao!",1750.0f,175.0f,5,RED);
+            break;
+        case 2:
+            *vida_de_rubens -= contra_ataque2 * ataqueFreddy.discutir_questao;
+             DrawText("Discuti questao!",1750.0f,175.0f,5,BLUE);
+            break;
+        case 3:
+            *vida_de_rubens -= contra_ataque3 * ataqueFreddy.chamar_no_zap;
+             DrawText("Chamei no Zap!",1750.0f,175.0f,5,GREEN);
+            break;
+        default:
+            break;
+        }
+    }
+    if(*vida_de_rubens <= 0){
+        
+        //animacao rubia morrendo
+    }
+    if(vida_de_Freddy<=0 && *vida_de_rubens<=0){
         StopSound(Musica.musica[9]);
-   }*/
+    }
 }

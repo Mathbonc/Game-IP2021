@@ -411,7 +411,7 @@ void Combat_Freddy(int *vida_de_rubens){
     ataqueFreddy.chamar_no_zap = 35;
     while(vida_de_Freddy > 0 && *vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        MenudeRubensFreddy(ataqueRubens, &vida_de_Freddy, *vida_de_rubens, &opRubens, opAluno, 9603, 172);
+        MenuCombatFreddy(ataqueRubens, &vida_de_Freddy, *vida_de_rubens, &opRubens, opAluno, 9603, 172);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;

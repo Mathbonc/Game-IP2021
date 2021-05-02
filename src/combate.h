@@ -19,7 +19,7 @@ typedef struct{
 }player;
 
 void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens,int posx,int posy);
-void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens, int opFreddy,int posx,int posy)
+void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens, int opFreddy,int posx,int posy);
 void Combat_LeaoNidas(int *vida_de_rubens);
 void Combat_RoBrigo(int *vida_de_rubens);
 void Combat_MuLittle(int *vida_de_rubens);

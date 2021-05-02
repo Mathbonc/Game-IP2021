@@ -1,6 +1,7 @@
 #ifndef ASSETS_H
 #define ASSETS_H
 
+#include <stdlib.h>
 #include <raylib.h>
 #include "moviment.h"
 #define MenuScale 3.333

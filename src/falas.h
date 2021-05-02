@@ -1,3 +1,5 @@
+#ifndef FALAS_H
+#define FALAS_H
 #include "raylib.h"
 #include <string.h>
 #include <stdlib.h>
@@ -97,3 +99,4 @@ const char fala45[]="Email: Professora Rubens, a universidade pede\nque você fa
 const char fala[]="NÃAAAAAAAAAAAAAAAAAAAAAAAAAAAAOOOOOOOOOOOOO";
 const char fala[]="E nunca mais os dados de Rubens foram vistos.";
 
+#endif

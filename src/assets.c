@@ -83,7 +83,7 @@ void UnloadUIIG(UIIG InGameUI){
     UnloadMusicStream(InGameUI.GameCombat);
 }
 //INCLUIR VIDA NESSA FUNÇÃO!!!
-void DrawGameUI(bool *GamePause, UIIG InGameUI,UIRECS MenuRects, Player rbns){
+void DrawGameUI(bool *GamePause, UIIG InGameUI,UIRECS MenuRects, Player rbns, float *SoundVolume, UI UIAssets, bool *OptWindow){
     int soundButton = 0;
     if(IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L)){PlaySound(InGameUI.Attack);}
     if(CheckCollisionPointRec((Vector2)GetMousePosition(),(Rectangle){1224,24,InGameUI.Pause.width*2.2,InGameUI.Pause.height*2.2})){
@@ -113,14 +113,17 @@ void DrawGameUI(bool *GamePause, UIIG InGameUI,UIRECS MenuRects, Player rbns){
             if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){*GamePause = !*GamePause;soundButton=1;}
         }
         if(CheckCollisionPointRec((Vector2)GetMousePosition(),MenuRects.OPT)){
-            if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
-                //DESENHA FRAME
-            }
-        }
+            if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){*OptWindow = !*OptWindow;}
+        }        
         if(CheckCollisionPointRec((Vector2)GetMousePosition(),MenuRects.EXIT)){
             if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
                 exit(0);
             }
+        }
+        if(*OptWindow){
+            DrawOpt(UIAssets,SoundVolume);
+            ChangeVolume(SoundVolume, UIAssets);
+            DrawTextEx(UIAssets.Alagard,"Musica",(Vector2){581,314},30,1,RAYWHITE);
         }
     }
     if(soundButton==1){PlaySound(InGameUI.PauseSound);}
@@ -166,8 +169,28 @@ void DrawOpt(UI UIAssets,float *SoundVolume){
                     0.0f,RAYWHITE);
     DrawTexturePro(UIAssets.Arrows,
                     (Rectangle){UIAssets.Arrows.width*2/3,0,UIAssets.Arrows.width/3,UIAssets.Arrows.height},
-                    (Rectangle){749+(UIAssets.Arrows.width*8/4),373-(UIAssets.Arrows.height*10/4),UIAssets.Arrows.width*2,UIAssets.Arrows.height*6},
+                    (Rectangle){749+(UIAssets.Arrows.width*8/4),372-(UIAssets.Arrows.height*10/4),UIAssets.Arrows.width*2,UIAssets.Arrows.height*6},
                     (Vector2){UIAssets.Arrows.width*8/4,UIAssets.Arrows.height*6/4},
                     0.0f,RAYWHITE);
+}
+void ChangeVolume(float *SoundVolume, UI UIAssets){
+    bool soundButton =0;
+    Rectangle VolumeDown = {475,345,40,40};
+    Rectangle VolumeUp = {755,345,40,40};
+    if(CheckCollisionPointRec((Vector2)GetMousePosition(),VolumeDown)){
+        if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
+            soundButton = !soundButton;
+            (*SoundVolume)-=0.1;
+            if((*SoundVolume)<=0.0){(*SoundVolume)=0.0;}
+        }
+    }
+    if(CheckCollisionPointRec((Vector2)GetMousePosition(),VolumeUp)){
+        if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
+            soundButton = !soundButton;
+            (*SoundVolume)+=0.1;
+            if((*SoundVolume)>=0.5){(*SoundVolume)=0.5;}
+        }
+    }
+    if(soundButton){PlaySound(UIAssets.Click);}
 }
 

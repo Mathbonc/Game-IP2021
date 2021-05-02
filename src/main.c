@@ -32,9 +32,9 @@ int main(){
     cloudsScroll.FC3 = 0.0f;
     //MUSICS
     PlayMusicStream(Menu.Music);
-    SetMusicVolume(Menu.Music,SoundVolume);
     
     while(GameStage==0){
+        SetMusicVolume(Menu.Music,SoundVolume);
         UpdateMusicStream(Menu.Music);
         //Scrolling
         cloudsScroll.BGC-=0.2f;
@@ -46,8 +46,8 @@ int main(){
     }
     if(GameStage==1){
         MudaMusica(Menu.Music,InGameUI.GameMusic1);
-        SetMusicVolume(InGameUI.GameMusic1,SoundVolume);
         
+        SoundVolume=0;
         char last = 'd';
         
         Player rbns = {0};
@@ -109,17 +109,14 @@ int main(){
         camera.zoom = 2.0f;
         
         while(GameStage==1){
+            SetMusicVolume(InGameUI.GameMusic1,SoundVolume);
             UpdateMusicStream(InGameUI.GameMusic1);
             BeginDrawing();
             Game(&rbns, guard, storm, extras, obst, rbnsTex, guardTex, stormTex, itensTex, &camera, &frame, &last, &timer, background, &text_cont, &text_aux);
-            DrawGameUI(&GamePause, InGameUI, MenuRects, rbns);
+            DrawGameUI(&GamePause, InGameUI, MenuRects, rbns, &SoundVolume, UIAssets,&OptWindow);
             EndDrawing();
         }
-    }
-    
-    
-    StopMusicStream(Menu.Music);
-    
+    }   
     UnloadUIAssets(UIAssets);
     UnloadMenu(Menu);
     UnloadUIIG(InGameUI);
@@ -190,6 +187,7 @@ int MenuSelect(UI UIAssets,bool *OptWindow,float *SoundVolume){
         if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){*OptWindow = !*OptWindow;PlaySound(UIAssets.Click);}
     }if(*OptWindow){
         DrawOpt(UIAssets,SoundVolume);
+        ChangeVolume(SoundVolume, UIAssets);
         DrawTextEx(UIAssets.Alagard,"Musica",(Vector2){581,314},30,1,RAYWHITE);
     }
     if(CheckCollisionPointRec(Pointer,EndGame)){

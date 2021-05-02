@@ -65,7 +65,8 @@ void UnloadUIIG(UIIG InGameUI);
 
 UIRECS DefineUIRECTS();
 
-void DrawGameUI(bool *GamePause, UIIG InGameUI, UIRECS MenuRects, Player rbns);
+void DrawGameUI(bool *GamePause, UIIG InGameUI, UIRECS MenuRects, Player rbns,float *SoundVolume, UI UIAssets, bool *OptWindows);
 void DrawOpt(UI UIAssets,float *SoundVolume);
+void ChangeVolume(float *SoundVolume, UI UIAssets);
 
 #endif

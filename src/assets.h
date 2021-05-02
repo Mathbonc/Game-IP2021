@@ -27,6 +27,8 @@ typedef struct{
 typedef struct{
     Texture2D ButtonLong;
     Texture2D OptFrame;
+    Texture2D Arrows;
+    Texture2D SoundBar;
     Font Alagard;
     Sound Click;
     Sound ConfirmClick;
@@ -63,4 +65,5 @@ void UnloadUIIG(UIIG InGameUI);
 UIRECS DefineUIRECTS();
 
 void DrawGameUI(bool *GamePause, UIIG InGameUI, UIRECS MenuRects, Player rbns);
+void DrawOpt(UI UIAssets,float *SoundVolume);
 #endif

@@ -5,7 +5,7 @@
 #include "assets.h"
 
 void ParallaxMenu(float BGC, float FC1, float FC2, float FC3, Parallax Menu,UI UIAssets);
-int MenuSelect(UI UIAssets,bool *OptWindow);
+int MenuSelect(UI UIAssets, bool *OptWindow, float *SoundVolume);
 
 int main(){
     const int WindowWidth = 1280;
@@ -24,6 +24,7 @@ int main(){
     bool OptWindow = false;
     bool GamePause = 0;
     int GameStage = 0;
+    float SoundVolume = 0.1;
     //SCROLL
     scrolling cloudsScroll;
     cloudsScroll.BGC = 0.0f;
@@ -32,7 +33,7 @@ int main(){
     cloudsScroll.FC3 = 0.0f;
     //MUSICS
     PlayMusicStream(Menu.Music);
-    SetMusicVolume(Menu.Music,0.1);
+    SetMusicVolume(Menu.Music,SoundVolume);
     
     while(GameStage==0){
         UpdateMusicStream(Menu.Music);
@@ -42,11 +43,11 @@ int main(){
         cloudsScroll.FC2-=0.3f;
         cloudsScroll.FC3+=0.2f;
         ParallaxMenu(cloudsScroll.BGC,cloudsScroll.FC1,cloudsScroll.FC2,cloudsScroll.FC3,Menu,UIAssets);
-        GameStage = MenuSelect(UIAssets,&OptWindow);
+        GameStage = MenuSelect(UIAssets,&OptWindow,&SoundVolume);
     }
     if(GameStage==1){
         MudaMusica(Menu.Music,InGameUI.GameMusic1);
-        SetMusicVolume(InGameUI.GameMusic1,0.1);
+        SetMusicVolume(InGameUI.GameMusic1,SoundVolume);
         
         char last = 'd';
         
@@ -171,7 +172,7 @@ void ParallaxMenu(float BGC, float FC1, float FC2, float FC3, Parallax Menu,UI U
         
 }
 
-int MenuSelect(UI UIAssets,bool *OptWindow){
+int MenuSelect(UI UIAssets,bool *OptWindow,float *SoundVolume){
     
     Rectangle StartGame = {640-UIAssets.ButtonLong.width*2.5,400,UIAssets.ButtonLong.width*5,UIAssets.ButtonLong.height*5};
     Rectangle Options =   {640-UIAssets.ButtonLong.width*2.5,480,UIAssets.ButtonLong.width*5,UIAssets.ButtonLong.height*5};
@@ -189,11 +190,7 @@ int MenuSelect(UI UIAssets,bool *OptWindow){
     if(CheckCollisionPointRec(Pointer,Options)){
         if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){*OptWindow = !*OptWindow;PlaySound(UIAssets.Click);}
     }if(*OptWindow){
-        DrawTexturePro(UIAssets.OptFrame,
-                        (Rectangle){0,0,UIAssets.OptFrame.width,UIAssets.OptFrame.height},
-                        (Rectangle){(640-UIAssets.OptFrame.width*3), (360-UIAssets.OptFrame.height*2), (UIAssets.OptFrame.width*6),(UIAssets.OptFrame.height*4)},
-                        (Vector2){0,0},   
-                        0.0f,RAYWHITE);
+        DrawOpt(UIAssets,SoundVolume);
         DrawTextEx(UIAssets.Alagard,"  Nada pra\n  ver aqui",(Vector2){549,328},30,1,RAYWHITE);
     }
     if(CheckCollisionPointRec(Pointer,EndGame)){

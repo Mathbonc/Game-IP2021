@@ -8,6 +8,8 @@ UI LoadUIAssets(){
     
     UIAssets.ButtonLong = (Texture2D) LoadTexture("../bin/UI/ButtonLong.png");
     UIAssets.OptFrame = (Texture2D) LoadTexture("../bin/UI/frame.png");
+    UIAssets.Arrows = (Texture2D) LoadTexture("../bin/UI/Arrows.png");
+    UIAssets.SoundBar = (Texture2D) LoadTexture("../bin/UI/SoundBar.png");
     UIAssets.Alagard = (Font) LoadFont("../fonts/alagard.ttf");
     UIAssets.Click =(Sound) LoadSound("../bin/Sample/Interface/Back_tones/style2/back_style_2_004.wav");
     UIAssets.ConfirmClick = (Sound) LoadSound("../bin/Sample/Interface/Confirm_tones/style2/confirm_style_2_echo_001.wav");
@@ -132,5 +134,21 @@ UIRECS DefineUIRECTS(){
     MenuRects.START = (Rectangle){580,270,120,50};
     return MenuRects;
 }
-
+void DrawOpt(UI UIAssets,float *SoundVolume){
+    DrawTexturePro(UIAssets.OptFrame,
+                    (Rectangle){0,0,UIAssets.OptFrame.width,UIAssets.OptFrame.height},
+                    (Rectangle){(640-UIAssets.OptFrame.width*5), (360-UIAssets.OptFrame.height*3), (UIAssets.OptFrame.width*10),(UIAssets.OptFrame.height*6)},
+                    (Vector2){0,0},   
+                    0.0f,RAYWHITE);
+    DrawTexturePro(UIAssets.SoundBar,
+                    (Rectangle){0,0,UIAssets.SoundBar.width,UIAssets.SoundBar.height/2},
+                    (Rectangle){640-UIAssets.SoundBar.width*2.5,360-(UIAssets.SoundBar.height/2),UIAssets.SoundBar.width*5,(UIAssets.SoundBar.height*4/2)},
+                    (Vector2){(UIAssets.SoundBar.width/2.5)-10,UIAssets.SoundBar.height/4},
+                    0.0f,RAYWHITE);  
+    DrawTexturePro(UIAssets.SoundBar,
+                    (Rectangle){0,UIAssets.SoundBar.height/2,UIAssets.SoundBar.width*(*SoundVolume/0.5),UIAssets.SoundBar.height/2},
+                    (Rectangle){640-UIAssets.SoundBar.width*2.5,360-(UIAssets.SoundBar.height/2)-8,UIAssets.SoundBar.width*5*(*SoundVolume/0.5),(UIAssets.SoundBar.height*4/2)},
+                    (Vector2){(UIAssets.SoundBar.width/2.5)-10,UIAssets.SoundBar.height/4},
+                    0.0f,RAYWHITE);
+}
 

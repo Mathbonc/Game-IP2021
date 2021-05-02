@@ -73,7 +73,7 @@ void UnloadUIIG(UIIG InGameUI){
     UnloadSound(InGameUI.PauseSound);
 }
 //INCLUIR VIDA NESSA FUNÇÃO!!!
-void DrawGameUI(bool *GamePause, UIIG InGameUI){
+void DrawGameUI(bool *GamePause, UIIG InGameUI, Player rbns){
     int soundButton = 0;
     if(CheckCollisionPointRec((Vector2)GetMousePosition(),(Rectangle){1224,24,InGameUI.Pause.width*2.2,InGameUI.Pause.height*2.2})){
         if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){*GamePause = !*GamePause;soundButton=1;}
@@ -85,7 +85,7 @@ void DrawGameUI(bool *GamePause, UIIG InGameUI){
                     (Vector2){InGameUI.HealthBar.width/2,InGameUI.HealthBar.height/2},
                     0.0f,RAYWHITE);
     
-    Rectangle GreenBar = {44.5,37,InGameUI.HealthBar.width*1.82*(Health/200),InGameUI.HealthBar.height*1.6};
+    Rectangle GreenBar = {44.5,37,InGameUI.HealthBar.width*1.82*(rbns.life/200),InGameUI.HealthBar.height*1.6};
     DrawRectangleRec(GreenBar,GREEN);
     
     DrawTexturePro(InGameUI.Pause,
@@ -102,3 +102,16 @@ void DrawGameUI(bool *GamePause, UIIG InGameUI){
         
     }
 }
+
+Texture2D *LoadrbnsTex(){
+    Texture2D rbnsTex[5];
+    rbnsTex[0] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_Idle.png"); //Idle Texture
+    rbnsTex[1] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_Run.png"); //Run Texture
+    rbnsTex[2] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_Die.png"); //Die Texture
+    rbnsTex[3] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_AttackLtt.png"); //Attack Texture
+    rbnsTex[4] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_AttackLtt2.png"); //Attack Texture 2
+    
+    return rbnsTex;
+}
+
+

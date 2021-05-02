@@ -1,5 +1,6 @@
 #ifndef ASSETS_H
 #define ASSETS_H
+
 #include <raylib.h>
 #include "moviment.h"
 #define MenuScale 3.333
@@ -53,6 +54,6 @@ void MudaMusica(Music song_anterior, Music song_proximo);
 UIIG LoadUIIG();
 void UnloadUIIG(UIIG InGameUI);
 //INCLUIR VIDA NESSA FUNÇÃO!!
-void DrawGameUI(bool *GamePause, UIIG InGameUI);
+void DrawGameUI(bool *GamePause, UIIG InGameUI, Player rbns);
 
 #endif

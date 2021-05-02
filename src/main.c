@@ -95,6 +95,23 @@ int main(){
         stormTex[2] = LoadTexture("../bin/Characters/Enemies/Stormhead/attack.png"); //Attack Texture
         stormTex[3] = LoadTexture("../bin/Characters/Enemies/Stormhead/damaged.png");
         
+        Student stud[5] = {0};
+        stud[0].life = 200; //Leao Nidas
+        stud[0].position = (Vector2){1750.0f, 175.0f};
+        stud[0].texture = LoadTexture("../bin/Characters/Students/Leao Nidas/frente_ruivo.png");
+        stud[1].life = 200; //Ro Brigo
+        stud[1].position = (Vector2){4330.0f, 175.0f};
+        stud[1].texture = LoadTexture("../bin/Characters/Students/Ro Brigo/frente_loiro.png");
+        stud[2].life = 200; //MuLittle
+        stud[2].position = (Vector2){6920.0f, 175.0f};
+        stud[2].texture = LoadTexture("../bin/Characters/Students/MuLittle/frente_moreno.png");
+        stud[3].life = 200;
+        stud[3].position = (Vector2){9610.0f, 175.0f};
+        stud[3].texture = LoadTexture("../bin/Characters/Students/X Anny/fem_frente.png");
+        stud[4].life = 300;
+        stud[4].position = (Vector2){12260.0f, 175.0f};
+        stud[4].texture = LoadTexture("../bin/Characters/Students/Freddy Rico/noBKG_KnightIdle_strip.png");
+        
         Texture2D itensTex = LoadTexture("../bin/Itens/canetaverm.png");
         
         Texture2D background = LoadTexture("../bin/Map/fullmap.png");
@@ -112,7 +129,7 @@ int main(){
             SetMusicVolume(InGameUI.GameMusic1,SoundVolume);
             UpdateMusicStream(InGameUI.GameMusic1);
             BeginDrawing();
-            Game(&rbns, guard, storm, extras, obst, rbnsTex, guardTex, stormTex, itensTex, &camera, &frame, &last, &timer, background, &text_cont, &text_aux);
+            Game(&rbns, guard, storm, extras, obst, rbnsTex, guardTex, stormTex, itensTex, &camera, &frame, &last, &timer, background, &text_cont, &text_aux, stud);
             DrawGameUI(&GamePause, InGameUI, MenuRects, rbns, &SoundVolume, UIAssets,&OptWindow);
             EndDrawing();
         }

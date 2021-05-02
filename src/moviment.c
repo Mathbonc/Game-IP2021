@@ -3,7 +3,7 @@
 #include "falas.h"
 #include <math.h>
 
-int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectangle obst[], Texture2D rbnsTex[], Texture2D guardTex[], Texture2D stormTex[], Texture2D itensTex, Camera2D *camera, int *frame, char *last, float *timer, Texture2D background, int *text_cont, int *text_aux){
+int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectangle obst[], Texture2D rbnsTex[], Texture2D guardTex[], Texture2D stormTex[], Texture2D itensTex, Camera2D *camera, int *frame, char *last, float *timer, Texture2D background, int *text_cont, int *text_aux, Student stud[]){
     
     int i;
     charcont[1]=1;
@@ -72,7 +72,7 @@ int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectang
         //-----------------------------------------------------------------------------------------------------------------------------------
         
         //Desenhando Estudantes
-        //studentPlace(lnidas, robrigo, mulittle, xanny, freddy, *frame);
+        studentPlace(stud, *frame);
         //-----------------------------------------------------------------------------------------------------------------------------------
         
         //Gerenciando Itens
@@ -457,7 +457,13 @@ void cameraUpdate(Camera2D *camera, Player rbns){
     if(camera->target.y>270) camera->target.y = 270;
 }
 //-----------------------------------------------------------------------------------------------------------------------------------
-void studentPlace(Student lnidas, Student robrigo, Student mulittle, Student xanny, Student freddy, int frame){
+void studentPlace(Student stud[], int frame){
+    Student lnidas = stud[0];
+    Student robrigo = stud[1];
+    Student mulittle = stud[2];
+    Student xanny = stud[3];
+    Student freddy = stud[4];
+    
     float lnidasframeWidth = (float)(lnidas.texture.width/6);
     int maxFramesLnidas = (int)(lnidas.texture.width/(int)lnidasframeWidth);
     
@@ -482,11 +488,21 @@ void studentPlace(Student lnidas, Student robrigo, Student mulittle, Student xan
 }
 //-----------------------------------------------------------------------------------------------------------------------------------   
 void studentFight(Player *rbns){
-    //if(rbns->position.x > 1720 && rbns->position.x < 1830) //chama combate 1
-    //if(rbns->position.x > 4300 && rbns->position.x < 4370) //chama combate 2
-    //if(rbns->position.x > 6910 && rbns->position.x < 7030) //chama combate 3
-    //if(rbns->position.x > 9600 && rbns->position.x < 9730) //chama combate 4
-    //if(rbns->position.x > 12250) //chama combate 5
+    if(rbns->position.x > 1720 && rbns->position.x < 1830){
+
+    }        //chama combate 1
+    if(rbns->position.x > 4300 && rbns->position.x < 4370){
+
+    }        //chama combate 2
+    if(rbns->position.x > 6910 && rbns->position.x < 7030){
+
+    }        //chama combate 3
+    if(rbns->position.x > 9600 && rbns->position.x < 9730){
+
+    }        //chama combate 4
+    if(rbns->position.x > 12250){
+
+    }        //chama combate 5
 }
 //-----------------------------------------------------------------------------------------------------------------------------------
 Player Setrbns(){

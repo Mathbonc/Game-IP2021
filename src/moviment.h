@@ -3,7 +3,7 @@
 
 #include <raylib.h>
 #include <math.h>
-#include "assets.h"
+
 
 #define numObjs 8
 

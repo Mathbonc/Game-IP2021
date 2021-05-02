@@ -85,7 +85,7 @@ void DrawGameUI(bool *GamePause, UIIG InGameUI, Player rbns){
                     (Vector2){InGameUI.HealthBar.width/2,InGameUI.HealthBar.height/2},
                     0.0f,RAYWHITE);
     
-    Rectangle GreenBar = {44.5,37,InGameUI.HealthBar.width*1.82*(rbns.life/200),InGameUI.HealthBar.height*1.6};
+    Rectangle GreenBar = {44.5,37,InGameUI.HealthBar.width*1.82*(rbns.life/200.0),InGameUI.HealthBar.height*1.6};
     DrawRectangleRec(GreenBar,GREEN);
     
     DrawTexturePro(InGameUI.Pause,

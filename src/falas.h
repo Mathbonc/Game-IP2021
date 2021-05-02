@@ -97,6 +97,6 @@ const char fala44[]="E nunca mais as notas de Freddy Rico foram vistas.";
 
 const char fala45[]="Email: Professora Rubens, a universidade pede\nque você faça provas condizentes com o assunto visto\ne com os exercícios passados em sala.";
 const char fala[]="NÃAAAAAAAAAAAAAAAAAAAAAAAAAAAAOOOOOOOOOOOOO";
-const char fala[]="E nunca mais os dados de Rubens foram vistos.";
+//const char fala[]="E nunca mais os dados de Rubens foram vistos.";
 
 #endif

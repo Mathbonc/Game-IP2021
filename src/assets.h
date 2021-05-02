@@ -66,4 +66,5 @@ UIRECS DefineUIRECTS();
 
 void DrawGameUI(bool *GamePause, UIIG InGameUI, UIRECS MenuRects, Player rbns);
 void DrawOpt(UI UIAssets,float *SoundVolume);
+
 #endif

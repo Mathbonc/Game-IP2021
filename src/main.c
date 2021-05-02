@@ -10,8 +10,7 @@ int MenuSelect(UI UIAssets, bool *OptWindow, float *SoundVolume);
 int main(){
     const int WindowWidth = 1280;
     const int WindowHeight = 720;
-    const int windowWidth = 1280;
-    const int windowHeight = 720;
+    
     InitWindow(WindowWidth,WindowHeight,"MainMenu");
     InitAudioDevice();
     SetTargetFPS(60);
@@ -101,18 +100,18 @@ int main(){
         Texture2D background = LoadTexture("../bin/Map/fullmap.png");
         
         float timer = 0.0f;
-        int frame = 0, frameDie = 0, frameAtk = 0;
+        int frame = 0, frameDie = 0, frameAtk = 0, text_cont=1, text_aux=0;
         
         Camera2D camera;
         camera.target = (Vector2){rbns.position.x + 20.0f,rbns.position.y + 20.0f};
-        camera.offset = (Vector2){windowWidth/2.0f, windowHeight/2.0f};
+        camera.offset = (Vector2){WindowWidth/2.0f, WindowHeight/2.0f};
         camera.rotation = 0.0f;
         camera.zoom = 2.0f;
         
         while(GameStage==1){
             UpdateMusicStream(InGameUI.GameMusic1);
             BeginDrawing();
-            Game(&rbns, guard, storm, extras, obst, rbnsTex, guardTex, stormTex, itensTex, &camera, &frame, &last, &timer, background);
+            Game(&rbns, guard, storm, extras, obst, rbnsTex, guardTex, stormTex, itensTex, &camera, &frame, &last, &timer, background, &text_cont, &text_aux);
             DrawGameUI(&GamePause, InGameUI, MenuRects, rbns);
             EndDrawing();
         }

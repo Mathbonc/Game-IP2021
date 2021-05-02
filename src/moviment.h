@@ -16,6 +16,7 @@ typedef struct{
 
 typedef struct{
     int life;
+    int died;
     int damage;
     Vector2 position;
     Rectangle bound, atkbound;
@@ -40,7 +41,7 @@ typedef struct{
 void generateEnemies(Enemies *guard, Enemies *storm);
 void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture2D rbnsTex[], int frame, int frameDie, char *last);
 void resetCharacter(Player *rbns);
-void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, Texture2D rbnsTexAtk2, char last, int frameAtk);
+void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTex[], Texture2D guardTex[], Texture2D stormTex[], char last, int frameAtk);
 void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], Texture2D guardTex[], Texture2D stormTex[], int frame);
 void resetEnemies(Enemies *guard, Enemies *storm, Player rbns);
 void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardTex[], Texture2D stormTex[], int frame);

@@ -8,8 +8,9 @@ void generateEnemies(Enemies *guard, Enemies *storm){
     int i;
     for(i=0; i<10; i++){
         guard[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
-        guard[i].speed = (GetRandomValue(5, 9) * 0.1);
+        guard[i].speed = (GetRandomValue(3, 5) * 0.1f);
         guard[i].life = 20;
+        guard[i].died = 0;
         guard[i].damage = GetRandomValue(1, 3);
         guard[i].bound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 30, 44};
         guard[i].atkbound = (Rectangle){guard[i].position.x-60, guard[i].position.y, 170, 44};
@@ -17,8 +18,9 @@ void generateEnemies(Enemies *guard, Enemies *storm){
     
     for(i=0; i<5; i++){
         storm[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
-        storm[i].speed = (GetRandomValue(3, 5) * 0.1);
+        storm[i].speed = (GetRandomValue(3, 5) * 0.1f);
         storm[i].life = 40;
+        storm[i].died = 0;
         storm[i].damage = GetRandomValue(3, 5);
         storm[i].bound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 30, 44};
         storm[i].atkbound = (Rectangle){guard[i].position.x+7, guard[i].position.y-5, 100, 44};
@@ -41,7 +43,7 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
     float frameWidthDie = (float)(rbnsTexDie.width/11);
     int maxFramesDie = (int)(rbnsTexDie.width/(int)frameWidthDie);
     
-    if(rbns->life > 0 && !IsKeyDown(KEY_C)){
+    if(rbns->life > 0){
         // 2 segundo parametro o Rectangle é a linha que vai ser desenhada, e o 4 a quantidade de linhas
         if(IsKeyDown(KEY_D)){
             DrawTextureRec(rbnsTexRun, (Rectangle){frameWidthRun*frame, 0, frameWidthRun, (float)rbnsTexRun.height}, (Vector2){rbns->position.x, rbns->position.y}, RAYWHITE); 
@@ -124,12 +126,23 @@ void resetCharacter(Player *rbns){
 }
 //-----------------------------------------------------------------------------------------------------------------------------------
 
-void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTexAtk, Texture2D rbnsTexAtk2, char last, int frameAtk){
+void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbnsTex[], Texture2D guardTex[], Texture2D stormTex[], char last, int frameAtk){
     int i;
+    Texture2D rbnsTexAtk = rbnsTex[3];
+    Texture2D rbnsTexAtk2 = rbnsTex[4];
+    
+    Texture2D guardTexHit = guardTex[3];
+    Texture2D stormTexHit = stormTex[3];
+    
     float frameWidthAtk = (float)(rbnsTexAtk.width/3);
     int maxFramesAtk = (int)(rbnsTexAtk.width/(int)frameWidthAtk);
     float frameWidthAtk2 = (float)(rbnsTexAtk2.width/3);
     int maxFramesAtk2 = (int)(rbnsTexAtk2.width/(int)frameWidthAtk2);
+    
+    float guardframeHeightHit = (float)(guardTexHit.height/3);
+    int guardmaxFramesHit = (int)(guardTexHit.width/(int)guardframeHeightHit);
+    float stormframeHeightHit = (float)(stormTexHit.height/2);
+    int stormmaxFramesHit = (int)(stormTexHit.width/(int)stormframeHeightHit);
     
     if(IsKeyDown(KEY_K)){
         if(last=='d') DrawTextureRec(rbnsTexAtk, (Rectangle){frameWidthAtk*frameAtk, 0, frameWidthAtk, (float)rbnsTexAtk.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
@@ -141,11 +154,13 @@ void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbns
     }
     for(i=0; i<10; i++){
         if((IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L)) && CheckCollisionRecs(rbns.atkbound, guard[i].bound)){
+            DrawTextureRec(guardTexHit, (Rectangle){0, guardframeHeightHit*frameAtk, guardframeHeightHit, (float)guardframeHeightHit*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
             guard[i].life -= rbns.damage;
         }
     }
     for(i=0; i<5; i++){
         if((IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L)) && CheckCollisionRecs(rbns.atkbound, storm[i].bound)){
+            DrawTextureRec(stormTexHit, (Rectangle){0, stormframeHeightHit*frameAtk, stormframeHeightHit, (float)stormframeHeightHit*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
             storm[i].life -= rbns.damage;
         }
     }
@@ -176,11 +191,18 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
     for(i=0; i<5; i++){
         if(storm[i].life>0) DrawTextureRec(stormTexMove, (Rectangle){0, stormframeHeightMove*frame, stormframeHeightMove, (float)stormframeHeightMove*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
     }
+    
     for(i=0; i<10; i++){
-        if(guard[i].life<=0) DrawTextureRec(guardTexDie, (Rectangle){0, guardframeHeightDie*frame, guardframeHeightDie, (float)guardframeHeightDie*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
+        if(guard[i].life<=0 && guard[i].died<11){
+            DrawTextureRec(guardTexDie, (Rectangle){0, guardframeHeightDie*frame, guardframeHeightDie, (float)guardframeHeightDie*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
+            guard[i].died ++;
+        }
     }
     for(i=0; i<5; i++){
-        if(storm[i].life<=0) DrawTextureRec(stormTexDie, (Rectangle){0, stormframeHeightDie*frame, stormframeHeightDie, (float)stormframeHeightDie*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
+        if(storm[i].life<=0 && storm[i].died<10){
+            DrawTextureRec(stormTexDie, (Rectangle){0, stormframeHeightDie*frame, stormframeHeightDie, (float)stormframeHeightDie*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
+            storm[i].died ++;
+        }
     }
     
     //Movimento do Guardian
@@ -265,7 +287,8 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
     for(i=0; i<10; i++){
         if(guard[i].life>0){
             if(CheckCollisionRecs(guard[i].atkbound, rbns->bound)){
-                if(GetRandomValue(1, 10)==1){
+                if(GetRandomValue(1, 25)==1){
+                    //DrawTextureRec(guardTexAtk, (Rectangle){0, guardframeHeightAtk*frame, -guardframeHeightAtk, (float)guardframeHeightAtk*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
                     rbns->life -= guard[i].damage;
                     rbns->hits += 1;
                 }
@@ -276,7 +299,7 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
     for(i=0; i<5; i++){
         if(storm[i].life>0){
             if(CheckCollisionRecs(storm[i].atkbound, rbns->bound)){
-                if(GetRandomValue(1, 10)==1){
+                if(GetRandomValue(1, 25)==1){
                     DrawTextureRec(stormTexAtk, (Rectangle){0, stormframeHeightAtk*frame, stormframeHeightAtk, (float)stormframeHeightAtk*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
                     rbns->life -= storm[i].damage;
                     rbns->hits += 1;
@@ -290,7 +313,8 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
 void resetEnemies(Enemies *guard, Enemies *storm, Player rbns){
     int i;
     for(i=0; i<10; i++){
-        guard[i].life = 3;
+        guard[i].life = 20;
+        guard[i].life = 0;
         //if(rbns.position.x <= 1830) guard[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         if(rbns.position.x > 2600 && rbns.position.x <= 4370) guard[i].position = (Vector2){GetRandomValue(3000, 4200), GetRandomValue(0, 350)};
         if(rbns.position.x > 5300 && rbns.position.x <= 7030) guard[i].position = (Vector2){GetRandomValue(5700, 8900), GetRandomValue(0, 350)};
@@ -299,7 +323,8 @@ void resetEnemies(Enemies *guard, Enemies *storm, Player rbns){
     }
     
     for(i=0; i<5; i++){
-        storm[i].life = 7;
+        storm[i].life = 40;
+        storm[i].died = 0;
         //if(rbns.position.x <= 1830) storm[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         if(rbns.position.x > 1830 && rbns.position.x <= 4370) storm[i].position = (Vector2){GetRandomValue(3000, 4200), GetRandomValue(0, 350)};
         if(rbns.position.x > 4370 && rbns.position.x <= 7030) storm[i].position = (Vector2){GetRandomValue(5700, 8900), GetRandomValue(0, 350)};

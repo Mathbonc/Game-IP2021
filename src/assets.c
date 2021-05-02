@@ -19,6 +19,8 @@ UI LoadUIAssets(){
 void UnloadUIAssets(UI UIAssets){
     UnloadTexture(UIAssets.ButtonLong);
     UnloadTexture(UIAssets.OptFrame);
+    UnloadTexture(UIAssets.Arrows);
+    UnloadTexture(UIAssets.SoundBar);
     UnloadFont(UIAssets.Alagard);
     UnloadSound(UIAssets.Click);
     UnloadSound(UIAssets.ConfirmClick);
@@ -61,6 +63,7 @@ UIIG LoadUIIG(){
     InGameUI.Pause = (Texture2D) LoadTexture("../bin/UI/pause_button.png");
     InGameUI.MenuPause = (Texture2D) LoadTexture("../bin/UI/pause_menu.png");
     InGameUI.PauseSound = (Sound) LoadSound("../bin/Sample/Interface/Cursor_tones/cursor_style_2.wav");
+    InGameUI.Attack = (Sound) LoadSound("../bin/Sample/Music/Sword Hit.wav");
     InGameUI.GameMusic1 = (Music) LoadMusicStream("../bin/Sample/Music/DavidKBD - HexaPuppies Pack - 02 - Meet the HexaPuppies - 1.ogg");
     InGameUI.GameMusic2 = (Music) LoadMusicStream("../bin/Sample/Music/Ludum Dare 38 - Track 8.wav");
     InGameUI.FredTheme = (Music) LoadMusicStream("../bin/Sample/Music/Ludum Dare 38 - Track 10.wav");
@@ -73,10 +76,16 @@ void UnloadUIIG(UIIG InGameUI){
     UnloadTexture(InGameUI.Pause);
     UnloadTexture(InGameUI.MenuPause);
     UnloadSound(InGameUI.PauseSound);
+    UnloadSound(InGameUI.Attack);
+    UnloadMusicStream(InGameUI.GameMusic1);
+    UnloadMusicStream(InGameUI.GameMusic2);
+    UnloadMusicStream(InGameUI.FredTheme);
+    UnloadMusicStream(InGameUI.GameCombat);
 }
 //INCLUIR VIDA NESSA FUNÇÃO!!!
 void DrawGameUI(bool *GamePause, UIIG InGameUI,UIRECS MenuRects, Player rbns){
     int soundButton = 0;
+    if(IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L)){PlaySound(InGameUI.Attack);}
     if(CheckCollisionPointRec((Vector2)GetMousePosition(),(Rectangle){1224,24,InGameUI.Pause.width*2.2,InGameUI.Pause.height*2.2})){
         if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){*GamePause = !*GamePause;soundButton=1;}
     }
@@ -149,6 +158,16 @@ void DrawOpt(UI UIAssets,float *SoundVolume){
                     (Rectangle){0,UIAssets.SoundBar.height/2,UIAssets.SoundBar.width*(*SoundVolume/0.5),UIAssets.SoundBar.height/2},
                     (Rectangle){640-UIAssets.SoundBar.width*2.5,360-(UIAssets.SoundBar.height/2)-8,UIAssets.SoundBar.width*5*(*SoundVolume/0.5),(UIAssets.SoundBar.height*4/2)},
                     (Vector2){(UIAssets.SoundBar.width/2.5)-10,UIAssets.SoundBar.height/4},
+                    0.0f,RAYWHITE);
+    DrawTexturePro(UIAssets.Arrows,
+                    (Rectangle){0,0,UIAssets.Arrows.width/3,UIAssets.Arrows.height},
+                    (Rectangle){570-(UIAssets.Arrows.width*8/4),372-(UIAssets.Arrows.height*10/4),UIAssets.Arrows.width*2,UIAssets.Arrows.height*6},
+                    (Vector2){UIAssets.Arrows.width*8/4,UIAssets.Arrows.height*6/4},
+                    0.0f,RAYWHITE);
+    DrawTexturePro(UIAssets.Arrows,
+                    (Rectangle){UIAssets.Arrows.width*2/3,0,UIAssets.Arrows.width/3,UIAssets.Arrows.height},
+                    (Rectangle){749+(UIAssets.Arrows.width*8/4),373-(UIAssets.Arrows.height*10/4),UIAssets.Arrows.width*2,UIAssets.Arrows.height*6},
+                    (Vector2){UIAssets.Arrows.width*8/4,UIAssets.Arrows.height*6/4},
                     0.0f,RAYWHITE);
 }
 

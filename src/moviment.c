@@ -235,13 +235,13 @@ void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbns
         if(last!='d') DrawTextureRec(rbnsTexAtk2, (Rectangle){frameWidthAtk2*frameAtk, 0, -frameWidthAtk2, (float)rbnsTexAtk2.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
     }
     for(i=0; i<10; i++){
-        if((IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L)) && CheckCollisionRecs(rbns.atkbound, guard[i].bound)){
+        if((IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L)) && CheckCollisionRecs(rbns.atkbound, guard[i].bound) && guard[i].life>0){
             DrawTextureRec(guardTexHit, (Rectangle){0, guardframeHeightHit*frameAtk, guardframeHeightHit, (float)guardframeHeightHit*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
             guard[i].life -= rbns.damage;
         }
     }
     for(i=0; i<5; i++){
-        if((IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L)) && CheckCollisionRecs(rbns.atkbound, storm[i].bound)){
+        if((IsKeyPressed(KEY_K) || IsKeyPressed(KEY_L)) && CheckCollisionRecs(rbns.atkbound, storm[i].bound) && storm[i].life>0){
             DrawTextureRec(stormTexHit, (Rectangle){0, stormframeHeightHit*frameAtk, stormframeHeightHit, (float)stormframeHeightHit*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
             storm[i].life -= rbns.damage;
         }
@@ -381,8 +381,8 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
     for(i=0; i<5; i++){
         if(storm[i].life>0){
             if(CheckCollisionRecs(storm[i].atkbound, rbns->bound)){
+                DrawTextureRec(stormTexAtk, (Rectangle){0, stormframeHeightAtk*frame, stormframeHeightAtk, (float)stormframeHeightAtk*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
                 if(GetRandomValue(1, 25)==1){
-                    DrawTextureRec(stormTexAtk, (Rectangle){0, stormframeHeightAtk*frame, stormframeHeightAtk, (float)stormframeHeightAtk*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
                     rbns->life -= storm[i].damage;
                     rbns->hits += 1;
                 }

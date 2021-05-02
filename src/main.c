@@ -190,7 +190,7 @@ int MenuSelect(UI UIAssets,bool *OptWindow,float *SoundVolume){
         if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){*OptWindow = !*OptWindow;PlaySound(UIAssets.Click);}
     }if(*OptWindow){
         DrawOpt(UIAssets,SoundVolume);
-        DrawTextEx(UIAssets.Alagard,"  Nada pra\n  ver aqui",(Vector2){549,328},30,1,RAYWHITE);
+        DrawTextEx(UIAssets.Alagard,"Musica",(Vector2){581,314},30,1,RAYWHITE);
     }
     if(CheckCollisionPointRec(Pointer,EndGame)){
         if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){

@@ -39,6 +39,7 @@ typedef struct{
     Texture2D Pause;
     Texture2D MenuPause;
     Sound PauseSound;
+    Sound Attack;
     Music GameMusic1;
     Music GameMusic2;
     Music FredTheme;

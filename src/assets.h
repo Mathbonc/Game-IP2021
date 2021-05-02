@@ -43,6 +43,12 @@ typedef struct{
     Music GameCombat;
 }UIIG;
 
+typedef struct{
+    Rectangle START;
+    Rectangle OPT;
+    Rectangle EXIT;
+}UIRECS;
+
 UI LoadUIAssets();
 void UnloadUIAssets (UI UIAssets);
 
@@ -53,7 +59,8 @@ void MudaMusica(Music song_anterior, Music song_proximo);
 
 UIIG LoadUIIG();
 void UnloadUIIG(UIIG InGameUI);
-//INCLUIR VIDA NESSA FUNÇÃO!!
-void DrawGameUI(bool *GamePause, UIIG InGameUI, Player rbns);
 
+UIRECS DefineUIRECTS();
+
+void DrawGameUI(bool *GamePause, UIIG InGameUI, UIRECS MenuRects, Player rbns);
 #endif

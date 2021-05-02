@@ -19,6 +19,7 @@ int main(){
     Parallax Menu = LoadMenu();
     UI UIAssets = LoadUIAssets();
     UIIG InGameUI = LoadUIIG();
+    UIRECS MenuRects = DefineUIRECTS();
     
     bool OptWindow = false;
     bool GamePause = 0;
@@ -107,11 +108,11 @@ int main(){
         camera.rotation = 0.0f;
         camera.zoom = 2.0f;
         
-        while(!WindowShouldClose()){
+        while(GameStage==1){
             UpdateMusicStream(InGameUI.GameMusic1);
             BeginDrawing();
             Game(&rbns, guard, storm, extras, obst, rbnsTex, guardTex, stormTex, itensTex, &camera, &frame, &last, &timer, background);
-            DrawGameUI(&GamePause, InGameUI, rbns);
+            DrawGameUI(&GamePause, InGameUI, MenuRects, rbns);
             EndDrawing();
         }
     }

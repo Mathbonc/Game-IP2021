@@ -73,12 +73,11 @@ void UnloadUIIG(UIIG InGameUI){
     UnloadSound(InGameUI.PauseSound);
 }
 //INCLUIR VIDA NESSA FUNÇÃO!!!
-void DrawGameUI(bool *GamePause, UIIG InGameUI, Player rbns){
+void DrawGameUI(bool *GamePause, UIIG InGameUI,UIRECS MenuRects, Player rbns){
     int soundButton = 0;
     if(CheckCollisionPointRec((Vector2)GetMousePosition(),(Rectangle){1224,24,InGameUI.Pause.width*2.2,InGameUI.Pause.height*2.2})){
         if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){*GamePause = !*GamePause;soundButton=1;}
     }
-    if(soundButton==1){PlaySound(InGameUI.PauseSound);}
     DrawTexturePro(InGameUI.HealthBar,
                     (Rectangle){0,0,InGameUI.HealthBar.width,InGameUI.HealthBar.height},
                     (Rectangle){80,40,InGameUI.HealthBar.width*2,InGameUI.HealthBar.height*2},
@@ -99,8 +98,21 @@ void DrawGameUI(bool *GamePause, UIIG InGameUI, Player rbns){
                         (Rectangle){640-(InGameUI.MenuPause.width),360-(InGameUI.MenuPause.height),InGameUI.MenuPause.width*4,InGameUI.MenuPause.height*4},
                         (Vector2){InGameUI.MenuPause.width,InGameUI.MenuPause.height},
                         0.0f,RAYWHITE);
-        
+        if(CheckCollisionPointRec((Vector2)GetMousePosition(),MenuRects.START)){
+            if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){*GamePause = !*GamePause;soundButton=1;}
+        }
+        if(CheckCollisionPointRec((Vector2)GetMousePosition(),MenuRects.OPT)){
+            if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
+                //DESENHA FRAME
+            }
+        }
+        if(CheckCollisionPointRec((Vector2)GetMousePosition(),MenuRects.EXIT)){
+            if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
+                exit(0);
+            }
+        }
     }
+    if(soundButton==1){PlaySound(InGameUI.PauseSound);}
 }
 
 Texture2D *LoadrbnsTex(){
@@ -112,6 +124,13 @@ Texture2D *LoadrbnsTex(){
     rbnsTex[4] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_AttackLtt2.png"); //Attack Texture 2
     
     return rbnsTex;
+}
+UIRECS DefineUIRECTS(){
+    UIRECS MenuRects;
+    MenuRects.EXIT = (Rectangle){580,400,120,50};
+    MenuRects.OPT = (Rectangle){580,335,120,50};
+    MenuRects.START = (Rectangle){580,270,120,50};
+    return MenuRects;
 }
 
 

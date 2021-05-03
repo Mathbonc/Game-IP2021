@@ -1,4 +1,5 @@
 #include "moviment.h"
+#include "combate.h"
 #include "raylib.h"
 #include "falas.h"
 #include <math.h>
@@ -25,10 +26,7 @@ int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectang
     
     //Gerenciando Camera
     cameraUpdate(camera, *rbns);
-    //-----------------------------------------------------------------------------------------------------------------------------------
     
-    //Gerenciando Bosses
-    studentFight(rbns);
     //-----------------------------------------------------------------------------------------------------------------------------------
     
     ClearBackground(RAYWHITE); //(Color){255, 0, 255, 255} -> forma alternativa
@@ -79,9 +77,13 @@ int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectang
         getItens(rbns, extras, itensTex);
         //-----------------------------------------------------------------------------------------------------------------------------------
         
+        //Gerenciando Bosses
+        studentFight(rbns,guard,storm,extras); 
+        //-----------------------------------------------------------------------------------------------------------------------------------
+        
     EndMode2D();
             
-            
+           
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------
@@ -268,10 +270,12 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
     int stormmaxFramesDie = (int)(stormTexDie.width/(int)stormframeHeightDie);
     
     for(i=0; i<10; i++){
-        if(guard[i].life>0) DrawTextureRec(guardTexMove, (Rectangle){0, guardframeHeightMove*frame, guardframeHeightMove, (float)guardframeHeightMove*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
+        if(guard[i].life>0 && guard[i].position.x > rbns.position.x) DrawTextureRec(guardTexMove, (Rectangle){0, guardframeHeightMove*frame, -guardframeHeightMove, (float)guardframeHeightMove*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
+        if(guard[i].life>0 && guard[i].position.x < rbns.position.x) DrawTextureRec(guardTexMove, (Rectangle){0, guardframeHeightMove*frame, guardframeHeightMove, (float)guardframeHeightMove*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
     }
     for(i=0; i<5; i++){
-        if(storm[i].life>0) DrawTextureRec(stormTexMove, (Rectangle){0, stormframeHeightMove*frame, stormframeHeightMove, (float)stormframeHeightMove*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
+        if(storm[i].life>0 && storm[i].position.x+30 > rbns.position.x) DrawTextureRec(stormTexMove, (Rectangle){0, stormframeHeightMove*frame, -stormframeHeightMove, (float)stormframeHeightMove*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
+        if(storm[i].life>0 && storm[i].position.x+30 < rbns.position.x) DrawTextureRec(stormTexMove, (Rectangle){0, stormframeHeightMove*frame, stormframeHeightMove, (float)stormframeHeightMove*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
     }
     
     for(i=0; i<10; i++){
@@ -369,8 +373,9 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
     for(i=0; i<10; i++){
         if(guard[i].life>0){
             if(CheckCollisionRecs(guard[i].atkbound, rbns->bound)){
+                if(guard[i].position.x < rbns->position.x) DrawTextureRec(guardTexAtk, (Rectangle){0, guardframeHeightAtk*frame, guardTex->width, (float)guardframeHeightAtk*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
+                else DrawTextureRec(guardTexAtk, (Rectangle){0, guardframeHeightAtk*frame, -guardTex->width, (float)guardframeHeightAtk*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
                 if(GetRandomValue(1, 25)==1){
-                    //DrawTextureRec(guardTexAtk, (Rectangle){0, guardframeHeightAtk*frame, -guardframeHeightAtk, (float)guardframeHeightAtk*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
                     rbns->life -= guard[i].damage;
                     rbns->hits += 1;
                 }
@@ -381,7 +386,8 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
     for(i=0; i<5; i++){
         if(storm[i].life>0){
             if(CheckCollisionRecs(storm[i].atkbound, rbns->bound)){
-                DrawTextureRec(stormTexAtk, (Rectangle){0, stormframeHeightAtk*frame, stormframeHeightAtk, (float)stormframeHeightAtk*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
+                if(storm[i].position.x+30 < rbns->position.x) DrawTextureRec(stormTexAtk, (Rectangle){0, stormframeHeightAtk*frame, stormframeHeightAtk, (float)stormframeHeightAtk*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
+                else DrawTextureRec(stormTexAtk, (Rectangle){0, stormframeHeightAtk*frame, -stormframeHeightAtk, (float)stormframeHeightAtk*1}, (Vector2){storm[i].position.x, storm[i].position.y}, RAYWHITE);
                 if(GetRandomValue(1, 25)==1){
                     rbns->life -= storm[i].damage;
                     rbns->hits += 1;
@@ -396,7 +402,7 @@ void resetEnemies(Enemies *guard, Enemies *storm, Player rbns){
     int i;
     for(i=0; i<10; i++){
         guard[i].life = 20;
-        guard[i].life = 0;
+        guard[i].died = 0;
         //if(rbns.position.x <= 1830) guard[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         if(rbns.position.x > 2600 && rbns.position.x <= 4370) guard[i].position = (Vector2){GetRandomValue(3000, 4200), GetRandomValue(0, 350)};
         if(rbns.position.x > 5300 && rbns.position.x <= 7030) guard[i].position = (Vector2){GetRandomValue(5700, 8900), GetRandomValue(0, 350)};
@@ -487,21 +493,31 @@ void studentPlace(Student stud[], int frame){
     if(robrigo.life> 0) DrawTextureRec(freddy.texture, (Rectangle){freddyframeWidth*frame, 0, -freddyframeWidth, freddy.texture.height}, (Vector2){freddy.position.x, freddy.position.y}, RAYWHITE);
 }
 //-----------------------------------------------------------------------------------------------------------------------------------   
-void studentFight(Player *rbns){
+void studentFight(Player *rbns,Enemies guard[],Enemies storm[],Itens extras[]){
     if(rbns->position.x > 1720 && rbns->position.x < 1830){
-
+        Combat_LeaoNidas(rbns);
+        //resetEnemies(guard, storm, *rbns);
+        //generateItens(extras,*rbns);
     }        //chama combate 1
     if(rbns->position.x > 4300 && rbns->position.x < 4370){
-
+        
+        resetEnemies(guard, storm, *rbns);
+        generateItens(extras,*rbns);
     }        //chama combate 2
     if(rbns->position.x > 6910 && rbns->position.x < 7030){
-
+        
+        resetEnemies(guard, storm, *rbns);
+        generateItens(extras,*rbns);
     }        //chama combate 3
     if(rbns->position.x > 9600 && rbns->position.x < 9730){
-
+        
+        resetEnemies(guard, storm, *rbns);
+        generateItens(extras,*rbns);
     }        //chama combate 4
     if(rbns->position.x > 12250){
-
+        
+        resetEnemies(guard, storm, *rbns);
+        generateItens(extras,*rbns);
     }        //chama combate 5
 }
 //-----------------------------------------------------------------------------------------------------------------------------------

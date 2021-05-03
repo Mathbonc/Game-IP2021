@@ -1,5 +1,6 @@
 #ifndef COMBATE_H
 #define COMBATE_H
+#include "moviment.h"
 #include <raylib.h>
 //Structs necessarias para os combates
 typedef struct{ //Struct para os ataques de Rubens
@@ -18,9 +19,9 @@ typedef struct{
     Texture2D Rubens[4];
 }player;
 
-void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens,int posx,int posy);
+void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens,Player rbns);
 void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens, int opFreddy,int posx,int posy);
-void Combat_LeaoNidas(int *vida_de_rubens);
+void Combat_LeaoNidas(Player *rbns);
 void Combat_RoBrigo(int *vida_de_rubens);
 void Combat_MuLittle(int *vida_de_rubens);
 void Combat_XAnny(int *vida_de_rubens);

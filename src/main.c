@@ -134,7 +134,7 @@ int main(){
             DrawGameUI(&GamePause, InGameUI, MenuRects, rbns, &SoundVolume, UIAssets,&OptWindow);
             EndDrawing();
         }
-    }   
+    }
     UnloadUIAssets(UIAssets);
     UnloadMenu(Menu);
     UnloadUIIG(InGameUI);

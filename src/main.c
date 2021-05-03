@@ -119,7 +119,7 @@ int main(){
         Texture2D background = LoadTexture("../bin/Map/fullmap.png");
         
         float timer = 0.0f;
-        int frame = 0, frameDie = 0, frameAtk = 0, text_cont=1, text_aux=0;
+        int frame = 0, text_cont=1, text_aux=0;
         
         Camera2D camera;
         camera.target = (Vector2){rbns.position.x + 20.0f,rbns.position.y + 20.0f};

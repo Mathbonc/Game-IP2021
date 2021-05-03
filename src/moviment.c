@@ -210,11 +210,8 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
     Texture2D rbnsTexDie = rbnsTex[2];
     
     float frameWidthIdle = (float)(rbnsTexIdle.width/6);
-    int maxFramesIdle = (int)(rbnsTexIdle.width/(int)frameWidthIdle);
-    float frameWidthRun = (float)(rbnsTexRun.width/8);
-    int maxFramesRun = (int)(rbnsTexRun.width/(int)frameWidthRun);
+    float frameWidthRun = (float)(rbnsTexRun.width/8);;
     float frameWidthDie = (float)(rbnsTexDie.width/11);
-    int maxFramesDie = (int)(rbnsTexDie.width/(int)frameWidthDie);
     
     if(rbns->life > 0){
         // 2 segundo parametro o Rectangle é a linha que vai ser desenhada, e o 4 a quantidade de linhas
@@ -269,14 +266,20 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
         if(rbns->position.y >= background.height-50) rbns->position.y -= 1.0f * rbns->speed;
         if(rbns->position.y <= 0) rbns->position.y += 1.0f * rbns->speed; 
                   
+        if(rbns->position.x < 1830){
+            if(rbns->position.x > 1820.0f) rbns->position.x = 1820.0f;
+        }
         if(rbns->position.x > 1830 && rbns->position.x <= 4370){
             if(rbns->position.x < 2650.0f) rbns->position.x = 2650.0f;
+            if(rbns->position.x > 4360.0f) rbns->position.x = 4360.0f;
         }
         if(rbns->position.x > 4370 && rbns->position.x <= 7030){
             if(rbns->position.x < 5550.0f) rbns->position.x = 5600.0f;
+            if(rbns->position.x > 7020.0f) rbns->position.x = 7020.0f;
         }
         if(rbns->position.x > 7030 && rbns->position.x <= 9730){
             if(rbns->position.x < 8150.0f) rbns->position.x = 8200.0f;
+            if(rbns->position.x > 9720.0f) rbns->position.x = 9720.0f;
         }
         if(rbns->position.x > 9730){
             if(rbns->position.x < 10890.0f) rbns->position.x = 10900.0f;
@@ -321,14 +324,10 @@ void attackCharacter(Enemies *guard, Enemies *storm, Player rbns, Texture2D rbns
     Texture2D stormTexHit = stormTex[3];
     
     float frameWidthAtk = (float)(rbnsTexAtk.width/3);
-    int maxFramesAtk = (int)(rbnsTexAtk.width/(int)frameWidthAtk);
     float frameWidthAtk2 = (float)(rbnsTexAtk2.width/3);
-    int maxFramesAtk2 = (int)(rbnsTexAtk2.width/(int)frameWidthAtk2);
     
     float guardframeHeightHit = (float)(guardTexHit.height/3);
-    int guardmaxFramesHit = (int)(guardTexHit.width/(int)guardframeHeightHit);
     float stormframeHeightHit = (float)(stormTexHit.height/2);
-    int stormmaxFramesHit = (int)(stormTexHit.width/(int)stormframeHeightHit);
     
     if(IsKeyDown(KEY_K)){
         if(last=='d') DrawTextureRec(rbnsTexAtk, (Rectangle){frameWidthAtk*frameAtk, 0, frameWidthAtk, (float)rbnsTexAtk.height}, (Vector2){rbns.position.x, rbns.position.y}, RAYWHITE);
@@ -362,14 +361,10 @@ void moveEnemie(Enemies *guard, Enemies *storm, Player rbns, Rectangle obst[], T
     Texture2D stormTexDie = stormTex[1];
     
     float guardframeHeightMove = (float)(guardTexMove.height/12);
-    int guardmaxFramesMove = (int)(guardTexMove.width/(int)guardframeHeightMove);
     float guardframeHeightDie = (float)(guardTexDie.height/10);
-    int guardmaxFramesDie = (int)(guardTexDie.width/(int)guardframeHeightDie);
     
     float stormframeHeightMove = (float)(stormTexMove.height/10);
-    int stormmaxFramesMove = (int)(stormTexMove.width/(int)stormframeHeightMove);
     float stormframeHeightDie = (float)(stormTexDie.height/9);
-    int stormmaxFramesDie = (int)(stormTexDie.width/(int)stormframeHeightDie);
     
     for(i=0; i<10; i++){
         if(guard[i].life>0 && guard[i].position.x > rbns.position.x) DrawTextureRec(guardTexMove, (Rectangle){0, guardframeHeightMove*frame, -guardframeHeightMove, (float)guardframeHeightMove*1}, (Vector2){guard[i].position.x, guard[i].position.y}, RAYWHITE);
@@ -467,9 +462,7 @@ void attackEnemie(Enemies *guard, Enemies *storm, Player *rbns, Texture2D guardT
     Texture2D stormTexAtk = stormTex[2];
     
     float guardframeHeightAtk = (float)(guardTexAtk.height/9);
-    int guardmaxFramesAtk = (int)(guardTexAtk.width/(int)guardframeHeightAtk);
     float stormframeHeightAtk = (float)(stormTexAtk.height/21);
-    int stormmaxFramesAtk = (int)(stormTexAtk.width/(int)stormframeHeightAtk);
     
     int i;
     for(i=0; i<10; i++){
@@ -527,7 +520,7 @@ void resetEnemies(Enemies *guard, Enemies *storm, Player rbns){
 void generateItens(Itens extras[], Player rbns){
     int i;
     for(i=0; i<5; i++){
-        extras[i].lifeboost = GetRandomValue(20, 30);
+        extras[i].lifeboost = GetRandomValue(40, 60);
         if(rbns.position.x <= 1830) extras[i].position = (Vector2){GetRandomValue(500, 1700), GetRandomValue(0, 350)};
         if(rbns.position.x > 2600 && rbns.position.x <= 4370) extras[i].position = (Vector2){GetRandomValue(3000, 4200), GetRandomValue(0, 350)};
         if(rbns.position.x > 5300 && rbns.position.x <= 7030) extras[i].position = (Vector2){GetRandomValue(5700, 8900), GetRandomValue(0, 350)};
@@ -573,19 +566,10 @@ void studentPlace(Student stud[], int frame){
     Student freddy = stud[4];
     
     float lnidasframeWidth = (float)(lnidas.texture.width/6);
-    int maxFramesLnidas = (int)(lnidas.texture.width/(int)lnidasframeWidth);
-    
     float robrigoframeWidth = (float)(robrigo.texture.width/6);
-    int maxFramesrobrigo = (int)(robrigo.texture.width/(int)robrigoframeWidth);
-    
     float mulittleframeWidth = (float)(mulittle.texture.width/6);
-    int maxFramesmulittle = (int)(mulittle.texture.width/(int)mulittleframeWidth);
-    
     float xannyframeWidth = (float)(xanny.texture.width/6);
-    int maxFramesxanny = (int)(xanny.texture.width/(int)xannyframeWidth);
-    
     float freddyframeWidth = (float)(freddy.texture.width/15);
-    int maxFramesfreddy = (int)(freddy.texture.width/(int)freddyframeWidth);
     
     
     if(lnidas.life > 0) DrawTextureRec(lnidas.texture, (Rectangle){lnidasframeWidth*frame, 0, lnidasframeWidth, lnidas.texture.height}, (Vector2){lnidas.position.x, lnidas.position.y}, RAYWHITE);
@@ -637,82 +621,3 @@ void studentFight(Player *rbns,Enemies guard[],Enemies storm[],Itens extras[], C
     } 
 }
 //-----------------------------------------------------------------------------------------------------------------------------------
-Player Setrbns(){
-    Player rbns;
-    rbns.position = (Vector2){300.0f, 175.0f};
-    rbns.speed = 2.0;
-    rbns.life = 200;
-    rbns.damage = 10;
-    rbns.bound = (Rectangle){315, 180, 30, 44};
-    rbns.atkbound = (Rectangle){315, 180, 60, 44};
-    return rbns;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------  
-Student Setlnidas(){
-    Student lnidas;
-    lnidas.life = 200;
-    lnidas.position = (Vector2){1750.0f, 175.0f};
-    lnidas.texture = LoadTexture("../bin/Characters/Students/Leao Nidas/frente_ruivo.png");
-    return lnidas;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------  
-Student Setrobrigo(){
-    Student robrigo;
-    robrigo.life = 200;
-    robrigo.position = (Vector2){4330.0f, 175.0f};
-    robrigo.texture = LoadTexture("../bin/Characters/Students/Ro Brigo/frente_loiro.png");
-    return robrigo;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------  
-Student Setmulittle(){
-    Student mulittle;
-    mulittle.life = 200;
-    mulittle.position = (Vector2){6920.0f, 175.0f};
-    mulittle.texture = LoadTexture("../bin/Characters/Students/MuLittle/frente_moreno.png");
-    return mulittle;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------  
-Student Setxanny (){
-    Student xanny;
-    xanny.life = 200;
-    xanny.position = (Vector2){9610.0f, 175.0f};
-    xanny.texture = LoadTexture("../bin/Characters/Students/X Anny/fem_frente.png");
-    return xanny;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------  
-Student Setfreddy(){
-    Student freddy;
-    freddy.life = 300;
-    freddy.position = (Vector2){12260.0f, 175.0f};
-    freddy.texture = LoadTexture("../bin/Characters/Students/Freddy Rico/noBKG_KnightIdle_strip.png");
-    return freddy;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------  
-Texture2D *LoadRubensTexture(){
-    Texture2D rbnsTex[5];
-    rbnsTex[0] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_Idle.png"); //Idle Texture
-    rbnsTex[1] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_Run.png"); //Run Texture
-    rbnsTex[2] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_Die.png"); //Die Texture
-    rbnsTex[3] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_AttackLtt.png"); //Attack Texture
-    rbnsTex[4] = LoadTexture("../bin/Characters/Rubens/SpriteSheet/Warrior_AttackLtt2.png"); //Attack Texture 2
-    return rbnsTex;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------  
-Texture2D *LoadGuardTex(){
-    Texture2D guardTex[4] = {0};
-    guardTex[0] = LoadTexture("../bin/Characters/Enemies/Guardian/Guardian_Move.png"); //Run/Idle Texture
-    guardTex[1] = LoadTexture("../bin/Characters/Enemies/Guardian/Guardian_Die.png"); //Die Texture
-    guardTex[2] = LoadTexture("../bin/Characters/Enemies/Guardian/Guardian_Attack.png"); //Attack Texture
-    guardTex[3] = LoadTexture("../bin/Characters/Enemies/Guardian/Guardian_Hit.png"); //Hit Texture
-    return guardTex;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------  
-Texture2D *LoadStormTex(){
-    Texture2D stormTex[4] = {0};
-    stormTex[0] = LoadTexture("../bin/Characters/Enemies/Stormhead/run.png"); //Run/Idle Texture
-    stormTex[1] = LoadTexture("../bin/Characters/Enemies/Stormhead/death.png"); //Die Texture
-    stormTex[2] = LoadTexture("../bin/Characters/Enemies/Stormhead/attack.png"); //Attack Texture
-    stormTex[3] = LoadTexture("../bin/Characters/Enemies/Stormhead/damaged.png"); //Hit Texture
-    return stormTex;
-}
-//-----------------------------------------------------------------------------------------------------------------------------------  

@@ -31,28 +31,27 @@ mus CarregaMusicas(mus Song){
 
 void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens,Player rbns){
     int valorizador = 1;
+    
     DrawText("Escolha um ataque: \nQuestao_Complicada(J)\nCorrecao Errada(K)\nNota Errada(L)\nQuestao Oral(M)\n",rbns.position.x,rbns.position.y,5,RED);
     if(vida_Rubens <= 100) valorizador = 1.2;
     if(vida_Rubens <= 50) valorizador = 1.5;
     if(vida_Rubens <= 30) valorizador = 2;
+    
     if(IsKeyPressed(KEY_J)){
         *vida_estudante -= valorizador * ataques.Questao_complicada;
         *opRubens = 1;
-    }
-    if(IsKeyPressed(KEY_K)){
+    }else if(IsKeyPressed(KEY_K)){
         *vida_estudante -= valorizador * ataques.Correcao_errada;
         *opRubens = 2;
         
-    }
-    if(IsKeyPressed(KEY_L)){
+    }else if(IsKeyPressed(KEY_L)){
         *vida_estudante -= valorizador * ataques.Nota_Errada;
         *opRubens = 3;
 
-    }
-    if(IsKeyPressed(KEY_M)){
+    }else if(IsKeyPressed(KEY_M)){
         *vida_estudante -= valorizador * ataques.Questao_Oral;
         *opRubens = 4;
-    }   
+    }else *opRubens = 0;
 }
 
 void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens, int opFreddy,int posx,int posy){
@@ -131,7 +130,7 @@ void Rubens_atack(Texture2D warrior, Vector2 position, int frame, float timer, f
 //combate leonidas
 void Combat_LeaoNidas(Player *rbns){
     int vida_de_rubens = rbns->life;
-    int vida_de_leao = 70, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
+    static int vida_de_leao = 200, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueLeao;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
@@ -157,7 +156,7 @@ void Combat_LeaoNidas(Player *rbns){
         default:
             break;
         }
-        if(vida_de_leao>0){
+        if(vida_de_leao>0 && (opRubens)!=0){
             //menu de opcoes para aluno
             //srand((unsigned)time(NULL));
             /*do{
@@ -183,13 +182,11 @@ void Combat_LeaoNidas(Player *rbns){
             
         }
     }
+    DrawText(TextFormat("Vida de Leao Nidas: %d", vida_de_leao),1750.0f, 165.0f,5,SKYBLUE);
     rbns->life = vida_de_rubens;
-    if(vida_de_rubens <= 0){
-        
-        //animacao rubia morrendo
-    }else if(vida_de_rubens>0){
-        //rbns->position.x=2700;
-        //rbns->position.y=175;
+    if(vida_de_rubens>0 && vida_de_leao<=0){
+        rbns->position.x=2700;
+        rbns->position.y=175;
     }
     if(vida_de_leao<=0 || vida_de_rubens<=0){
         StopSound(Musica.musica[0]);

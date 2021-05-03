@@ -192,10 +192,11 @@ void Combat_LeaoNidas(Player *rbns){
         StopSound(Musica.musica[0]);
     }
 }
-/*
+
 //Combate Ro Brigo
-void Combat_RoBrigo(int *vida_de_rubens){
-    int vida_de_Robrigo= 80, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
+void Combat_RoBrigo(Player *rbns){
+    int vida_de_rubens = rbns->life;
+    static int vida_de_Robrigo= 80, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueRobrigo;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
@@ -208,9 +209,9 @@ void Combat_RoBrigo(int *vida_de_rubens){
     //musica de combate
     PlaySound(Musica.musica[0]);
     
-    while(vida_de_Robrigo > 0 && *vida_de_rubens > 0){
+    if(vida_de_Robrigo > 0 && vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        MenudeRubens(ataqueRubens , &vida_de_Robrigo, *vida_de_rubens, &opRubens,4315,173);
+        MenudeRubens(ataqueRubens , &vida_de_Robrigo, vida_de_rubens, &opRubens,4315,173);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;
@@ -225,43 +226,49 @@ void Combat_RoBrigo(int *vida_de_rubens){
             break;
         }
         //menu de opcoes para aluno
-        srand((unsigned)time(NULL));
+        /*srand((unsigned)time(NULL));
         do{
             opAluno =  (rand() % 10);
-        }while(opAluno < 1 || opAluno > 3);
-        if(vida_de_Robrigo <= 40) opAluno = 4;
-        switch (opAluno){
-        case 1:
-            *vida_de_rubens -= contra_ataque1 * ataqueRobrigo.acertar_questao;
-            DrawText("Acertei a questao!",4330.0f,175.0f,5,RED);
-            break;
-        case 2:
-            *vida_de_rubens -= contra_ataque2 * ataqueRobrigo.discutir_questao;
-            DrawText("Discuti questao!",4330.0f,175.0f,5,BLUE);
-            break;
-        case 3:
-            *vida_de_rubens -= contra_ataque3 * ataqueRobrigo.chamar_no_zap;
-            DrawText("Chamei no Zap!",4330.0f,175.0f,5,GREEN);
-            break;
-        case 4:
-            *vida_de_rubens -= 50; //ESPECIAL TERMO TECNICO-CIENTIFICO
-            DrawText("ESPECIAL TERMO TECNICO-CIENTIFICO!",4330.0f,175.0f,5,YELLOW);
-            break;
-        default:
-            break;
+        }while(opAluno < 1 || opAluno > 3);*/
+        opAluno=GetRandomValue(1, 3);
+        if(vida_de_Robrigo>0 && opRubens!=0){
+            if(vida_de_Robrigo <= 40) opAluno = 4;
+            switch (opAluno){
+            case 1:
+                vida_de_rubens -= contra_ataque1 * ataqueRobrigo.acertar_questao;
+                DrawText("Acertei a questao!",4330.0f,175.0f,5,RED);
+                break;
+            case 2:
+                vida_de_rubens -= contra_ataque2 * ataqueRobrigo.discutir_questao;
+                DrawText("Discuti questao!",4330.0f,175.0f,5,BLUE);
+                break;
+            case 3:
+                vida_de_rubens -= contra_ataque3 * ataqueRobrigo.chamar_no_zap;
+                DrawText("Chamei no Zap!",4330.0f,175.0f,5,GREEN);
+                break;
+            case 4:
+                vida_de_rubens -= 50; //ESPECIAL TERMO TECNICO-CIENTIFICO
+                DrawText("ESPECIAL TERMO TECNICO-CIENTIFICO!",4330.0f,175.0f,5,YELLOW);
+                break;
+            default:
+                break;
+            }
         }
     }
-    if(*vida_de_rubens <= 0){
-        
-        //animacao rubia morrendo
+    DrawText(TextFormat("Vida de Ro Brigo: %d", vida_de_Robrigo),4330.0f, 165.0f,5,SKYBLUE);
+    rbns->life = vida_de_rubens;
+    if(vida_de_rubens>0 && vida_de_leao<=0){
+        rbns->position.x=5600;
+        rbns->position.y=175;
     }
-    if(vida_de_Robrigo<=0 || *vida_de_rubens<=0){
+    if(vida_de_Robrigo<=0 || vida_de_rubens<=0){
         StopSound(Musica.musica[0]);
-}
+    }
 }
 //Combate MuLittle
-void Combat_MuLittle(int *vida_de_rubens){
-    int vida_de_MuLittle = 85, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
+void Combat_MuLittle(Player *rbns){
+    vida_de_rubens = rbns->life;
+    static int vida_de_MuLittle = 85, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueMuLittle;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
@@ -273,9 +280,9 @@ void Combat_MuLittle(int *vida_de_rubens){
     //iniciar musica combat
     PlaySound(Musica.musica[0]);
     
-    while(vida_de_MuLittle > 0 && *vida_de_rubens > 0){
+    if(vida_de_MuLittle > 0 && vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        MenudeRubens(ataqueRubens,&vida_de_MuLittle, *vida_de_rubens, &opRubens,6905,173);
+        MenudeRubens(ataqueRubens,&vida_de_MuLittle, vida_de_rubens, &opRubens,6905,173);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;
@@ -290,42 +297,47 @@ void Combat_MuLittle(int *vida_de_rubens){
             break;
         }
         //menu de opcoes para aluno
-        srand((unsigned)time(NULL));
+        /*srand((unsigned)time(NULL));
         do{
             opAluno =  (rand() % 10);
-        }while(opAluno < 1 || opAluno > 3);
-        if(vida_de_MuLittle <= 40) opAluno = 4;
-        switch (opAluno){
-        case 1:
-            *vida_de_rubens -= contra_ataque1 * ataqueMuLittle.acertar_questao;
-            DrawText("Acertei a questao!",6920.0f,175.0f,5,RED);
-            break;
-        case 2:
-            *vida_de_rubens -= contra_ataque2 * ataqueMuLittle.discutir_questao;
-            DrawText("Discuti questao!",6920.0f,175.0f,5,BLUE);
-            break;
-        case 3:
-            *vida_de_rubens -= contra_ataque3 * ataqueMuLittle.chamar_no_zap;
-            DrawText("Chamei no Zap!",6920.0f,175.0f,5,GREEN);
-            
-            break;
-        case 4:
-            *vida_de_rubens -= 50; //ESPECIAL HIDRATACAO PROFUNDA
-            DrawText("ESPECIAL HIDRATACAO PROFUNDA!",6920.0f,175.0f,5,BLUE);
-            break;
-        default:
-            break;
+        }while(opAluno < 1 || opAluno > 3);*/
+        opAluno=GetRandomValue(1, 3);
+        if(vida_de_MuLittle>40 && opRubens!=0){   
+            if(vida_de_MuLittle <= 40) opAluno = 4;
+            switch (opAluno){
+            case 1:
+                vida_de_rubens -= contra_ataque1 * ataqueMuLittle.acertar_questao;
+                DrawText("Acertei a questao!",6920.0f,175.0f,5,RED);
+                break;
+            case 2:
+                vida_de_rubens -= contra_ataque2 * ataqueMuLittle.discutir_questao;
+                DrawText("Discuti questao!",6920.0f,175.0f,5,BLUE);
+                break;
+            case 3:
+                vida_de_rubens -= contra_ataque3 * ataqueMuLittle.chamar_no_zap;
+                DrawText("Chamei no Zap!",6920.0f,175.0f,5,GREEN);
+                
+                break;
+            case 4:
+                vida_de_rubens -= 50; //ESPECIAL HIDRATACAO PROFUNDA
+                DrawText("ESPECIAL HIDRATACAO PROFUNDA!",6920.0f,175.0f,5,BLUE);
+                break;
+            default:
+                break;
+            }
         }
     }
-    if(*vida_de_rubens <= 0){
-       
-        //animacao rubia morrendo
+    DrawText(TextFormat("Vida de MuLittle: %d", vida_de_MuLittle),4330.0f, 165.0f,5,SKYBLUE);
+    rbns->life = vida_de_rubens;
+    if(vida_de_rubens>0 && vida_de_leao<=0){
+        rbns->position.x=5600;
+        rbns->position.y=175;
     }
-    if(*vida_de_rubens<=0 || vida_de_MuLittle>0){
+    if(vida_de_rubens<=0 || vida_de_MuLittle>0){
        StopSound(Musica.musica[0]);
     }
 }
-    
+/*  
 //Combate Anny
 
 void Combat_XAnny(int *vida_de_rubens){

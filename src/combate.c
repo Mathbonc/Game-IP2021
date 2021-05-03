@@ -115,12 +115,12 @@ void Rubens_atack(Texture2D warrior, Vector2 position, int frame, float timer, f
     }*/
 }
 //combate leonidas
-void Combat_LeaoNidas(Player *rbns,int *Falas){
+void Combat_LeaoNidas(Player *rbns,int *Falas, int *INIMIGOS){
     int vida_de_rubens = rbns->life;
     static int i=0;
     static int vida_de_leao = 200, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueLeao;
-    ataqueRubens.Questao_complicada = 25; ataqueRubens.Correcao_errada = 20;
+    ataqueRubens.Questao_complicada = 30; ataqueRubens.Correcao_errada = 20;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 10;
     ataqueLeao.acertar_questao = 10; ataqueLeao.discutir_questao = 15;
     ataqueLeao.chamar_no_zap = 20;
@@ -181,14 +181,17 @@ void Combat_LeaoNidas(Player *rbns,int *Falas){
     rbns->life = vida_de_rubens;
     if(vida_de_rubens>0 && vida_de_leao<=0){
         *Falas=1;
-        rbns->position.x=2700;
-        rbns->position.y=175;
-       
+        DrawText("Pressione T para passar de fase, após o diálogo",rbns->position.x-100,rbns->position.y-80,8,DARKGREEN);
+        if(IsKeyPressed(KEY_T)){
+            *INIMIGOS=1;
+            rbns->position.x=2700;
+            rbns->position.y=175;
+        }
     }
 }
 
 //Combate Ro Brigo
-void Combat_RoBrigo(Player *rbns, int *Falas){
+void Combat_RoBrigo(Player *rbns, int *Falas, int *INIMIGOS){
     int vida_de_rubens = rbns->life;
     static int i=0;
     static int vida_de_Robrigo= 210, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
@@ -261,12 +264,16 @@ void Combat_RoBrigo(Player *rbns, int *Falas){
     rbns->life = vida_de_rubens;
     if(vida_de_rubens>0 && vida_de_Robrigo<=0){
         *Falas=2;
-        rbns->position.x=5600;
-        rbns->position.y=175;
+        DrawText("Pressione T para passar de fase, após o diálogo",rbns->position.x-100,rbns->position.y-80,8,DARKGREEN);
+        if(IsKeyPressed(KEY_T)){
+            *INIMIGOS=2;
+            rbns->position.x=5600;
+            rbns->position.y=175;
+        }
     }
 }
 //Combate MuLittle
-void Combat_MuLittle(Player *rbns, int *Falas){
+void Combat_MuLittle(Player *rbns, int *Falas, int *INIMIGOS){
     int vida_de_rubens = rbns->life;
     static int i=0;
     static int vida_de_MuLittle = 220, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
@@ -338,14 +345,18 @@ void Combat_MuLittle(Player *rbns, int *Falas){
     rbns->life = vida_de_rubens;
     if(vida_de_rubens>0 && vida_de_MuLittle<=0){
         *Falas=3;
-        rbns->position.x=8200;
-        rbns->position.y=175;
+        DrawText("Pressione T para passar de fase, após o diálogo",rbns->position.x-100,rbns->position.y-80,8,DARKGREEN);
+        if(IsKeyPressed(KEY_T)){
+            *INIMIGOS=3;
+            rbns->position.x=8200;
+            rbns->position.y=175;
+        }
     }
 }
   
 //Combate Anny
 
-void Combat_XAnny(Player *rbns, int *Falas){
+void Combat_XAnny(Player *rbns, int *Falas, int *INIMIGOS){
     int vida_de_rubens = rbns->life;
     static int i=0;
     static int vida_de_XAnny = 230, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
@@ -419,12 +430,16 @@ void Combat_XAnny(Player *rbns, int *Falas){
     rbns->life = vida_de_rubens;
     if(vida_de_rubens>0 && vida_de_XAnny<=0){
         *Falas=4;
-        rbns->position.x=10900;
-        rbns->position.y=175;
+        DrawText("Pressione T para passar de fase, após o diálogo",rbns->position.x-100,rbns->position.y-80,8,DARKGREEN);
+        if(IsKeyPressed(KEY_T)){
+            *INIMIGOS=4;
+            rbns->position.x=10900;
+            rbns->position.y=175;
+        }
     }
 }
 //Combate do Freddy
-void Combat_Freddy(Player *rbns, int *Falas){
+void Combat_Freddy(Player *rbns, int *Falas,int *INIMIGOS){
     //MAPA DE FREDERICO
     int vida_de_rubens = rbns->life;
     int opAluno = GetRandomValue(1, 3);
@@ -490,6 +505,10 @@ void Combat_Freddy(Player *rbns, int *Falas){
     DrawText(TextFormat("Vida de Fred Rico: %d", vida_de_Freddy),12260.0f, 165.0f,8,SKYBLUE);
     rbns->life = vida_de_rubens;
     if(vida_de_rubens>0 && vida_de_Freddy<=0){
-       *Falas=5;       
+       *Falas=5; 
+       DrawText("Pressione T para finalizar, após o diálogo",rbns->position.x-100,rbns->position.y-80,8,DARKGREEN);
+        if(IsKeyPressed(KEY_T)){
+            *INIMIGOS=5;
+        }
     }
 }

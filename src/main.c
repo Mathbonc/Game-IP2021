@@ -139,6 +139,7 @@ int main(){
     if(GameStage==2){
         while(!WindowShouldClose()){
             MudaMusica(InGameUI.GameMusic1,InGameUI.GameMusic2);
+            SetMusicVolume(InGameUI.GameMusic2,SoundVolume);
             UpdateMusicStream(InGameUI.GameMusic2);
             BeginDrawing();
             ClearBackground(RAYWHITE);

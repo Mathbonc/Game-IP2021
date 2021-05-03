@@ -50,7 +50,7 @@ void generateItens(Itens extras[], Player rbns);
 void getItens(Player *rbns, Itens extras[], Texture2D itensTex);
 void cameraUpdate(Camera2D *camera, Player rbns);
 void studentPlace(Student stud[], int frame);
-void studentFight(Player *rbns,Enemies guard[],Enemies storm[],Itens extras[], Camera2D *camera);
+void studentFight(Player *rbns,Enemies guard[],Enemies storm[],Itens extras[], Camera2D *camera, int *Falas);
 int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectangle obst[], Texture2D rbnsTex[], Texture2D guardTex[], Texture2D stormTex[], Texture2D itensTex, Camera2D *camera, int *frame, char *last, float *timer, Texture2D background, int *text_cont, int *text_aux, Student stud[]);
 Player Setrbns();
 Student Setlnidas(); 

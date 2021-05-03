@@ -32,7 +32,7 @@ mus CarregaMusicas(mus Song){
 void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens,Player rbns){
     int valorizador = 1;
     
-    DrawText("Escolha um ataque: \nQuestao_Complicada(J)\nCorrecao Errada(K)\nNota Errada(L)\nQuestao Oral(M)\n",rbns.position.x,rbns.position.y,5,RED);
+    DrawText("Escolha um ataque: \nQuestao_Complicada(J)\nCorrecao Errada(K)\nNota Errada(L)\nQuestao Oral(M)\n",rbns.position.x-200,rbns.position.y+100,12,DARKBLUE);
     if(vida_Rubens <= 100) valorizador = 1.2;
     if(vida_Rubens <= 50) valorizador = 1.5;
     if(vida_Rubens <= 30) valorizador = 2;
@@ -54,9 +54,9 @@ void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, 
     }else *opRubens = 0;
 }
 
-void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens, int opFreddy,int posx,int posy){
+void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens, int opFreddy,Player rbns){
     int valorizador = 1; int contra_ataque1 = 1, contra_ataque2 = 1, contra_ataque3 = 1, contra_ataque4 = 1;
-    DrawText("Escolha um ataque: \nQuestao_Complicada(J)\nCorrecao Errada(K)\nNota Errada(L)\nQuestao Oral(M)\n",posx,posy,5,RED);
+    DrawText("Escolha um ataque: \nQuestao_Complicada(J)\nCorrecao Errada(K)\nNota Errada(L)\nQuestao Oral(M)\n",rbns.position.x,rbns.position.y,8,DARKBLUE);
     if(vida_Rubens <= 100) valorizador = 1.2;
     if(vida_Rubens <= 50) valorizador = 1.5;
     if(vida_Rubens <= 30) valorizador = 2;
@@ -76,23 +76,17 @@ void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rube
         }
     if(IsKeyPressed(KEY_J)){
         *vida_estudante -= valorizador * ataques.Questao_complicada * contra_ataque1;
-        *opRubens = 1;
-       
-    }
-    if(IsKeyPressed(KEY_K)){
+        *opRubens = 1;   
+    }else if(IsKeyPressed(KEY_K)){
         *vida_estudante -= valorizador * ataques.Correcao_errada * contra_ataque2;
         *opRubens = 2;
-        
-    }
-    if(IsKeyPressed(KEY_L)){
+    }else if(IsKeyPressed(KEY_L)){
         *vida_estudante -= valorizador * ataques.Nota_Errada * contra_ataque3;
         *opRubens = 3;
-
-    }
-    if(IsKeyPressed(KEY_M)){
+    }else if(IsKeyPressed(KEY_M)){
         *vida_estudante -= valorizador * ataques.Questao_Oral * contra_ataque4;
         *opRubens = 4;
-    }
+    }else *opRubens = 0;
 }
 
 //Funcao de trocar a musica de combate (Vai ser utilizada quando chamar a funcao de combate do freddy
@@ -128,18 +122,26 @@ void Rubens_atack(Texture2D warrior, Vector2 position, int frame, float timer, f
     }*/
 }
 //combate leonidas
-void Combat_LeaoNidas(Player *rbns){
+void Combat_LeaoNidas(Player *rbns,int *Falas){
     int vida_de_rubens = rbns->life;
+    static int i=0;
     static int vida_de_leao = 200, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueLeao;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
     ataqueLeao.acertar_questao = 10; ataqueLeao.discutir_questao = 15;
     ataqueLeao.chamar_no_zap = 20;
-    //dialogo entre Leao Nidas e Rubens
-    //iniciar musica combat
-    mus Musica=CarregaMusicas(Musica);
-    PlaySound(Musica.musica[0]);   
+    
+    if(i!=0){
+        if(i==1){
+            DrawText("Acertei a questao!",1750.0f,175.0f,8,RED);
+        }else if(i==2){
+            DrawText("Discuti questao!",1750.0f,175.0f,8,BLUE);    
+        }else if(i==3){
+            DrawText("Chamei no Zap!",1750.0f,175.0f,8,GREEN);
+        }
+    }
+        
     if(vida_de_leao > 0 && vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;       
         MenudeRubens(ataqueRubens,&vida_de_leao, vida_de_rubens, &opRubens, *rbns);
@@ -166,15 +168,15 @@ void Combat_LeaoNidas(Player *rbns){
             switch (opAluno){
             case 1:
                 vida_de_rubens -= contra_ataque1 * ataqueLeao.acertar_questao;
-                DrawText("Acertei a questao!",1750.0f,175.0f,5,RED);
+                i=1;
                 break;
             case 2:
                 vida_de_rubens -= contra_ataque2 * ataqueLeao.discutir_questao;
-                 DrawText("Discuti questao!",1750.0f,175.0f,5,BLUE);
+                i=2;           
                 break;
             case 3:
-                vida_de_rubens -= contra_ataque3 * ataqueLeao.chamar_no_zap;
-                 DrawText("Chamei no Zap!",1750.0f,175.0f,5,GREEN);
+                vida_de_rubens -= contra_ataque3 * ataqueLeao.chamar_no_zap;               
+                i=3;
                 break;
             default:
                 break;
@@ -182,36 +184,42 @@ void Combat_LeaoNidas(Player *rbns){
             
         }
     }
-    DrawText(TextFormat("Vida de Leao Nidas: %d", vida_de_leao),1750.0f, 165.0f,5,SKYBLUE);
+    DrawText(TextFormat("Vida de Leao Nidas: %d", vida_de_leao),1750.0f, 165.0f,8,SKYBLUE);
     rbns->life = vida_de_rubens;
     if(vida_de_rubens>0 && vida_de_leao<=0){
+        *Falas=1;
         rbns->position.x=2700;
         rbns->position.y=175;
-    }
-    if(vida_de_leao<=0 || vida_de_rubens<=0){
-        StopSound(Musica.musica[0]);
     }
 }
 
 //Combate Ro Brigo
-void Combat_RoBrigo(Player *rbns){
+void Combat_RoBrigo(Player *rbns, int *Falas){
     int vida_de_rubens = rbns->life;
-    static int vida_de_Robrigo= 80, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
+    static int i=0;
+    static int vida_de_Robrigo= 210, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueRobrigo;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
     ataqueRobrigo.acertar_questao = 15; 
     ataqueRobrigo.discutir_questao = 20;
     ataqueRobrigo.chamar_no_zap = 10;
-    mus Musica=CarregaMusicas(Musica);
-    //dialogo
     
-    //musica de combate
-    PlaySound(Musica.musica[0]);
+    if(i!=0){
+        if(i==1){
+            DrawText("Acertei a questao!",4330.0f,175.0f,8,RED);
+        }else if(i==2){
+            DrawText("Discuti questao!",4330.0f,175.0f,8,BLUE);    
+        }else if(i==3){
+            DrawText("Chamei no Zap!",4330.0f,175.0f,8,GREEN);
+        }else if(i==4){
+            DrawText("ESPECIAL TERMO TECNICO-CIENTIFICO!",4330.0f,175.0f,8,YELLOW);    
+        }
+    }
     
     if(vida_de_Robrigo > 0 && vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        MenudeRubens(ataqueRubens , &vida_de_Robrigo, vida_de_rubens, &opRubens,4315,173);
+        MenudeRubens(ataqueRubens , &vida_de_Robrigo, vida_de_rubens, &opRubens,*rbns);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;
@@ -236,53 +244,59 @@ void Combat_RoBrigo(Player *rbns){
             switch (opAluno){
             case 1:
                 vida_de_rubens -= contra_ataque1 * ataqueRobrigo.acertar_questao;
-                DrawText("Acertei a questao!",4330.0f,175.0f,5,RED);
+                i=1;
                 break;
             case 2:
                 vida_de_rubens -= contra_ataque2 * ataqueRobrigo.discutir_questao;
-                DrawText("Discuti questao!",4330.0f,175.0f,5,BLUE);
+                i=2;
                 break;
             case 3:
                 vida_de_rubens -= contra_ataque3 * ataqueRobrigo.chamar_no_zap;
-                DrawText("Chamei no Zap!",4330.0f,175.0f,5,GREEN);
+                i=3;
                 break;
             case 4:
                 vida_de_rubens -= 50; //ESPECIAL TERMO TECNICO-CIENTIFICO
-                DrawText("ESPECIAL TERMO TECNICO-CIENTIFICO!",4330.0f,175.0f,5,YELLOW);
+                i=4;
                 break;
             default:
                 break;
             }
         }
     }
-    DrawText(TextFormat("Vida de Ro Brigo: %d", vida_de_Robrigo),4330.0f, 165.0f,5,SKYBLUE);
+    DrawText(TextFormat("Vida de Ro Brigo: %d", vida_de_Robrigo),4330.0f, 165.0f,8,SKYBLUE);
     rbns->life = vida_de_rubens;
-    if(vida_de_rubens>0 && vida_de_leao<=0){
+    if(vida_de_rubens>0 && vida_de_Robrigo<=0){
+        *Falas=2;
         rbns->position.x=5600;
         rbns->position.y=175;
     }
-    if(vida_de_Robrigo<=0 || vida_de_rubens<=0){
-        StopSound(Musica.musica[0]);
-    }
 }
 //Combate MuLittle
-void Combat_MuLittle(Player *rbns){
-    vida_de_rubens = rbns->life;
-    static int vida_de_MuLittle = 85, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
+void Combat_MuLittle(Player *rbns, int *Falas){
+    int vida_de_rubens = rbns->life;
+    static int i=0;
+    static int vida_de_MuLittle = 220, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueMuLittle;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
     ataqueMuLittle.acertar_questao = 30; ataqueMuLittle.discutir_questao = 15;
     ataqueMuLittle.chamar_no_zap = 10;
-    mus Musica=CarregaMusicas(Musica);
-   
-    //dialogo entre MuLittle e Rubens
-    //iniciar musica combat
-    PlaySound(Musica.musica[0]);
+    
+    if(i!=0){
+        if(i==1){
+            DrawText("Acertei a questao!",6920.0f,175.0f,8,RED);
+        }else if(i==2){
+            DrawText("Discuti questao!",6920.0f,175.0f,8,BLUE);    
+        }else if(i==3){
+            DrawText("Chamei no Zap!",6920.0f,175.0f,8,GREEN);
+        }else if(i==4){
+            DrawText("ESPECIAL HIDRATACAO PROFUNDA!",6920.0f,175.0f,8,BLUE);    
+        }
+    }
     
     if(vida_de_MuLittle > 0 && vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        MenudeRubens(ataqueRubens,&vida_de_MuLittle, vida_de_rubens, &opRubens,6905,173);
+        MenudeRubens(ataqueRubens,&vida_de_MuLittle, vida_de_rubens, &opRubens,*rbns);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;
@@ -307,55 +321,62 @@ void Combat_MuLittle(Player *rbns){
             switch (opAluno){
             case 1:
                 vida_de_rubens -= contra_ataque1 * ataqueMuLittle.acertar_questao;
-                DrawText("Acertei a questao!",6920.0f,175.0f,5,RED);
+                i=1;
                 break;
             case 2:
                 vida_de_rubens -= contra_ataque2 * ataqueMuLittle.discutir_questao;
-                DrawText("Discuti questao!",6920.0f,175.0f,5,BLUE);
+                i=2;
                 break;
             case 3:
                 vida_de_rubens -= contra_ataque3 * ataqueMuLittle.chamar_no_zap;
-                DrawText("Chamei no Zap!",6920.0f,175.0f,5,GREEN);
-                
+                i=3;                
                 break;
             case 4:
                 vida_de_rubens -= 50; //ESPECIAL HIDRATACAO PROFUNDA
-                DrawText("ESPECIAL HIDRATACAO PROFUNDA!",6920.0f,175.0f,5,BLUE);
+                i=4;
                 break;
             default:
                 break;
             }
         }
     }
-    DrawText(TextFormat("Vida de MuLittle: %d", vida_de_MuLittle),4330.0f, 165.0f,5,SKYBLUE);
+    DrawText(TextFormat("Vida de MuLittle: %d", vida_de_MuLittle),6920.0f, 165.0f,8,SKYBLUE);
     rbns->life = vida_de_rubens;
-    if(vida_de_rubens>0 && vida_de_leao<=0){
-        rbns->position.x=5600;
+    if(vida_de_rubens>0 && vida_de_MuLittle<=0){
+        *Falas=3;
+        rbns->position.x=8200;
         rbns->position.y=175;
     }
-    if(vida_de_rubens<=0 || vida_de_MuLittle>0){
-       StopSound(Musica.musica[0]);
-    }
 }
-/*  
+  
 //Combate Anny
 
-void Combat_XAnny(int *vida_de_rubens){
-    int vida_de_XAnny = 90, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
+void Combat_XAnny(Player *rbns, int *Falas){
+    int vida_de_rubens = rbns->life;
+    static int i=0;
+    static int vida_de_XAnny = 230, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; 
     ataques_aluno ataqueXAnny;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
     ataqueXAnny.acertar_questao = 30; ataqueXAnny.discutir_questao = 15;
     ataqueXAnny.chamar_no_zap = 10;
-    mus Musica=CarregaMusicas(Musica);
     
-    //iniciar musica combat
-    PlaySound(Musica.musica[0]);
-    //dialogo entre XAnny e Rubens
-    while(vida_de_XAnny > 0 && *vida_de_rubens > 0){
+    if(i!=0){
+        if(i==1){
+            DrawText("Acertei a questao!",9610.0f,175.0f,8,RED);
+        }else if(i==2){
+            DrawText("Discuti questao!",9610.0f,175.0f,8,BLUE);    
+        }else if(i==3){
+            DrawText("Chamei no Zap!",9610.0f,175.0f,8,GREEN);
+        }else if(i==4){
+            DrawText("H'(x)!!!",9610.0f,175.0f,8,YELLOW);    
+        }
+    }
+    
+    if(vida_de_XAnny > 0 && vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        MenudeRubens(ataqueRubens,&vida_de_XAnny, *vida_de_rubens, &opRubens,9603,172);
+        MenudeRubens(ataqueRubens,&vida_de_XAnny, vida_de_rubens, &opRubens,*rbns);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;
@@ -370,47 +391,50 @@ void Combat_XAnny(int *vida_de_rubens){
             break;
         }
         //menu de opcoes para aluno
-        srand((unsigned)time(NULL));
-        do{
+        /*srand((unsigned)time(NULL));
+        *do{
             opAluno =  (rand() % 10);
-        }while(opAluno < 1 || opAluno > 3);
-        if(vida_de_XAnny <= 40) opAluno = 4;
-        switch (opAluno){
-        case 1:
-            *vida_de_rubens -= contra_ataque1 * ataqueXAnny.acertar_questao;
-            DrawText("Acertei a questao!",9610.0f,175.0f,5,RED);
-            break;
-        case 2:
-            *vida_de_rubens -= contra_ataque2 * ataqueXAnny.discutir_questao;
-            DrawText("Discuti a questao!",9610.0f,175.0f,5,BLUE);
-            break;
-        case 3:
-            *vida_de_rubens -= contra_ataque3 * ataqueXAnny.chamar_no_zap;
-            DrawText("Chamei no Zap!",9610.0f,175.0f,5,GREEN);
-            break;
-        case 4:
-            //invocacao da h'(x)
-            *vida_de_rubens -= 60; //ESPECIAL H'(X)
-            DrawText("H'(x)!!!",9610.0f,175.0f,5,YELLOW);
-            break;
-        default:
-            break;
+        }while(opAluno < 1 || opAluno > 3);*/ 
+        opAluno=GetRandomValue(1, 3);        
+        if(vida_de_XAnny>0 && opRubens!=0){    
+            if(vida_de_XAnny <= 40) opAluno = 4;
+            switch (opAluno){
+            case 1:
+                vida_de_rubens -= contra_ataque1 * ataqueXAnny.acertar_questao;
+                i=1;
+                break;
+            case 2:
+                vida_de_rubens -= contra_ataque2 * ataqueXAnny.discutir_questao;
+                i=2;
+                break;
+            case 3:
+                vida_de_rubens -= contra_ataque3 * ataqueXAnny.chamar_no_zap;
+                i=3;
+                break;
+            case 4:
+                //invocacao da h'(x)
+                vida_de_rubens -= 60; //ESPECIAL H'(X)
+                i=4;
+                break;
+            default:
+                break;
+            }
         }
     }
-    if(*vida_de_rubens <= 0){
-        
-        //animacao rubia morrendo
+    DrawText(TextFormat("Vida de X Anny: %d", vida_de_XAnny),9610.0f, 165.0f,8,SKYBLUE);
+    rbns->life = vida_de_rubens;
+    if(vida_de_rubens>0 && vida_de_XAnny<=0){
+        *Falas=4;
+        rbns->position.x=10900;
+        rbns->position.y=175;
     }
-    
-    if(*vida_de_rubens<=0 ||vida_de_XAnny<=0){
-       StopSound(Musica.musica[0]);
-    }
-
 }
 //Combate do Freddy
-void Combat_Freddy(int *vida_de_rubens){
+void Combat_Freddy(Player *rbns, int *Falas){
     mus Musica=CarregaMusicas(Musica);
-    int vida_de_Freddy = 200, opRubens, opAluno = 0, flag = 0, contra_ataque1, contra_ataque2, contra_ataque3;
+    int vida_de_rubens = rbns->life;
+    static int i=0;
+    static int vida_de_Freddy = 250, opRubens, opAluno = 0, flag = 0, contra_ataque1, contra_ataque2, contra_ataque3;
     //dialogo entre Freddy e Rubens
     PlaySound(Musica.musica[1]);
     //combate Freddy x Rubens:
@@ -420,9 +444,20 @@ void Combat_Freddy(int *vida_de_rubens){
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
     ataqueFreddy.acertar_questao = 20; ataqueFreddy.discutir_questao = 25;
     ataqueFreddy.chamar_no_zap = 35;
-    while(vida_de_Freddy > 0 && *vida_de_rubens > 0){
+    
+    if(i!=0){
+        if(i==1){
+            DrawText("Acertei a questao!",12260.0f,175.0f,8,RED);
+        }else if(i==2){
+            DrawText("Discuti questao!",12260.0f,175.0f,8,BLUE);    
+        }else if(i==3){
+            DrawText("Chamei no Zap!",12260.0f,175.0f,8,GREEN);
+        }
+    }
+    
+    if(vida_de_Freddy > 0 && vida_de_rubens > 0){
         contra_ataque1 = 1; contra_ataque2 = 1; contra_ataque3 = 1;
-        MenuCombatFreddy(ataqueRubens, &vida_de_Freddy, *vida_de_rubens, &opRubens, opAluno, 9603, 172);
+        MenuCombatFreddy(ataqueRubens, &vida_de_Freddy, vida_de_rubens, &opRubens, opAluno, *rbns);
         switch (opRubens){
         case 1:
             contra_ataque2 = 1.3;
@@ -437,33 +472,38 @@ void Combat_Freddy(int *vida_de_rubens){
             break;
         }
         //menu de opcoes para aluno
-        srand((unsigned)time(NULL));
+        /*srand((unsigned)time(NULL));
         do{
             opAluno =  (rand() % 10);
-        }while(opAluno < 1 || opAluno > 3);
-        
-        switch (opAluno){
-        case 1:
-            *vida_de_rubens -= contra_ataque1 * ataqueFreddy.acertar_questao;
-            DrawText("Acertei a questao!",1750.0f,175.0f,5,RED);
-            break;
-        case 2:
-            *vida_de_rubens -= contra_ataque2 * ataqueFreddy.discutir_questao;
-             DrawText("Discuti questao!",1750.0f,175.0f,5,BLUE);
-            break;
-        case 3:
-            *vida_de_rubens -= contra_ataque3 * ataqueFreddy.chamar_no_zap;
-             DrawText("Chamei no Zap!",1750.0f,175.0f,5,GREEN);
-            break;
-        default:
-            break;
-        }
+        }while(opAluno < 1 || opAluno > 3);*/
+        opAluno=GetRandomValue(1, 3);
+        if(vida_de_Freddy>0 && opRubens!=0){
+            switch (opAluno){
+            case 1:
+                vida_de_rubens -= contra_ataque1 * ataqueFreddy.acertar_questao;
+                i=1;
+                break;
+            case 2:
+                vida_de_rubens -= contra_ataque2 * ataqueFreddy.discutir_questao;
+                i=2;
+                break;
+            case 3:
+                vida_de_rubens -= contra_ataque3 * ataqueFreddy.chamar_no_zap;
+                i=3;
+                break;
+            default:
+                break;
+            }
+        }    
     }
-    if(*vida_de_rubens <= 0){
-        
-        //animacao rubia morrendo
+    DrawText(TextFormat("Vida de Freddy: %d", vida_de_Freddy),12260.0f, 165.0f,8,SKYBLUE);
+    rbns->life = vida_de_rubens;
+    if(vida_de_rubens>0 && vida_de_Freddy<=0){
+        *Falas=5;
+        rbns->position.x=10900;
+        rbns->position.y=4000;
     }
-    if(vida_de_Freddy<=0 && *vida_de_rubens<=0){
+    if(vida_de_Freddy<=0 && vida_de_rubens<=0){
         StopSound(Musica.musica[2]);
     }
-}*/
+}

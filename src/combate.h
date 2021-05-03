@@ -20,12 +20,12 @@ typedef struct{
 }player;
 
 void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens,Player rbns);
-void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens, int opFreddy,int posx,int posy);
-void Combat_LeaoNidas(Player *rbns);
-void Combat_RoBrigo(int *vida_de_rubens);
-void Combat_MuLittle(int *vida_de_rubens);
-void Combat_XAnny(int *vida_de_rubens);
-void Combat_Freddy(int *vida_de_rubens);
+void MenuCombatFreddy(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens, int opFreddy,Player rbns);
+void Combat_LeaoNidas(Player *rbns,int *Falas);
+void Combat_RoBrigo(Player *rbns,int *Falas);
+void Combat_MuLittle(Player *rbns,int *Falas);
+void Combat_XAnny(Player *rbns,int *Falas);
+void Combat_Freddy(Player *rbns,int *Falas);
 player CarregaSpriteRubens(player rbs);
 mus CarregaMusicas(mus Song);
 void TrocaMusicaCombate(Sound musica_anterior, Sound musica_proxima);

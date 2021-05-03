@@ -6,7 +6,7 @@
 
 int charcont[48]={0};
 const char fala00[]="GAME OVER";
-const char fala01[]="Em um lugar distante porém conhecido (Recife),\numa professora se vê rodeada por perigos inéditos\nem uma situação apocalíptica.\n        Pressione K para atacar\n        Pressione Enter";
+const char fala01[]="Em um lugar distante porém conhecido (Recife),\numa professora se vê rodeada por perigos inéditos\nem uma situação apocalíptica.\n        Pressione K para atacar\n        Pressione ESPAÇO";
 const char fala02[]="Professora Rubens: Vish, gente. O que aconteceu aqui?\nProcurei em todo canto e não achei as provas dos meus alunos,\ndemorei tanto pra jogar esses dados pra corrigi-las...\nAh, achei algumas aqui no meu baú sem fundo onde eu as guardo.";
 const char fala03[]="Professora Rubens: O jeito agora é procurar pelos alunos\ne ver se acho alguma pista do que está acontecendo.";
 

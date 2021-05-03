@@ -48,7 +48,7 @@ int main(){
     if(GameStage==1){
         MudaMusica(Menu.Music,InGameUI.GameMusic1);
         
-        SoundVolume=0;
+        OptWindow=false;
         char last = 'd';
         
         Player rbns = {0};

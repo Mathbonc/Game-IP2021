@@ -5,8 +5,8 @@
 #include <math.h>
 
 int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectangle obst[], Texture2D rbnsTex[], Texture2D guardTex[], Texture2D stormTex[], Texture2D itensTex, Camera2D *camera, int *frame, char *last, float *timer, Texture2D background, int *text_cont, int *text_aux, Student stud[]){
-    
-    int i;
+    static int i;
+    static int Falas = 0;
     charcont[1]=1;
     //Sistema de FullScreen ao apertar F
     if(!IsWindowFullscreen() && IsKeyPressed(KEY_F)) ToggleFullscreen();
@@ -32,22 +32,85 @@ int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectang
         //Lidando com o Mapa
         DrawTexture(background, 0, 0, RAYWHITE);
         //-----------------------------------------------------------------------------------------------------------------------------------
-        
-        //Escrevendo as duas falas iniciais
+        i+=GetFrameTime();
+        //Escrevendo as TODAS falas iniciais
         if(charcont[(*text_cont)]!=0)
             charcont[(*text_cont)] += 8;
 
         DrawText(TextFormat("%s", fala01), 1280/4.0f-90, 720/2.0f-60, 10, BLACK);
         DrawText(TextSubtext(fala02, 0, charcont[2]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
         DrawText(TextSubtext(fala03, 0, charcont[3]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala04, 0, charcont[4]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala05, 0, charcont[5]/10), stud[0].position.x-70, stud[0].position.y+50, 10, BLACK);
+        if(stud[0].life<=0){
+            DrawText(TextSubtext(fala06, 0, charcont[6]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala07, 0, charcont[7]/10), stud[0].position.x-70, stud[0].position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala08, 0, charcont[8]/10), 1280/4.0f-90, 720/2.0f-60, 10, BLACK);
+            DrawText(TextSubtext(fala09, 0, charcont[9]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        }
+        DrawText(TextSubtext(fala10, 0, charcont[10]/10), stud[1].position.x-70, stud[1].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala11, 0, charcont[11]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala12, 0, charcont[12]/10), stud[1].position.x-70, stud[1].position.y+50, 10, BLACK);
+        if(stud[1].life<=0){
+            DrawText(TextSubtext(fala13, 0, charcont[13]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala14, 0, charcont[14]/10), stud[1].position.x-70, stud[1].position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala15, 0, charcont[15]/10), 1280/4.0f-90, 720/2.0f-60, 10, BLACK);
+            DrawText(TextSubtext(fala16, 0, charcont[16]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        }
+        DrawText(TextSubtext(fala17, 0, charcont[17]/10), stud[2].position.x-70, stud[2].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala18, 0, charcont[18]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala19, 0, charcont[19]/10), stud[2].position.x-70, stud[2].position.y+50, 10, BLACK);
+        if(stud[2].life<=0){
+            DrawText(TextSubtext(fala20, 0, charcont[20]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala21, 0, charcont[21]/10), stud[2].position.x-70, stud[2].position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala22, 0, charcont[22]/10), 1280/4.0f-90, 720/2.0f-60, 10, BLACK);
+            DrawText(TextSubtext(fala23, 0, charcont[23]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        }
+        DrawText(TextSubtext(fala24, 0, charcont[24]/10), stud[3].position.x-70, stud[3].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala25, 0, charcont[25]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala26, 0, charcont[26]/10), stud[3].position.x-70, stud[3].position.y+50, 10, BLACK);
+        if(stud[3].life<=0){
+            DrawText(TextSubtext(fala27, 0, charcont[27]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala28, 0, charcont[28]/10), stud[3].position.x-70, stud[3].position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala29, 0, charcont[29]/10), 1280/4.0f-90, 720/2.0f-60, 10, BLACK);
+            DrawText(TextSubtext(fala30, 0, charcont[30]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        }
+        
+        DrawText(TextSubtext(fala31, 0, charcont[31]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala32, 0, charcont[32]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala33, 0, charcont[33]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala34, 0, charcont[34]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala35, 0, charcont[35]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala36, 0, charcont[36]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala37, 0, charcont[37]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala38, 0, charcont[38]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala39, 0, charcont[39]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala40, 0, charcont[40]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+        if(stud[4].life<=0){
+            DrawText(TextSubtext(fala41, 0, charcont[41]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala42, 0, charcont[42]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala43, 0, charcont[43]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala44, 0, charcont[44]/10), 1280/4.0f-90, 720/2.0f-60, 10, BLACK);
+        }
+        /*
+        DrawText(TextSubtext(fala45, 0, charcont[45]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala46, 0, charcont[46]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala47, 0, charcont[47]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala48, 0, charcont[48]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);*/
         if(IsKeyPressed(KEY_SPACE)){
             charcont[(*text_cont)]=0;
-            if((*text_aux)<3){
+            if((*text_aux)<43){
                 (*text_cont)++;
                 charcont[(*text_cont)]=1;
                 (*text_aux)++;
             }
         }
+        /*if(charcont[2]>256){
+            *text_aux=48;
+        }
+        if(IsKeyPressed(KEY_J)){
+            *text_aux=2;
+        }*/
         //-----------------------------------------------------------------------------------------------------------------------------------
         
         //Acoes Player
@@ -75,7 +138,7 @@ int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectang
         //-----------------------------------------------------------------------------------------------------------------------------------
         
         //Gerenciando Bosses
-        studentFight(rbns,guard,storm,extras, camera); 
+        studentFight(rbns,guard,storm,extras, camera, &Falas); 
         //-----------------------------------------------------------------------------------------------------------------------------------
         
         //Gerenciando Camera
@@ -215,7 +278,7 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 void resetCharacter(Player *rbns){
-    rbns->life = 200;
+    rbns->life = 130;
     if(rbns->position.x <= 1830) rbns->position = (Vector2){300.0f, 175.0f};
     if(rbns->position.x > 1830 && rbns->position.x <= 4370) rbns->position = (Vector2){2700.0f, 175.0f};
     if(rbns->position.x > 4370 && rbns->position.x <= 7030) rbns->position = (Vector2){5600.0f, 175.0f};
@@ -507,32 +570,46 @@ void studentPlace(Student stud[], int frame){
     if(robrigo.life> 0) DrawTextureRec(freddy.texture, (Rectangle){freddyframeWidth*frame, 0, -freddyframeWidth, freddy.texture.height}, (Vector2){freddy.position.x, freddy.position.y}, RAYWHITE);
 }
 //-----------------------------------------------------------------------------------------------------------------------------------   
-void studentFight(Player *rbns,Enemies guard[],Enemies storm[],Itens extras[], Camera2D *camera){
+void studentFight(Player *rbns,Enemies guard[],Enemies storm[],Itens extras[], Camera2D *camera,int *Falas){
     if(rbns->position.x > 1720 && rbns->position.x < 1830){
         //camera->zoom = 10.0f;
-        Combat_LeaoNidas(rbns);
-        resetEnemies(guard, storm, *rbns);
-        generateItens(extras,*rbns);
+        Combat_LeaoNidas(rbns, Falas);
+        if(*Falas==1){
+            resetEnemies(guard, storm, *rbns);
+            generateItens(extras,*rbns);
+        }
     }
     if(rbns->position.x > 4300 && rbns->position.x < 4370){
         //camera->zoom = 10.0f;
-        resetEnemies(guard, storm, *rbns);
-        generateItens(extras,*rbns);
+        Combat_RoBrigo(rbns ,Falas);
+        if(*Falas==1){
+            resetEnemies(guard, storm, *rbns);
+            generateItens(extras,*rbns);
+        }
     } 
     if(rbns->position.x > 6910 && rbns->position.x < 7030){
         //camera->zoom = 10.0f;
-        resetEnemies(guard, storm, *rbns);
-        generateItens(extras,*rbns);
+        Combat_MuLittle(rbns ,Falas);
+        if(*Falas==1){
+            resetEnemies(guard, storm, *rbns);
+            generateItens(extras,*rbns);
+        }
     }
     if(rbns->position.x > 9600 && rbns->position.x < 9730){
         //camera->zoom = 10.0f;
-        resetEnemies(guard, storm, *rbns);
-        generateItens(extras,*rbns);
+        Combat_XAnny(rbns , Falas);
+        if(*Falas==1){
+            resetEnemies(guard, storm, *rbns);
+            generateItens(extras,*rbns);
+        }
     }
     if(rbns->position.x > 12250){
         //camera->zoom = 10.0f;
-        resetEnemies(guard, storm, *rbns);
-        generateItens(extras,*rbns);
+        Combat_Freddy(rbns, Falas);
+        if(*Falas==1){
+            resetEnemies(guard, storm, *rbns);
+            generateItens(extras,*rbns);
+        };
     } 
 }
 //-----------------------------------------------------------------------------------------------------------------------------------

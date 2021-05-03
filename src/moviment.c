@@ -24,10 +24,7 @@ int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectang
     //frameDie = frameDie % 11;
     //frameAtk = frameAtk % 12;
     
-    //Gerenciando Camera
-    cameraUpdate(camera, *rbns);
     
-    //-----------------------------------------------------------------------------------------------------------------------------------
     
     ClearBackground(RAYWHITE); //(Color){255, 0, 255, 255} -> forma alternativa
     
@@ -78,7 +75,11 @@ int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectang
         //-----------------------------------------------------------------------------------------------------------------------------------
         
         //Gerenciando Bosses
-        studentFight(rbns,guard,storm,extras); 
+        studentFight(rbns,guard,storm,extras, camera); 
+        //-----------------------------------------------------------------------------------------------------------------------------------
+        
+        //Gerenciando Camera
+        cameraUpdate(camera, *rbns);
         //-----------------------------------------------------------------------------------------------------------------------------------
         
     EndMode2D();
@@ -174,12 +175,25 @@ void moveCharacter(Player *rbns, Texture2D background, Rectangle obst[], Texture
             if (IsKeyDown(KEY_W)) rbns->position.y -= 1.0f * rbns->speed; 
             if (IsKeyDown(KEY_S)) rbns->position.y += 1.0f * rbns->speed; 
         }
-        else{
-            if(rbns->position.x > 12300) rbns->position.x = 12300; 
-            if(rbns->position.x <= 0) rbns->position.x += 1.0f * rbns->speed; 
-            if(rbns->position.y >= background.height-50) rbns->position.y -= 1.0f * rbns->speed;
-            if(rbns->position.y <= 0) rbns->position.y += 1.0f * rbns->speed; 
+        
+        if(rbns->position.x > 12300) rbns->position.x = 12300; 
+        if(rbns->position.x <= 0) rbns->position.x += 1.0f * rbns->speed; 
+        if(rbns->position.y >= background.height-50) rbns->position.y -= 1.0f * rbns->speed;
+        if(rbns->position.y <= 0) rbns->position.y += 1.0f * rbns->speed; 
+                  
+        if(rbns->position.x > 1830 && rbns->position.x <= 4370){
+            if(rbns->position.x < 2650.0f) rbns->position.x = 2650.0f;
         }
+        if(rbns->position.x > 4370 && rbns->position.x <= 7030){
+            if(rbns->position.x < 5550.0f) rbns->position.x = 5600.0f;
+        }
+        if(rbns->position.x > 7030 && rbns->position.x <= 9730){
+            if(rbns->position.x < 8150.0f) rbns->position.x = 8200.0f;
+        }
+        if(rbns->position.x > 9730){
+            if(rbns->position.x < 10890.0f) rbns->position.x = 10900.0f;
+        }
+        
         
         if (IsKeyDown(KEY_D))rbns->bound.x = rbns->position.x+12;
         if (IsKeyDown(KEY_A))rbns->bound.x = rbns->position.x+24;
@@ -454,8 +468,8 @@ void cameraUpdate(Camera2D *camera, Player rbns){
     camera->target = (Vector2){rbns.position.x + 20, rbns.position.y + 20};
     camera->zoom += ((float)GetMouseWheelMove()*0.05f);
     //Limitando o zoom da camera
-    if (camera->zoom > 3.0f) camera->zoom = 3.0f;
-    else if (camera->zoom < 2.0f) camera->zoom = 2.0f;
+    if(camera->zoom > 2.5f) camera->zoom = 2.5f;
+    if(camera->zoom < 2.0f) camera->zoom = 2.0f;
     //Limitando o deslocamento da camera
     if(camera->target.x<320) camera->target.x = 320;
     if(camera->target.x>12050) camera->target.x = 12050;
@@ -487,38 +501,39 @@ void studentPlace(Student stud[], int frame){
     
     
     if(lnidas.life > 0) DrawTextureRec(lnidas.texture, (Rectangle){lnidasframeWidth*frame, 0, lnidasframeWidth, lnidas.texture.height}, (Vector2){lnidas.position.x, lnidas.position.y}, RAYWHITE);
-    if(robrigo.life> 0) DrawTextureRec(robrigo.texture, (Rectangle){robrigoframeWidth*frame, 0, robrigoframeWidth, robrigo.texture.height}, (Vector2){robrigo.position.x, robrigo.position.y}, RAYWHITE);
+    if(robrigo.life > 0) DrawTextureRec(robrigo.texture, (Rectangle){robrigoframeWidth*frame, 0, robrigoframeWidth, robrigo.texture.height}, (Vector2){robrigo.position.x, robrigo.position.y}, RAYWHITE);
     if(robrigo.life> 0) DrawTextureRec(mulittle.texture, (Rectangle){mulittleframeWidth*frame, 0, mulittleframeWidth, mulittle.texture.height}, (Vector2){mulittle.position.x, mulittle.position.y}, RAYWHITE);
     if(robrigo.life> 0) DrawTextureRec(xanny.texture, (Rectangle){xannyframeWidth*frame, 0, xannyframeWidth, xanny.texture.height}, (Vector2){xanny.position.x, xanny.position.y}, RAYWHITE);
     if(robrigo.life> 0) DrawTextureRec(freddy.texture, (Rectangle){freddyframeWidth*frame, 0, -freddyframeWidth, freddy.texture.height}, (Vector2){freddy.position.x, freddy.position.y}, RAYWHITE);
 }
 //-----------------------------------------------------------------------------------------------------------------------------------   
-void studentFight(Player *rbns,Enemies guard[],Enemies storm[],Itens extras[]){
+void studentFight(Player *rbns,Enemies guard[],Enemies storm[],Itens extras[], Camera2D *camera){
     if(rbns->position.x > 1720 && rbns->position.x < 1830){
+        //camera->zoom = 10.0f;
         Combat_LeaoNidas(rbns);
-        //resetEnemies(guard, storm, *rbns);
-        //generateItens(extras,*rbns);
-    }        //chama combate 1
+        resetEnemies(guard, storm, *rbns);
+        generateItens(extras,*rbns);
+    }
     if(rbns->position.x > 4300 && rbns->position.x < 4370){
-        
+        //camera->zoom = 10.0f;
         resetEnemies(guard, storm, *rbns);
         generateItens(extras,*rbns);
-    }        //chama combate 2
+    } 
     if(rbns->position.x > 6910 && rbns->position.x < 7030){
-        
+        //camera->zoom = 10.0f;
         resetEnemies(guard, storm, *rbns);
         generateItens(extras,*rbns);
-    }        //chama combate 3
+    }
     if(rbns->position.x > 9600 && rbns->position.x < 9730){
-        
+        //camera->zoom = 10.0f;
         resetEnemies(guard, storm, *rbns);
         generateItens(extras,*rbns);
-    }        //chama combate 4
+    }
     if(rbns->position.x > 12250){
-        
+        //camera->zoom = 10.0f;
         resetEnemies(guard, storm, *rbns);
         generateItens(extras,*rbns);
-    }        //chama combate 5
+    } 
 }
 //-----------------------------------------------------------------------------------------------------------------------------------
 Player Setrbns(){

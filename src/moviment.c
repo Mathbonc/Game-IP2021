@@ -77,19 +77,19 @@ int Game(Player *rbns, Enemies guard[], Enemies storm[], Itens extras[], Rectang
         }
         
         DrawText(TextSubtext(fala31, 0, charcont[31]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
-        DrawText(TextSubtext(fala32, 0, charcont[32]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala32, 0, charcont[32]/10), stud[4].position.x-200, stud[4].position.y+50, 10, LIGHTGRAY);
         DrawText(TextSubtext(fala33, 0, charcont[33]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
-        DrawText(TextSubtext(fala34, 0, charcont[34]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala34, 0, charcont[34]/10), stud[4].position.x-200, stud[4].position.y+50, 10, LIGHTGRAY);
         DrawText(TextSubtext(fala35, 0, charcont[35]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
-        DrawText(TextSubtext(fala36, 0, charcont[36]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala36, 0, charcont[36]/10), stud[4].position.x-200, stud[4].position.y+50, 10, LIGHTGRAY);
         DrawText(TextSubtext(fala37, 0, charcont[37]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
-        DrawText(TextSubtext(fala38, 0, charcont[38]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala38, 0, charcont[38]/10), stud[4].position.x-200, stud[4].position.y+50, 10, LIGHTGRAY);
         DrawText(TextSubtext(fala39, 0, charcont[39]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
-        DrawText(TextSubtext(fala40, 0, charcont[40]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+        DrawText(TextSubtext(fala40, 0, charcont[40]/10), stud[4].position.x-200, stud[4].position.y+50, 10, LIGHTGRAY);
         if(Falas==5){
-            DrawText(TextSubtext(fala41, 0, charcont[41]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala41, 0, charcont[41]/10), stud[4].position.x-200, stud[4].position.y+50, 10, LIGHTGRAY);
             DrawText(TextSubtext(fala42, 0, charcont[42]/10), rbns->position.x-70, rbns->position.y+50, 10, BLACK);
-            DrawText(TextSubtext(fala43, 0, charcont[43]/10), stud[4].position.x-70, stud[4].position.y+50, 10, BLACK);
+            DrawText(TextSubtext(fala43, 0, charcont[43]/10), stud[4].position.x-200, stud[4].position.y+50, 10, LIGHTGRAY);
             DrawText(TextSubtext(fala44, 0, charcont[44]/10), 1280/4.0f-90, 720/2.0f-60, 10, BLACK);
         }
         /*
@@ -534,10 +534,10 @@ void generateItens(Itens extras[], Player rbns){
 void getItens(Player *rbns, Itens extras[], Texture2D itensTex){
     int i;
     for(i=0; i<5; i++){
-        if(CheckCollisionRecs(rbns->bound, extras[i].bound) && rbns->life<200){
+        if(CheckCollisionRecs(rbns->bound, extras[i].bound) && rbns->life<270){
             rbns->life += extras[i].lifeboost;
             extras[i].lifeboost = 0;
-            if(rbns->life > 200) rbns->life = 200;
+            if(rbns->life > 270) rbns->life = 270;
         }
     }
     for(i=0; i<5; i++) if(extras[i].lifeboost > 0) DrawTextureEx(itensTex, (Vector2){extras[i].position.x, extras[i].position.y}, 0.0f, 0.50f, RAYWHITE); 

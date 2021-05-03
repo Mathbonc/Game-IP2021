@@ -55,7 +55,7 @@ int main(){
         Player rbns = {0};
         rbns.position = (Vector2){300.0f, 175.0f};
         rbns.speed = 2.0;
-        rbns.life = 200;
+        rbns.life = 270;
         rbns.damage = 10;
         rbns.bound = (Rectangle){315, 180, 30, 44};
         rbns.atkbound = (Rectangle){315, 180, 60, 44};
@@ -138,11 +138,14 @@ int main(){
     }
     if(GameStage==2){
         while(!WindowShouldClose()){
+            MudaMusica(InGameUI.GameMusic1,InGameUI.GameMusic2);
+            UpdateMusicStream(InGameUI.GameMusic2);
             BeginDrawing();
             ClearBackground(RAYWHITE);
-            
+            DrawTextureEx(UIAssets.EndScreen,(Vector2){0,0},0.0f,MenuScale,RAYWHITE);
             DrawTextEx(UIAssets.Alagard,"Obrigado por jogar!",(Vector2){270,20},80,1,BLACK);
-            DrawTextEx(UIAssets.Alagard,"Desenvolvido por:\n Matheus Julio\n Victor Carvalho\nMarcelo Cristian\n Lucas Brandao\n Paulo Sergio",(Vector2){510,314},30,1,BLACK);
+            DrawTextEx(UIAssets.Alagard,"Desenvolvido por:\n   Matheus Julio\n Victor Carvalho\n Marcelo Cristian\n  Lucas Brandao\n   Paulo Sergio\n",(Vector2){500,220},30,1,BLACK);
+            DrawTextEx(UIAssets.Alagard,"Qualquer semelhanca com a realidade foi mera coincidencia!",(Vector2){180,650},30,1,BLACK);
             EndDrawing();
         }
     }

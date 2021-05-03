@@ -30,6 +30,7 @@ typedef struct{
     Texture2D OptFrame;
     Texture2D Arrows;
     Texture2D SoundBar;
+    Texture2D EndScreen;
     Font Alagard;
     Sound Click;
     Sound ConfirmClick;

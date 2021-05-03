@@ -10,6 +10,7 @@ UI LoadUIAssets(){
     UIAssets.OptFrame = (Texture2D) LoadTexture("../bin/UI/frame.png");
     UIAssets.Arrows = (Texture2D) LoadTexture("../bin/UI/Arrows.png");
     UIAssets.SoundBar = (Texture2D) LoadTexture("../bin/UI/SoundBar.png");
+    UIAssets.EndScreen = (Texture2D) LoadTexture("../bin/UI/Credits.png");
     UIAssets.Alagard = (Font) LoadFont("../fonts/alagard.ttf");
     UIAssets.Click =(Sound) LoadSound("../bin/Sample/Interface/Back_tones/style2/back_style_2_004.wav");
     UIAssets.ConfirmClick = (Sound) LoadSound("../bin/Sample/Interface/Confirm_tones/style2/confirm_style_2_echo_001.wav");
@@ -21,6 +22,7 @@ void UnloadUIAssets(UI UIAssets){
     UnloadTexture(UIAssets.OptFrame);
     UnloadTexture(UIAssets.Arrows);
     UnloadTexture(UIAssets.SoundBar);
+    UnloadTexture(UIAssets.EndScreen);
     UnloadFont(UIAssets.Alagard);
     UnloadSound(UIAssets.Click);
     UnloadSound(UIAssets.ConfirmClick);
@@ -95,7 +97,7 @@ void DrawGameUI(bool *GamePause, UIIG InGameUI,UIRECS MenuRects, Player rbns, fl
                     (Vector2){InGameUI.HealthBar.width/2,InGameUI.HealthBar.height/2},
                     0.0f,RAYWHITE);
     
-    Rectangle GreenBar = {44.5,37,InGameUI.HealthBar.width*1.82*(rbns.life/200.0),InGameUI.HealthBar.height*1.6};
+    Rectangle GreenBar = {44.5,37,InGameUI.HealthBar.width*1.82*(rbns.life/270.0),InGameUI.HealthBar.height*1.6};
     DrawRectangleRec(GreenBar,GREEN);
     
     DrawTexturePro(InGameUI.Pause,

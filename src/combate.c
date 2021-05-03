@@ -486,11 +486,9 @@ void Combat_Freddy(Player *rbns, int *Falas){
             }
         }    
     }
-    DrawText(TextFormat("Vida de Freddy: %d", vida_de_Freddy),12260.0f, 165.0f,8,SKYBLUE);
+    DrawText(TextFormat("Vida de Fred Rico: %d", vida_de_Freddy),12260.0f, 165.0f,8,SKYBLUE);
     rbns->life = vida_de_rubens;
     if(vida_de_rubens>0 && vida_de_Freddy<=0){
-        *Falas=5;
-        rbns->position.x=10900;
-        rbns->position.y=4000;
+       *Falas=5;       
     }
 }

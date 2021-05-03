@@ -22,13 +22,6 @@ typedef struct{
 }player;
 */
 
-mus CarregaMusicas(mus Song){  
-	Song.musica[0]=LoadSound("./bin/Sample/Music/Ludum Dare - Track 4.wav");    
-	Song.musica[1]=LoadSound("./bin/Sample/Music/Ludum Dare - Track 10.wav");
-    Song.musica[2]=LoadSound("./bin/Sample/Music/10-Fight.wav");
-	return Song;  
-}
-
 void MenudeRubens(ataques_rubens ataques, int *vida_estudante, int vida_Rubens, int *opRubens,Player rbns){
     int valorizador = 1;
     
@@ -431,14 +424,11 @@ void Combat_XAnny(Player *rbns, int *Falas){
 }
 //Combate do Freddy
 void Combat_Freddy(Player *rbns, int *Falas){
-    mus Musica=CarregaMusicas(Musica);
+    //MAPA DE FREDERICO
     int vida_de_rubens = rbns->life;
     static int i=0;
     static int vida_de_Freddy = 250, opRubens, opAluno = 0, flag = 0, contra_ataque1, contra_ataque2, contra_ataque3;
-    //dialogo entre Freddy e Rubens
-    PlaySound(Musica.musica[1]);
     //combate Freddy x Rubens:
-    TrocaMusicaCombate(Musica.musica[1],Musica.musica[2]);
     ataques_rubens ataqueRubens; ataques_aluno ataqueFreddy;
     ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
     ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
@@ -502,8 +492,5 @@ void Combat_Freddy(Player *rbns, int *Falas){
         *Falas=5;
         rbns->position.x=10900;
         rbns->position.y=4000;
-    }
-    if(vida_de_Freddy<=0 && vida_de_rubens<=0){
-        StopSound(Musica.musica[2]);
     }
 }

@@ -12,7 +12,7 @@ typedef struct{ //Struct para os ataques do aluno
 } ataques_aluno;
 
 typedef struct {
-	Sound musica[10];
+	Sound musica[3];
 }mus;
 
 typedef struct{

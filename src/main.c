@@ -33,17 +33,18 @@ int main(){
     cloudsScroll.FC3 = 0.0f;
     //MUSICS
     PlayMusicStream(Menu.Music);
-    
-    while(GameStage==0){
-        SetMusicVolume(Menu.Music,SoundVolume);
-        UpdateMusicStream(Menu.Music);
-        //Scrolling
-        cloudsScroll.BGC-=0.2f;
-        cloudsScroll.FC1+=0.4f;
-        cloudsScroll.FC2-=0.3f;
-        cloudsScroll.FC3+=0.2f;
-        ParallaxMenu(cloudsScroll.BGC,cloudsScroll.FC1,cloudsScroll.FC2,cloudsScroll.FC3,Menu,UIAssets);
-        GameStage = MenuSelect(UIAssets,&OptWindow,&SoundVolume);
+    if(GameStage==0){
+        while(GameStage==0){
+            SetMusicVolume(Menu.Music,SoundVolume);
+            UpdateMusicStream(Menu.Music);
+            //Scrolling
+            cloudsScroll.BGC-=0.2f;
+            cloudsScroll.FC1+=0.4f;
+            cloudsScroll.FC2-=0.3f;
+            cloudsScroll.FC3+=0.2f;
+            ParallaxMenu(cloudsScroll.BGC,cloudsScroll.FC1,cloudsScroll.FC2,cloudsScroll.FC3,Menu,UIAssets);
+            GameStage = MenuSelect(UIAssets,&OptWindow,&SoundVolume);
+        }
     }
     if(GameStage==1){
         MudaMusica(Menu.Music,InGameUI.GameMusic1);
@@ -130,8 +131,18 @@ int main(){
             SetMusicVolume(InGameUI.GameMusic1,SoundVolume);
             UpdateMusicStream(InGameUI.GameMusic1);
             BeginDrawing();
-            Game(&rbns, guard, storm, extras, obst, rbnsTex, guardTex, stormTex, itensTex, &camera, &frame, &last, &timer, background, &text_cont, &text_aux, stud);
+            Game(&rbns, guard, storm, extras, obst, rbnsTex, guardTex, stormTex, itensTex, &camera, &frame, &last, &timer, background, &text_cont, &text_aux, stud,&GameStage);
             DrawGameUI(&GamePause, InGameUI, MenuRects, rbns, &SoundVolume, UIAssets,&OptWindow);
+            EndDrawing();
+        }       
+    }
+    if(GameStage==2){
+        while(!WindowShouldClose()){
+            BeginDrawing();
+            ClearBackground(RAYWHITE);
+            
+            DrawTextEx(UIAssets.Alagard,"Obrigado por jogar!",(Vector2){270,20},80,1,BLACK);
+            DrawTextEx(UIAssets.Alagard,"Desenvolvido por:\n Matheus Julio\n Victor Carvalho\nMarcelo Cristian\n Lucas Brandao\n Paulo Sergio",(Vector2){510,314},30,1,BLACK);
             EndDrawing();
         }
     }

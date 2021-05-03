@@ -120,8 +120,8 @@ void Combat_LeaoNidas(Player *rbns,int *Falas){
     static int i=0;
     static int vida_de_leao = 200, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueLeao;
-    ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
-    ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
+    ataqueRubens.Questao_complicada = 25; ataqueRubens.Correcao_errada = 20;
+    ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 10;
     ataqueLeao.acertar_questao = 10; ataqueLeao.discutir_questao = 15;
     ataqueLeao.chamar_no_zap = 20;
     
@@ -183,6 +183,7 @@ void Combat_LeaoNidas(Player *rbns,int *Falas){
         *Falas=1;
         rbns->position.x=2700;
         rbns->position.y=175;
+       
     }
 }
 
@@ -270,8 +271,8 @@ void Combat_MuLittle(Player *rbns, int *Falas){
     static int i=0;
     static int vida_de_MuLittle = 220, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; ataques_aluno ataqueMuLittle;
-    ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
-    ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
+    ataqueRubens.Questao_complicada = 5; ataqueRubens.Correcao_errada = 15;
+    ataqueRubens.Nota_Errada = 30; ataqueRubens.Questao_Oral = 20;
     ataqueMuLittle.acertar_questao = 30; ataqueMuLittle.discutir_questao = 15;
     ataqueMuLittle.chamar_no_zap = 10;
     
@@ -350,8 +351,8 @@ void Combat_XAnny(Player *rbns, int *Falas){
     static int vida_de_XAnny = 230, opRubens, opAluno, contra_ataque1, contra_ataque2, contra_ataque3;
     ataques_rubens ataqueRubens; 
     ataques_aluno ataqueXAnny;
-    ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
-    ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
+    ataqueRubens.Questao_complicada = 20; ataqueRubens.Correcao_errada = 10;
+    ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 25;
     ataqueXAnny.acertar_questao = 30; ataqueXAnny.discutir_questao = 15;
     ataqueXAnny.chamar_no_zap = 10;
     
@@ -426,12 +427,13 @@ void Combat_XAnny(Player *rbns, int *Falas){
 void Combat_Freddy(Player *rbns, int *Falas){
     //MAPA DE FREDERICO
     int vida_de_rubens = rbns->life;
+    int opAluno = GetRandomValue(1, 3);
     static int i=0;
-    static int vida_de_Freddy = 250, opRubens, opAluno = 0, flag = 0, contra_ataque1, contra_ataque2, contra_ataque3;
+    static int vida_de_Freddy = 250, opRubens, flag = 0, contra_ataque1, contra_ataque2, contra_ataque3;
     //combate Freddy x Rubens:
     ataques_rubens ataqueRubens; ataques_aluno ataqueFreddy;
-    ataqueRubens.Questao_complicada = 10; ataqueRubens.Correcao_errada = 10;
-    ataqueRubens.Nota_Errada = 20; ataqueRubens.Questao_Oral = 30;
+    ataqueRubens.Questao_complicada = 15; ataqueRubens.Correcao_errada = 15;
+    ataqueRubens.Nota_Errada = 25; ataqueRubens.Questao_Oral = 20;
     ataqueFreddy.acertar_questao = 20; ataqueFreddy.discutir_questao = 25;
     ataqueFreddy.chamar_no_zap = 35;
     
@@ -465,8 +467,7 @@ void Combat_Freddy(Player *rbns, int *Falas){
         /*srand((unsigned)time(NULL));
         do{
             opAluno =  (rand() % 10);
-        }while(opAluno < 1 || opAluno > 3);*/
-        opAluno=GetRandomValue(1, 3);
+        }while(opAluno < 1 || opAluno > 3);*/        
         if(vida_de_Freddy>0 && opRubens!=0){
             switch (opAluno){
             case 1:

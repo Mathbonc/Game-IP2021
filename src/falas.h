@@ -78,11 +78,11 @@ const char fala30[]="Professora Rubens: Meu Deus gente!\nEsses lugares que essas
 const char fala31[]="Professora Rubens: Meu Deus Freddy Rico\ncomo você está diferente, cortou o cabelo? ";
 const char fala32[]="Freddy Rico: Finalmente me encontrou, rã.";
 const char fala33[]="Professora Rubens: Pois é, pera aí...";
-const char fala34[]="Freddy Rico: Isso mesmo, fui eu que espalhei todas essas mensagens,\ninclusive fui eu o responsável por esse cenário apocalíptico.";
+const char fala34[]="Freddy Rico: Isso mesmo, fui eu que espalhei todas essas\nmensagens,inclusive fui eu o responsável\n por esse cenário apocalíptico.";
 const char fala35[]="Professora Rubens: Por que e como você fez isso? :o";
-const char fala36[]="Freddy Rico: Fiz isso tudo porque a senhora desconsiderou uma questão minha\nquando eu deixei de justificar a derivada da função que eu fiz,\na questão nem justificativa pedia... ";
+const char fala36[]="Freddy Rico: Fiz isso tudo porque a senhora desconsiderou\n uma questão minha quando eu deixei de justificar a derivada da função que eu fiz,\na questão nem justificativa pedia... ";
 const char fala37[]="Professora Rubens: Ai Freddy Rico, isso é só um detalhe,\ncada prova é cada prova e cada professor é cada professor.";
-const char fala38[]="Freddy Rico: Professora, com todo o respeito, a senhora falou muito, Mas não falou nada -_- ";
+const char fala38[]="Freddy Rico: Professora, com todo o respeito,\n a senhora falou muito, mas não falou nada -_- ";
 const char fala39[]="Professora Rubens: Esqueça isso, você ainda tá no sétimo período,\nmas mudando de assunto, como que você fez tudo isso?";
 const char fala40[]="Freddy Rico: Eu tô no oitavo período “tecnicamente”,\nsobre como eu fiz, bem, eu tenho meus contatos.";
 

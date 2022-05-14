@@ -1,5 +1,5 @@
 # Game-IP2021
-Projeto de Introdução a Computação (IP-2021)
+Projeto de Introdução a Computação (IP-2020)
 
 <h1 align="center">A Jornada de Rubens</h1>
 <p align="center">Projeto de IP 2020.1</p>
